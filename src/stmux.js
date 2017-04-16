@@ -272,7 +272,7 @@ if (focused === -1)
 wins[focused].focus()
 
 /*  handle terminal selection  */
-screen.key([ "C-a left" ], (/* ch, key */) => {
+screen.key([ "left" ], (/* ch, key */) => {
     if (focused <= 0)
         return
     wins[focused].resetScroll()
@@ -280,7 +280,7 @@ screen.key([ "C-a left" ], (/* ch, key */) => {
     wins[focused].focus()
     screen.render()
 })
-screen.key([ "C-a right" ], (/* ch, key */) => {
+screen.key([ "right" ], (/* ch, key */) => {
     if (focused >= (wins.length - 1))
         return
     wins[focused].resetScroll()
