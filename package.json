@@ -57,6 +57,7 @@
         "node":                                      ">=6.0.0"
     },
     "scripts": {
-        "test":  "node ./bin/stmux.js -- [ [ 'ls -l' .. 'date; false' ] : 'vi' ]"
+        "prepublish": "grunt default",
+        "test":       "node ./bin/stmux.js -- [ [ 'ls -l' .. 'date; false' ] : 'vi' ]"
     }
 }
