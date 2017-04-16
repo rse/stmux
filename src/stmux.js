@@ -277,16 +277,20 @@ wins[focused].focus()
 let prefixMode = 0
 screen.on("keypress", (ch, key) => {
     if ((prefixMode === 0 || prefixMode === 2) && key.full === `C-${argv.activator}`) {
+        /*  enter prefix mode  */
         prefixMode = 1
         wins[focused].enableInput(false)
     }
     else if (prefixMode === 1) {
+        /*  handle prefix mode  */
         prefixMode = 2
         if (key.full === argv.activator) {
+            /*  handle special prefix activator character  */
             let ch = String.fromCharCode(1 + argv.activator.charCodeAt(0) - "a".charCodeAt(0))
             wins[focused].injectInput(ch)
         }
         else if (key.full === "left" || key.full === "right" || key.full === "space") {
+            /*  handle terminal focus change  */
             wins[focused].resetScroll()
             if (key.full === "left")
                 focused--
@@ -300,13 +304,16 @@ screen.on("keypress", (ch, key) => {
             screen.render()
         }
         else if (key.full === "v") {
+            /*  handle scrolling/visual mode  */
             wins[focused].scroll(0)
         }
         else if (key.full === "k") {
+            /*  kill the program  */
             die()
         }
     }
     else if (prefixMode === 2) {
+        /*  leave prefix mode  */
         wins[focused].enableInput(true)
         prefixMode = 0
     }
