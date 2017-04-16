@@ -46,7 +46,7 @@
     },
     "dependencies" : {
         "blessed":                                   "~0.1.81",
-        "blessed-xterm":                             "~0.9.8",
+        "blessed-xterm":                             "~0.9.9",
         "chalk":                                     "~1.1.3",
         "yargs":                                     "~7.1.0",
         "asty":                                      "~1.4.9",
@@ -58,6 +58,6 @@
     },
     "scripts": {
         "prepublish": "grunt default",
-        "test":       "grunt default && node -- ./bin/stmux.js -w -- [ [ 'sleep 1; ls -l' .. 'date; false' ] : 'date; true' ]"
+        "test":       "grunt default && node -- ./bin/stmux.js -w -- [ [ 'bash' .. 'date; false' ] : 'date; true' ]"
     }
 }

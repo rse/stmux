@@ -46,6 +46,8 @@ let argv = yargs
         .describe("w", "wait after last finished command and do not shutdown automatically")
     .boolean("C").alias("C", "noColor").default("C", false)
         .describe("C", "do not use any colors in output")
+    .string("a").nargs("a", 1).alias("a", "activator").default("a", "a")
+        .describe("a", "use CTRL+<character> as the prefix to special commands")
     .string("t").nargs("t", 1).alias("t", "title").default("t", "stmux")
         .describe("t", "set title on terminal")
     .string("f").nargs("f", 1).alias("f", "file").default("f", "-")
@@ -129,7 +131,7 @@ const provision = {
             args:          [],
             env:           process.env,
             cwd:           process.cwd(),
-            ignoreKeys:    [ "left", "right" ],
+            ignoreKeys:    [],
             controlKey:    "C-w",
             left:          x,
             top:           y,
@@ -271,27 +273,42 @@ if (focused === -1)
     focused = 0
 wins[focused].focus()
 
-/*  handle terminal selection  */
-screen.key([ "left" ], (/* ch, key */) => {
-    if (focused <= 0)
-        return
-    wins[focused].resetScroll()
-    focused--
-    wins[focused].focus()
-    screen.render()
-})
-screen.key([ "right" ], (/* ch, key */) => {
-    if (focused >= (wins.length - 1))
-        return
-    wins[focused].resetScroll()
-    focused++
-    wins[focused].focus()
-    screen.render()
-})
-
-/*  handle manual program termination  */
-screen.key([ "C-c" ], (/* ch, key */) => {
-    die()
+/*  handle keys  */
+let prefixMode = 0
+screen.on("keypress", (ch, key) => {
+    wins[1].write(prefixMode + ":" + JSON.stringify(key) + "\r\n")
+    if ((prefixMode === 0 || prefixMode === 2) && key.full === `C-${argv.activator}`) {
+        prefixMode = 1
+        wins[focused].enableInput(false)
+    }
+    else if (prefixMode === 1) {
+        wins[1].write("<" + key.full + ">")
+        prefixMode = 2
+        if (key.full === argv.activator) {
+            let ch = String.fromCharCode(1 + argv.activator.charCodeAt(0) - "a".charCodeAt(0))
+            wins[focused].injectInput(ch)
+        }
+        else if (key.full === "left" || key.full === "right" || key.full === "space") {
+            wins[focused].resetScroll()
+            if (key.full === "left")
+                focused--
+            else if (key.full === "right" || key.full === "space")
+                focused++
+            if (focused < 0)
+                focused = wins.length - 1
+            if (focused > wins.length - 1)
+                focused = 0
+            wins[focused].focus()
+            screen.render()
+        }
+        else if (key.full === "k") {
+            die()
+        }
+    }
+    else if (prefixMode === 2) {
+        wins[focused].enableInput(true)
+        prefixMode = 0
+    }
 })
 
 /*  render Blessed screen initially  */
