@@ -134,6 +134,33 @@ The following keystrokes are supported under run-time:
 - `CTRL`+*activator* `k`:<br/>
   Kill the application and all shell commands in all terminals.
 
+Specification Examples
+----------------------
+
+- `[ A ]`:
+
+    ```
+    +-----------+
+    |           |
+    |           |
+    |     A     |
+    |           |
+    |           |
+    +-----------+
+    ```
+
+- `[ A .. B ]`:
+
+    ```
+    +-----+-----+
+    |     |     |
+    |     |     |
+    |  A  |  B  |
+    |     |     |
+    |     |     |
+    +-----+-----+
+    ```
+
 License
 -------
 
