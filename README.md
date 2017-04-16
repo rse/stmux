@@ -21,10 +21,29 @@ but instead in a portable way for bare Node.js environments. It's
 only nasty dependency is the essential native Node.js module
 [node-pty](https://github.com/Tyriar/node-pty). As a consequence this
 utility can be installed via just NPM and without any surrounding Unix
-environments (like CygWin under Windows, etc). It is primarily
-intended to be used for within a `package.json` `script` to side-by-side run various NPM
-scripts in a Node.js build-time environment. For more sophisticated use-cases
-please stick with [tmux](https://tmux.github.io/), of course.
+environments (like CygWin under Windows, etc).
+
+Intention
+---------
+
+This utility is primarily intended to be used for within a
+`package.json` `script` to side-by-side run various NPM scripts in a
+Node.js build-time environment. For more sophisticated use-cases please
+stick with [tmux](https://tmux.github.io/), of course.
+
+A sample `package.json` entry would be:
+
+```
+{
+    ...
+    "devDependencies": {
+        "stmux": "*"
+    },
+    "scripts": {
+        "dev": "stmux -- [ [ 'cd ui && npm build:watch' .. 'cd sv && npm build:watch' ] : [ 'bash' .. 'cd sv && npm start' ] ]"
+    }
+}
+```
 
 Example
 -------
