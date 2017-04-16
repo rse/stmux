@@ -63,10 +63,12 @@ $ stmux [-h] [-V] [-w] [-a <activator>] [-t <title>] [-f <file>] [-- <spec>]
   Wait after last finished command and do not shutdown automatically.
 - `-a <activator>`, `--activator <activator>`<br/>
   Use `CTRL+<activator>` as the prefix to special commands.
+  The default activator character is `a`.
 - `-t <title>`, `--title <title>`<br/>
-  Set title on terminal.
+  Set title on terminal. The default title is `stmux`.
 - `-f <file>`, `--file <file>`<br/>
-  Read specification from configuration file.
+  Read specification from configuration file. The
+  default is to use the specification in the command line arguments.
 
 The following grammar describes the specification:
 
