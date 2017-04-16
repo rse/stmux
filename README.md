@@ -15,13 +15,15 @@ Abstract
 
 This is a simple terminal multiplexing utility for Node.js
 environments. It is inspired by the awesome and unreachable
-[tmux](https://tmux.github.io/) native Unix utility. It is intended
-to provide a just very tiny subset of the original functionality,
-but instead in a portable way for bare Node.js environments. It's
-only nasty dependency is the essential native Node.js module
-[node-pty](https://github.com/Tyriar/node-pty). As a consequence this
-utility can be installed via just NPM and without any surrounding Unix
-environments (like CygWin under Windows, etc).
+[tmux](https://tmux.github.io/) native Unix utility. It is
+intended to provide just a very tiny subset of the original
+[tmux](https://tmux.github.io/) functionality, but in a portable way for
+bare Node.js environments. It's only nasty dependency is the essential
+native Node.js module [node-pty](https://github.com/Tyriar/node-pty). As
+a consequence, this utility can be installed via just NPM and without
+any surrounding Unix-like environments (like Cygwin or MinGW under
+Windows, MacPorts or Homebrew under macOS, etc), which the original
+[tmux](https://tmux.github.io/) would require.
 
 Example
 -------
@@ -29,22 +31,30 @@ Example
 The following command...
 
 ```
-$ stmux -w -- [ [ bash .. vi ] : mc ]
+$ stmux -w -- [ [ bash .. vim ] : mc ]
 ```
 
-...leads to the following result:
+...leads to the following particular terminal multiplexing environment,
+where GNU bash, Vim and Midnight Commander are running side-by-side
+inside their own XTerm emulating terminal widget:
 
 ![stmux usage](screenshot.png)
 
 Intention
 ---------
 
-This utility is primarily intended to be used for within a
-`package.json` `script` to side-by-side run various NPM scripts in a
-Node.js build-time environment. For more sophisticated use-cases please
-stick with [tmux](https://tmux.github.io/), of course.
+This utility is primarily intended to be used from within a
+`package.json` `script` to easily side-by-side run various
+NPM-based commands in a Node.js build-time environment. For
+more sophisticated use-cases please stick with the original
+[tmux](https://tmux.github.io/), of course.
 
-A sample `package.json` entry would be:
+Sample `package.json` entries from a top-level NPM-based project
+follows, which allows one to run the commands of two sub-projects.
+First, the build-time of the user interface (frontend) project.
+Second, the build-time of the server (backend) project.
+Third, the run-time of the server (backed) project.
+Forth, an additional regular shell.
 
 ```
 {
@@ -53,7 +63,7 @@ A sample `package.json` entry would be:
         "stmux": "*"
     },
     "scripts": {
-        "dev":      "stmux -- [ [ 'npm run build:ui' .. 'npm run build:sv' ] : [ 'bash' .. 'npm start' ] ]",
+        "dev":      "stmux -- [ [ 'npm run build:ui' .. 'npm run build:sv' ] : [ $SHELL .. 'npm start' ] ]",
         "build:ui": "cd ui && npm build:watch",
         "build:sv": "cd sv && npm build:watch",
         "start":    "cd sv && npm start"
@@ -89,10 +99,11 @@ $ stmux [-h] [-V] [-w] [-a <activator>] [-t <title>] [-f <file>] [-- <spec>]
 - `-t <title>`, `--title <title>`<br/>
   Set title on terminal. The default title is `stmux`.
 - `-f <file>`, `--file <file>`<br/>
-  Read specification from configuration file. The
-  default is to use the specification in the command line arguments.
+  Read specification `<spec>` from a configuration file. The
+  default is to use the specification inside the command line arguments
+  or (alternatively) to read the specification from `stdin`.
 
-The following grammar describes the specification:
+The following grammar describes the specification `<spec>`:
 
 ```
 spec      ::= "[" directive (":"  directive)* "]"  /* vertical   split */
@@ -107,20 +118,20 @@ option    ::= ("-f" | "--focus")                   /* focus terminal initially *
             | ("-t" | "--title") string            /* set title of terminal */
 ```
 
-The following run-time keystrokes are supported:
+The following keystrokes are supported under run-time:
 
 - `CTRL`+*activator* *activator*:<br/>
-  Send the `CTRL`+*activator* key-sequence to terminal.
+  Send the `CTRL`+*activator* key-sequence to the focused terminal.
 - `CTRL`+*activator* `LEFT`:<br/>
-  Switch the focus to the previous terminal.
+  Switch the focus to the previous terminal in sequence.
 - `CTRL`+*activator* `RIGHT`/`SPACE`:<br/>
-  Switch the focus to the next terminal.
+  Switch the focus to the next terminal in sequence.
 - `CTRL`+*activator* `v`:<br/>
-  Switch the focused terminal into visual scrolling mode.
-  Use `PAGEUP`/`PAGEDOWN` during this mode. Any other
-  key leaves this mode again.
+  Switch the focused terminal into visual/scrolling mode.
+  Use `PAGEUP`/`PAGEDOWN` during this mode to scroll up/down.
+  Any other key leaves this mode.
 - `CTRL`+*activator* `k`:<br/>
-  Kill the program manually.
+  Kill the application and all shell commands in all terminals.
 
 License
 -------
