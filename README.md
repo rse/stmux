@@ -29,6 +29,14 @@ please stick with [tmux](https://tmux.github.io/), of course.
 Example
 -------
 
+The following command...
+
+```
+$ stmux -w -- [ [ bash .. vi ] : mc ]
+```
+
+...leads to the following result:
+
 ![stmux usage](screenshot.png)
 
 Installation
