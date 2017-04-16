@@ -41,14 +41,56 @@ $ npm install -g stmux
 Usage
 -----
 
+The following command line arguments are supported:
+
 ```
-$ stmux [-h] [-V] [-q] [-n] [-C] [-m <name>] [-f <file>] [-r <url>] [-g] [<pattern> ...]
+$ stmux [-h] [-V] [-w] [-a <activator>] [-t <title>] [-f <file>] [-- <spec>]
 ```
 
 - `-h`, `--help`<br/>
   Show usage help.
 - `-V`, `--version`<br/>
   Show program version information.
+- `-w`, `--wait`<br/>
+  Wait after last finished command and do not shutdown automatically.
+- `-a <activator>`, `--activator <activator>`<br/>
+  Use `CTRL+<activator>` as the prefix to special commands.
+- `-t <title>`, `--title <title>`<br/>
+  Set title on terminal.
+- `-f <file>`, `--file <file>`<br/>
+  Read specification from configuration file.
+
+The following grammar describes the specification:
+
+```
+spec      ::= "[" directive (":"  directive)* "]"
+            | "[" directive (".." directive)* "]"
+
+directive ::= spec /* RECURSION */
+            | command
+
+command   ::= option* string
+
+option    ::= ("-f" | "--focus")
+            | ("-r" | "--restart")
+            | ("-d" | "--delay") number
+            | ("-t" | "--title") string
+```
+
+The following run-time keystrokes are supported:
+
+- `CTRL`+*activator* *activator*:<br/>
+  Send the `CTRL`+*activator* key-sequence to terminal.
+- `CTRL`+*activator* `LEFT`:<br/>
+  Switch the focus to the previous terminal.
+- `CTRL`+*activator* `RIGHT`/`SPACE`:<br/>
+  Switch the focus to the next terminal.
+- `CTRL`+*activator* `v`:<br/>
+  Switch the focused terminal into visual scrolling mode.
+  Use `PAGEUP`/`PAGEDOWN` during this mode. Any other
+  key leaves this mode again.
+- `CTRL`+*activator* `k`:<br/>
+  Kill the program manually.
 
 License
 -------

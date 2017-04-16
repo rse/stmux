@@ -37,17 +37,15 @@ import my              from "../package.json"
 
 /*  parse command-line arguments  */
 let argv = yargs
-    .usage("Usage: $0 [-h] [-V] [-w] [-C] [-t <title>] [-f <file>] [-- <spec>]")
+    .usage("Usage: $0 [-h] [-V] [-w] [-a <activator>] [-t <title>] [-f <file>] [-- <spec>]")
     .help("h").alias("h", "help").default("h", false)
         .describe("h", "show usage help")
     .boolean("V").alias("V", "version").default("V", false)
         .describe("V", "show program version information")
     .boolean("w").alias("w", "wait").default("w", false)
         .describe("w", "wait after last finished command and do not shutdown automatically")
-    .boolean("C").alias("C", "noColor").default("C", false)
-        .describe("C", "do not use any colors in output")
     .string("a").nargs("a", 1).alias("a", "activator").default("a", "a")
-        .describe("a", "use CTRL+<character> as the prefix to special commands")
+        .describe("a", "use CTRL+<activator> as the prefix to special commands")
     .string("t").nargs("t", 1).alias("t", "title").default("t", "stmux")
         .describe("t", "set title on terminal")
     .string("f").nargs("f", 1).alias("f", "file").default("f", "-")
