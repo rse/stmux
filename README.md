@@ -23,6 +23,19 @@ only nasty dependency is the essential native Node.js module
 utility can be installed via just NPM and without any surrounding Unix
 environments (like CygWin under Windows, etc).
 
+Example
+-------
+
+The following command...
+
+```
+$ stmux -w -- [ [ bash .. vi ] : mc ]
+```
+
+...leads to the following result:
+
+![stmux usage](screenshot.png)
+
 Intention
 ---------
 
@@ -47,19 +60,6 @@ A sample `package.json` entry would be:
     }
 }
 ```
-
-Example
--------
-
-The following command...
-
-```
-$ stmux -w -- [ [ bash .. vi ] : mc ]
-```
-
-...leads to the following result:
-
-![stmux usage](screenshot.png)
 
 Installation
 ------------
