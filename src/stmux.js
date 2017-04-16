@@ -102,9 +102,16 @@ const screen = blessed.screen({
     warnings:    false
 })
 
+/*  gracefully terminate programm  */
+const die = () => {
+    screen.destroy()
+    process.exit(0)
+}
+
 /*  provision Blessed screen layout with Blessed XTerm widgets  */
 let wins = []
 let focused = -1
+let terminated = 0
 const provision = {
     command (x, y, w, h, node) {
         if (node.type() !== "command")
@@ -196,14 +203,21 @@ const provision = {
                     chalk.red.inverse("::.. ") +
                     "\r\n\r\n")
 
-            /*  handle restarting  */
+            /*  handle termination and restarting  */
             if (node.childs().find((node) => node.get("name") === "restart" && node.get("value") === true)) {
+                /*  restart command  */
                 let delayNode = node.childs().find((node) =>
                     node.get("name") === "delay" && typeof node.get("value") === "number")
                 if (delayNode)
                     setTimeout(() => win.spawn(shell, args), delayNode.get("value"))
                 else
                     win.spawn(shell, args)
+            }
+            else if (!argv.wait) {
+                /*  handle automatic program termination  */
+                terminated++
+                if (terminated >= wins.length)
+                    die()
             }
         })
 
@@ -275,10 +289,9 @@ screen.key([ "C-a right" ], (/* ch, key */) => {
     screen.render()
 })
 
-/*  handle program termination  */
+/*  handle manual program termination  */
 screen.key([ "C-c" ], (/* ch, key */) => {
-    screen.destroy()
-    process.exit(0)
+    die()
 })
 
 /*  render Blessed screen initially  */
