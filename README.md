@@ -16,12 +16,15 @@ Abstract
 This is a simple terminal multiplexing utility for Node.js
 environments. It is inspired by the awesome and unreachable
 [tmux](https://tmux.github.io/) native Unix utility. It is intended
-to provide a just tiny subset of the original functionality,
-but in a portable way for bare Node.js environments. It's
+to provide a just very tiny subset of the original functionality,
+but instead in a portable way for bare Node.js environments. It's
 only nasty dependency is the essential native Node.js module
 [node-pty](https://github.com/Tyriar/node-pty). As a consequence this
 utility can be installed via just NPM and without any surrounding Unix
-environments (like CygWin under Windows, etc).
+environments (like CygWin under Windows, etc). It is primarily
+intended to be used for side-by-side running various tools
+in a Node.js build environment. For more sophisticated use-cases
+please stick with [tmux](https://tmux.github.io/), of course.
 
 Example
 -------
