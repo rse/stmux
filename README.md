@@ -103,7 +103,8 @@ $ stmux [-h] [-V] [-w] [-a <activator>] [-t <title>] [-f <file>] [-- <spec>]
   default is to use the specification inside the command line arguments
   or (alternatively) to read the specification from `stdin`.
 
-The following grammar describes the specification `<spec>`:
+The following PEG-style grammar loosly describes the specification `<spec>`.
+For exact details see the [real PEG grammar of stmux](src/stmux.pegjs).
 
 ```
 spec      ::= "[" directive (":"  directive)* "]"  /* vertical   split */
