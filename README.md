@@ -71,18 +71,16 @@ $ stmux [-h] [-V] [-w] [-a <activator>] [-t <title>] [-f <file>] [-- <spec>]
 The following grammar describes the specification:
 
 ```
-spec      ::= "[" directive (":"  directive)* "]"
-            | "[" directive (".." directive)* "]"
+spec      ::= "[" directive (":"  directive)* "]"  /* vertical   split */
+            | "[" directive (".." directive)* "]"  /* horizontal split */
 
-directive ::= spec /* RECURSION */
-            | command
+directive ::= spec                                 /* RECURSION */
+            | option* string                       /* shell command */
 
-command   ::= option* string
-
-option    ::= ("-f" | "--focus")
-            | ("-r" | "--restart")
-            | ("-d" | "--delay") number
-            | ("-t" | "--title") string
+option    ::= ("-f" | "--focus")                   /* focus terminal initially */
+            | ("-r" | "--restart")                 /* restart command automatically */
+            | ("-d" | "--delay") number            /* delay <number> seconds on restart */
+            | ("-t" | "--title") string            /* set title of terminal */
 ```
 
 The following run-time keystrokes are supported:
