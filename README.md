@@ -63,7 +63,7 @@ Forth, an additional regular shell.
         "stmux": "*"
     },
     "scripts": {
-        "dev":      "stmux -- [ [ 'npm run build:ui' .. 'npm run build:sv' ] : [ $SHELL .. 'npm start' ] ]",
+        "dev":      "stmux -- [ [ 'npm run build:ui' .. 'npm run build:sv' ] : [ 'npm start' .. $SHELL ] ]",
         "build:ui": "cd ui && npm build:watch",
         "build:sv": "cd sv && npm build:watch",
         "start":    "cd sv && npm start"
