@@ -132,7 +132,7 @@ const provision = {
             env:           process.env,
             cwd:           process.cwd(),
             ignoreKeys:    [],
-            controlKey:    "C-w",
+            controlKey:    "none",
             left:          x,
             top:           y,
             width:         w,
@@ -298,6 +298,9 @@ screen.on("keypress", (ch, key) => {
                 focused = 0
             wins[focused].focus()
             screen.render()
+        }
+        else if (key.full === "v") {
+            wins[focused].scroll(0)
         }
         else if (key.full === "k") {
             die()
