@@ -111,7 +111,7 @@ const die = () => {
 }
 
 /*  provision Blessed screen layout with Blessed XTerm widgets  */
-let wins = []
+let terms = []
 let focused = -1
 let terminated = 0
 const provision = {
@@ -126,7 +126,7 @@ const provision = {
         title = `( {bold}${title}{/bold} )`
 
         /*  create XTerm widget  */
-        const win = new BlessedXTerm({
+        const term = new BlessedXTerm({
             shell:         null,
             args:          [],
             env:           process.env,
@@ -155,50 +155,50 @@ const provision = {
         if (node.childs().find((node) => node.get("name") === "focus" && node.get("value") === true)) {
             if (focused >= 0)
                 throw new Error("only a single command can be focused")
-            focused = wins.length
+            focused = terms.length
         }
 
         /*  handle focus/blur events  */
-        win.on("focus", () => {
+        term.on("focus", () => {
             let label
-            if (win.scrolling)
+            if (term.scrolling)
                 label = `{red-fg}${title}{/red-fg}`
             else
                 label = `{green-fg}${title}{/green-fg}`
-            win.setLabel(label)
+            term.setLabel(label)
             screen.render()
         })
-        win.on("blur", () => {
-            win.setLabel(title)
+        term.on("blur", () => {
+            term.setLabel(title)
             screen.render()
         })
 
         /*  handle scrolling events  */
-        win.on("scrolling-start", () => {
-            win.setLabel(`{red-fg}${title}{/red-fg}`)
+        term.on("scrolling-start", () => {
+            term.setLabel(`{red-fg}${title}{/red-fg}`)
             screen.render()
         })
-        win.on("scrolling-end", () => {
-            win.setLabel(`{green-fg}${title}{/green-fg}`)
+        term.on("scrolling-end", () => {
+            term.setLabel(`{green-fg}${title}{/green-fg}`)
             screen.render()
         })
 
         /*  spawn command  */
         let shell = process.env.SHELL || "sh"
         let args  = [ "-c", node.get("cmd") ]
-        win.spawn(shell, args)
+        term.spawn(shell, args)
 
         /*  handle command termination (and optional restarting)  */
-        win.on("exit", (code) => {
+        term.on("exit", (code) => {
             if (code === 0)
-                win.write(
+                term.write(
                     "\r\n" +
                     chalk.green.inverse(" ..::") +
                     chalk.green.bold.inverse(" PROGRAM TERMINATED ") +
                     chalk.green.inverse("::.. ") +
                     "\r\n\r\n")
             else
-                win.write(
+                term.write(
                     "\r\n" +
                     chalk.red.inverse(" ..::") +
                     chalk.red.bold.inverse(` PROGRAM TERMINATED (code: ${code}) `) +
@@ -211,22 +211,21 @@ const provision = {
                 let delayNode = node.childs().find((node) =>
                     node.get("name") === "delay" && typeof node.get("value") === "number")
                 if (delayNode)
-                    setTimeout(() => win.spawn(shell, args), delayNode.get("value"))
+                    setTimeout(() => term.spawn(shell, args), delayNode.get("value"))
                 else
-                    win.spawn(shell, args)
+                    term.spawn(shell, args)
             }
             else if (!argv.wait) {
                 /*  handle automatic program termination  */
                 terminated++
-                if (terminated >= wins.length)
+                if (terminated >= terms.length)
                     die()
             }
         })
 
         /*  place XTerm widget on screen  */
-        screen.append(win)
-        win.node = node
-        wins.push(win)
+        screen.append(term)
+        terms.push(term)
     },
     split (x, y, w, h, node) {
         if (node.type() !== "split")
@@ -268,10 +267,10 @@ const provision = {
 }
 provision.any(0, 0, screen.width, screen.height, result.ast)
 
-/*  manage initial window focus  */
+/*  manage initial terminal focus  */
 if (focused === -1)
     focused = 0
-wins[focused].focus()
+terms[focused].focus()
 
 /*  handle keys  */
 let prefixMode = 0
@@ -279,7 +278,7 @@ screen.on("keypress", (ch, key) => {
     if ((prefixMode === 0 || prefixMode === 2) && key.full === `C-${argv.activator}`) {
         /*  enter prefix mode  */
         prefixMode = 1
-        wins[focused].enableInput(false)
+        terms[focused].enableInput(false)
     }
     else if (prefixMode === 1) {
         /*  handle prefix mode  */
@@ -287,25 +286,25 @@ screen.on("keypress", (ch, key) => {
         if (key.full === argv.activator) {
             /*  handle special prefix activator character  */
             let ch = String.fromCharCode(1 + argv.activator.charCodeAt(0) - "a".charCodeAt(0))
-            wins[focused].injectInput(ch)
+            terms[focused].injectInput(ch)
         }
         else if (key.full === "left" || key.full === "right" || key.full === "space") {
             /*  handle terminal focus change  */
-            wins[focused].resetScroll()
+            terms[focused].resetScroll()
             if (key.full === "left")
                 focused--
             else if (key.full === "right" || key.full === "space")
                 focused++
             if (focused < 0)
-                focused = wins.length - 1
-            if (focused > wins.length - 1)
+                focused = terms.length - 1
+            if (focused > terms.length - 1)
                 focused = 0
-            wins[focused].focus()
+            terms[focused].focus()
             screen.render()
         }
         else if (key.full === "v") {
             /*  handle scrolling/visual mode  */
-            wins[focused].scroll(0)
+            terms[focused].scroll(0)
         }
         else if (key.full === "k") {
             /*  kill the program  */
@@ -314,7 +313,7 @@ screen.on("keypress", (ch, key) => {
     }
     else if (prefixMode === 2) {
         /*  leave prefix mode  */
-        wins[focused].enableInput(true)
+        terms[focused].enableInput(true)
         prefixMode = 0
     }
 })
