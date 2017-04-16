@@ -40,7 +40,10 @@ A sample `package.json` entry would be:
         "stmux": "*"
     },
     "scripts": {
-        "dev": "stmux -- [ [ 'cd ui && npm build:watch' .. 'cd sv && npm build:watch' ] : [ 'bash' .. 'cd sv && npm start' ] ]"
+        "dev":      "stmux -- [ [ 'npm run build:ui' .. 'npm run build:sv' ] : [ 'bash' .. 'npm start' ] ]",
+        "build:ui": "cd ui && npm build:watch",
+        "build:sv": "cd sv && npm build:watch",
+        "start":    "cd sv && npm start"
     }
 }
 ```
