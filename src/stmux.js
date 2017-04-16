@@ -73,8 +73,36 @@ if (argv._.length > 0) {
         return arg
     }).join(" ")
 }
-else
-    spec = fs.readFileSync(argv.file, "utf8")
+else {
+    if (argv.file === "-") {
+        spec = ""
+        process.stdin.setEncoding("utf-8")
+        let BUFSIZE = 256
+        let buf = Buffer.alloc(BUFSIZE)
+        while (true) {
+            let bytesRead = 0
+            try {
+                bytesRead = fs.readSync(process.stdin.fd, buf, 0, BUFSIZE)
+            }
+            catch (ex) {
+                if (ex.code === "EAGAIN")
+                    continue
+                else if (ex.code === "EOF")
+                    break
+                else
+                    throw ex
+            }
+            if (bytesRead === 0)
+                break
+            spec += buf.toString(null, 0, bytesRead)
+        }
+    }
+    else {
+        if (!fs.existsSync(argv.file))
+            throw new Error(`cannot find specification file "${argv.file}"`)
+        spec = fs.readFileSync(argv.file, "utf8")
+    }
+}
 
 /*  parse specification into Abstract Syntax Tree (AST)  */
 const asty = new ASTY()
