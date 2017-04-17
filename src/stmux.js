@@ -141,41 +141,56 @@ let terms = []
 let focused = -1
 let terminated = 0
 const provision = {
-    command (x, y, w, h, node) {
+    command (x, y, w, h, node, initially) {
         if (node.type() !== "command")
             throw new Error("invalid AST node (expected \"command\")")
+
+        /*  determine XTerm widget  */
+        let term
+        if (initially) {
+            /*  create XTerm widget  */
+            term = new BlessedXTerm({
+                left:          x,
+                top:           y,
+                width:         w,
+                height:        h,
+                shell:         null,
+                args:          [],
+                env:           process.env,
+                cwd:           process.cwd(),
+                ignoreKeys:    [],
+                controlKey:    "none",
+                fg:            "normal",
+                tags:          true,
+                border:        "line",
+                scrollback:    1000,
+                style: {
+                    fg:        "default",
+                    bg:        "default",
+                    border:    { fg: "default" },
+                    focus:     { border: { fg: "green" } },
+                    scrolling: { border: { fg: "red" } }
+                }
+            })
+            node.term = term
+        }
+        else {
+            /*  reuse XTerm widget  */
+            term = node.term
+
+            /*  reconfigure size and position  */
+            term.left   = x
+            term.top    = y
+            term.width  = w
+            term.height = h
+        }
 
         /*  determine title of terminal  */
         let n = node.childs().find((node) =>
             node.get("name") === "title" && typeof node.get("value") === "string")
         let title = n ? n.get("value") : node.get("cmd")
         title = `( {bold}${title}{/bold} )`
-
-        /*  create XTerm widget  */
-        const term = new BlessedXTerm({
-            shell:         null,
-            args:          [],
-            env:           process.env,
-            cwd:           process.cwd(),
-            ignoreKeys:    [],
-            controlKey:    "none",
-            left:          x,
-            top:           y,
-            width:         w,
-            height:        h,
-            label:         title,
-            fg:            "normal",
-            tags:          true,
-            border:        "line",
-            scrollback:    1000,
-            style: {
-                fg:        "default",
-                bg:        "default",
-                border:    { fg: "default" },
-                focus:     { border: { fg: "green" } },
-                scrolling: { border: { fg: "red" } }
-            }
-        })
+        term.setLabel(title)
 
         /*  determine initial focus  */
         if (node.childs().find((node) => node.get("name") === "focus" && node.get("value") === true)) {
@@ -185,75 +200,84 @@ const provision = {
         }
 
         /*  handle focus/blur events  */
-        term.on("focus", () => {
-            let label
-            if (term.scrolling)
-                label = `{red-fg}${title}{/red-fg}`
-            else
-                label = `{green-fg}${title}{/green-fg}`
-            term.setLabel(label)
-            screen.render()
-        })
-        term.on("blur", () => {
-            term.setLabel(title)
-            screen.render()
-        })
+        if (initially) {
+            term.on("focus", () => {
+                let label
+                if (term.scrolling)
+                    label = `{red-fg}${title}{/red-fg}`
+                else
+                    label = `{green-fg}${title}{/green-fg}`
+                term.setLabel(label)
+                screen.render()
+            })
+            term.on("blur", () => {
+                term.setLabel(title)
+                screen.render()
+            })
+        }
 
         /*  handle scrolling events  */
-        term.on("scrolling-start", () => {
-            term.setLabel(`{red-fg}${title}{/red-fg}`)
-            screen.render()
-        })
-        term.on("scrolling-end", () => {
-            term.setLabel(`{green-fg}${title}{/green-fg}`)
-            screen.render()
-        })
+        if (initially) {
+            term.on("scrolling-start", () => {
+                term.setLabel(`{red-fg}${title}{/red-fg}`)
+                screen.render()
+            })
+            term.on("scrolling-end", () => {
+                term.setLabel(`{green-fg}${title}{/green-fg}`)
+                screen.render()
+            })
+        }
 
         /*  spawn command  */
         let shell = process.env.SHELL || "sh"
         let args  = [ "-c", node.get("cmd") ]
-        term.spawn(shell, args)
+        if (initially)
+            term.spawn(shell, args)
 
         /*  handle command termination (and optional restarting)  */
-        term.on("exit", (code) => {
-            if (code === 0)
-                term.write(
-                    "\r\n" +
-                    chalk.green.inverse(" ..::") +
-                    chalk.green.bold.inverse(" PROGRAM TERMINATED ") +
-                    chalk.green.inverse("::.. ") +
-                    "\r\n\r\n")
-            else
-                term.write(
-                    "\r\n" +
-                    chalk.red.inverse(" ..::") +
-                    chalk.red.bold.inverse(` PROGRAM TERMINATED (code: ${code}) `) +
-                    chalk.red.inverse("::.. ") +
-                    "\r\n\r\n")
-
-            /*  handle termination and restarting  */
-            if (node.childs().find((node) => node.get("name") === "restart" && node.get("value") === true)) {
-                /*  restart command  */
-                let delayNode = node.childs().find((node) =>
-                    node.get("name") === "delay" && typeof node.get("value") === "number")
-                if (delayNode)
-                    setTimeout(() => term.spawn(shell, args), delayNode.get("value"))
+        if (initially) {
+            term.on("exit", (code) => {
+                if (code === 0)
+                    term.write(
+                        "\r\n" +
+                        chalk.green.inverse(" ..::") +
+                        chalk.green.bold.inverse(" PROGRAM TERMINATED ") +
+                        chalk.green.inverse("::.. ") +
+                        "\r\n\r\n")
                 else
-                    term.spawn(shell, args)
-            }
-            else if (!argv.wait) {
-                /*  handle automatic program termination  */
-                terminated++
-                if (terminated >= terms.length)
-                    die()
-            }
-        })
+                    term.write(
+                        "\r\n" +
+                        chalk.red.inverse(" ..::") +
+                        chalk.red.bold.inverse(` PROGRAM TERMINATED (code: ${code}) `) +
+                        chalk.red.inverse("::.. ") +
+                        "\r\n\r\n")
+
+                /*  handle termination and restarting  */
+                if (node.childs().find((node) => node.get("name") === "restart" && node.get("value") === true)) {
+                    /*  restart command  */
+                    let delayNode = node.childs().find((node) =>
+                        node.get("name") === "delay" && typeof node.get("value") === "number")
+                    if (delayNode)
+                        setTimeout(() => term.spawn(shell, args), delayNode.get("value"))
+                    else
+                        term.spawn(shell, args)
+                }
+                else if (!argv.wait) {
+                    /*  handle automatic program termination  */
+                    terminated++
+                    if (terminated >= terms.length)
+                        die()
+                }
+            })
+        }
 
         /*  place XTerm widget on screen  */
-        screen.append(term)
-        terms.push(term)
+        if (initially) {
+            screen.append(term)
+            terms.push(term)
+        }
     },
-    split (x, y, w, h, node) {
+    split (x, y, w, h, node, initially) {
         if (node.type() !== "split")
             throw new Error("invalid AST node (expected \"split\")")
 
@@ -274,29 +298,35 @@ const provision = {
         if (node.get("horizontal") === true) {
             let SL = divide(x, w, childs.length)
             for (let i = 0; i < childs.length; i++)
-                provision.any(SL[i].s, y, SL[i].l, h, childs[i])
+                provision.any(SL[i].s, y, SL[i].l, h, childs[i], initially)
         }
         else if (node.get("vertical") === true) {
             let SL = divide(y, h, childs.length)
             for (let i = 0; i < childs.length; i++)
-                provision.any(x, SL[i].s, w, SL[i].l, childs[i])
+                provision.any(x, SL[i].s, w, SL[i].l, childs[i], initially)
         }
     },
-    any (x, y, w, h, node) {
+    any (x, y, w, h, node, initially) {
         if (node.type() === "split")
-            return provision.split(x, y, w, h, node)
+            return provision.split(x, y, w, h, node, initially)
         else if (node.type() === "command")
-            return provision.command(x, y, w, h, node)
+            return provision.command(x, y, w, h, node, initially)
         else
             throw new Error("invalid AST node (expected \"split\" or \"command\")")
     }
 }
-provision.any(0, 0, screen.width, screen.height, result.ast)
+provision.any(0, 0, screen.width, screen.height, result.ast, true)
 
 /*  manage initial terminal focus  */
 if (focused === -1)
     focused = 0
 terms[focused].focus()
+
+/*  handle screen resizing  */
+screen.on("resize", () => {
+    provision.any(0, 0, screen.width, screen.height, result.ast, false)
+    screen.render()
+})
 
 /*  handle keys  */
 let prefixMode = 0
@@ -326,6 +356,10 @@ screen.on("keypress", (ch, key) => {
             if (focused > terms.length - 1)
                 focused = 0
             terms[focused].focus()
+            screen.render()
+        }
+        else if (key.full === "l") {
+            provision.any(0, 0, screen.width, screen.height, result.ast, false)
             screen.render()
         }
         else if (key.full === "v") {

@@ -127,6 +127,8 @@ The following keystrokes are supported under run-time:
   Switch the focus to the previous terminal in sequence.
 - `CTRL`+*activator* `RIGHT`/`SPACE`:<br/>
   Switch the focus to the next terminal in sequence.
+- `CTRL`+*activator* `l`:<br/>
+  Relayout the screen.
 - `CTRL`+*activator* `v`:<br/>
   Switch the focused terminal into visual/scrolling mode.
   Use `PAGEUP`/`PAGEDOWN` during this mode to scroll up/down.
