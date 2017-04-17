@@ -36,49 +36,50 @@ split
         }
 
 directive
-    =   split
-    /   command
-
-command
-    =   opts:options? _ cmd:string {
-            return ast("command").set({ cmd: cmd.get("value") }).add(opts)
+    =   opts:options? _ s:split { /*  RECURSION  */
+            return s.merge(opts)
+        }
+    /   opts:options? _ c:string {
+            return ast("command").set({ cmd: c.get("value") }).merge(opts)
         }
 
 options
     =   f:option l:(_ option)* {
-            return unroll(f, l, 1)
+            return unroll(f, l, 1).reduce(function (a, v) {
+                return a.merge(v)
+            }, ast("options"))
         }
 
 option "short or long option"
     =   s:("-f" / "--focus") {
-            return ast("option").set({ name: "focus", value: true })
+            return ast("option").set({ focus: true })
         }
     /   s:("-r" / "--restart") {
-            return ast("option").set({ name: "restart", value: true })
+            return ast("option").set({ restart: true })
         }
     /   "-d" _ a:number {
-            return ast("option").set({ name: "delay", value: parseInt(a.get("value")) })
+            return ast("option").set({ delay: parseInt(a.get("value")) })
         }
     /   "--delay" (ws / "=") a:number {
-            return ast("option").set({ name: "delay", value: parseInt(a.get("value")) })
+            return ast("option").set({ delay: parseInt(a.get("value")) })
         }
     /   "-t" _ a:string {
-            return ast("option").set({ name: "title", value: a.get("value") })
+            return ast("option").set({ title: a.get("value") })
         }
     /   "--title" (ws / "=") a:string {
-            return ast("option").set({ name: "title", value: a.get("value") })
+            return ast("option").set({ title: a.get("value") })
         }
     /   "-s" _ a:string {
-            return ast("option").set({ name: "size", value: a.get("value") })
+            return ast("option").set({ size: a.get("value") })
         }
     /   "--size" (ws / "=") a:string {
-            return ast("option").set({ name: "size", value: a.get("value") })
+            return ast("option").set({ size: a.get("value") })
         }
     /   "-e" _ a:string {
-            return ast("option").set({ name: "error", value: a.get("value") })
+            return ast("option").set({ error: a.get("value") })
         }
     /   "--error" (ws / "=") a:string {
-            return ast("option").set({ name: "error", value: a.get("value") })
+            return ast("option").set({ error: a.get("value") })
         }
 
 string "quoted string literal or bareword"

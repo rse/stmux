@@ -149,9 +149,7 @@ let terminated = 0
 
 /*  determine title of terminal  */
 const setTerminalTitle = (term) => {
-    let n = term.node.childs().find((node) =>
-        node.get("name") === "title" && typeof node.get("value") === "string")
-    let title = n ? n.get("value") : term.node.get("cmd")
+    let title = term.node.get("title") || term.node.get("cmd")
     title = `( {bold}${title}{/bold} )`
     if (argv.number)
         title = `[${term.stmuxNumber}]-${title}`
@@ -235,7 +233,7 @@ const provision = {
 
         /*  determine initial focus  */
         if (initially) {
-            if (node.childs().find((node) => node.get("name") === "focus" && node.get("value") === true)) {
+            if (node.get("focus") === true) {
                 if (focused >= 0)
                     throw new Error("only a single command can be focused")
                 focused = terms.length
@@ -307,12 +305,11 @@ const provision = {
                         "\r\n\r\n")
 
                 /*  handle termination and restarting  */
-                if (node.childs().find((node) => node.get("name") === "restart" && node.get("value") === true)) {
+                if (node.get("restart") === true) {
                     /*  restart command  */
-                    let delayNode = node.childs().find((node) =>
-                        node.get("name") === "delay" && typeof node.get("value") === "number")
-                    if (delayNode)
-                        setTimeout(() => term.spawn(shell, args), delayNode.get("value"))
+                    let delay = node.get("delay")
+                    if (delay > 0)
+                        setTimeout(() => term.spawn(shell, args), delay)
                     else
                         term.spawn(shell, args)
                 }
@@ -344,10 +341,8 @@ const provision = {
             let sizes = []
             for (let i = 0; i < n; i++) {
                 sizes[i] = -1
-                let sizeNode = childs[i].childs().find((node) =>
-                    node.get("name") === "size" && typeof node.get("value") === "string")
-                if (sizeNode) {
-                    let size = sizeNode.get("value")
+                let size = childs[i].get("size")
+                if (size) {
                     let m
                     if (size.match(/^\d+$/))
                         size = parseInt(size)
@@ -507,11 +502,7 @@ setInterval(() => {
             let screenshot = term.screenshot()
             screenshot = stripAnsi(screenshot)
             let regexp1 = argv.error
-            let n = term.node.childs().find((node) =>
-                node.get("name") === "error" && typeof node.get("value") === "string")
-            let regexp2
-            if (n)
-                regexp2 = n.get("value")
+            let regexp2 = term.node.get("error")
             if (   (regexp1 && screenshot.match(regexp1))
                 || (regexp2 && screenshot.match(regexp2)))
                 term.stmuxError = true
