@@ -160,7 +160,7 @@ const setTerminalTitle = (term) => {
     if (term.stmuxError)
         title = `${title}-[ERROR]`
     if (term.scrolling)
-        title = `{blue-fg}${title}{/blue-fg}`
+        title = `{yellow-fg}${title}{/yellow-fg}`
     else if (term.stmuxError)
         title = `{red-fg}${title}{/red-fg}`
     else if (focused !== -1 && focused === (term.stmuxNumber - 1))
@@ -197,7 +197,7 @@ const provision = {
                     bg:        "default",
                     border:    { fg: "default" },
                     focus:     { border: { fg: "green" } },
-                    scrolling: { border: { fg: "blue" } }
+                    scrolling: { border: { fg: "yellow" } }
                 }
             })
             node.term = term
