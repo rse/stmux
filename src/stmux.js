@@ -160,9 +160,9 @@ const setTerminalTitle = (term) => {
     if (term.stmuxError)
         title = `${title}-[ERROR]`
     if (term.scrolling)
-        title = `{red-fg}${title}{/red-fg}`
+        title = `{blue-fg}${title}{/blue-fg}`
     else if (term.stmuxError)
-        title = `{yellow-fg}${title}{/yellow-fg}`
+        title = `{red-fg}${title}{/red-fg}`
     else if (focused !== -1 && focused === (term.stmuxNumber - 1))
         title = `{green-fg}${title}{/green-fg}`
     term.stmuxTitle = title
@@ -197,7 +197,7 @@ const provision = {
                     bg:        "default",
                     border:    { fg: "default" },
                     focus:     { border: { fg: "green" } },
-                    scrolling: { border: { fg: "red" } }
+                    scrolling: { border: { fg: "blue" } }
                 }
             })
             node.term = term
@@ -520,18 +520,18 @@ setInterval(() => {
 
             /*  determine results  */
             if (term.stmuxError && term.style.border.fg === "default") {
-                term.style.border.fg = "yellow"
+                term.style.border.fg = "red"
                 dirty = true
             }
-            else if (!term.stmuxError && term.style.border.fg === "yellow") {
+            else if (!term.stmuxError && term.style.border.fg === "red") {
                 term.style.border.fg = "default"
                 dirty = true
             }
             if (term.stmuxError && term.style.focus.border.fg === "green") {
-                term.style.border.fg = "yellow"
+                term.style.border.fg = "red"
                 dirty = true
             }
-            else if (!term.stmuxError && term.style.focus.border.fg === "yellow") {
+            else if (!term.stmuxError && term.style.focus.border.fg === "red") {
                 term.style.border.fg = "green"
                 dirty = true
             }
