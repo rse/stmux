@@ -404,7 +404,6 @@ screen.on("keypress", (ch, key) => {
             zoomed = (zoomed === -1 ? focused : -1)
             provision.any(0, 0, screen.width, screen.height, result.ast, false)
             terms[focused].focus()
-            terms[focused].
             screen.render()
         }
         else if (key.full === "v") {
