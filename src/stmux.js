@@ -414,6 +414,56 @@ screen.on("resize", () => {
     screen.render()
 })
 
+/*  provide help window  */
+const helpText = "" +
+    `{bold}${my.name} ${my.version} <${my.homepage}>{/bold}\n` +
+    `{bold}${my.description}{/bold}\n` +
+    `Copyright (c) 2017 ${my.author.name} <${my.author.url}>\n` +
+    `Licensed under ${my.license} <http://spdx.org/licenses/${my.license}.html>\n` +
+    "\n" +
+    "Global Keys:\n" +
+    `CTRL+${argv.activator} {bold}{green-fg}${argv.activator}{/green-fg}{/bold} ............. ` +
+        `send CTRL+${argv.activator} to focused terminal\n` +
+    `CTRL+${argv.activator} {bold}{green-fg}LEFT{/green-fg}{/bold} .......... ` +
+        "switch focus to previous terminal in sequence\n" +
+    `CTRL+${argv.activator} {bold}{green-fg}RIGHT{/green-fg}{/bold}/{bold}{green-fg}SPACE{/green-fg}{/bold} ... ` +
+        "switch focus to next terminal in sequence\n" +
+    `CTRL+${argv.activator} {bold}{green-fg}1{/green-fg}{/bold}/{bold}{green-fg}2{/green-fg}{/bold}/.../{bold}{green-fg}9{/green-fg}{/bold} ..... ` +
+        "switch focus to terminal identified by number\n" +
+    `CTRL+${argv.activator} {bold}{green-fg}n{/green-fg}{/bold} ............. ` +
+        "toggle the display of sequence numbers\n" +
+    `CTRL+${argv.activator} {bold}{green-fg}z{/green-fg}{/bold} ............. ` +
+        "toggle the zooming of focused terminal\n" +
+    `CTRL+${argv.activator} {bold}{green-fg}v{/green-fg}{/bold} ............. ` +
+        "enable visual/scrolling mode on focused terminal\n" +
+    `CTRL+${argv.activator} {bold}{green-fg}l{/green-fg}{/bold} ............. ` +
+        "manually force redrawing of entire screen\n" +
+    `CTRL+${argv.activator} {bold}{green-fg}k{/green-fg}{/bold} ............. ` +
+        "kill stmux application (and all shell commands)\n" +
+    `CTRL+${argv.activator} {bold}{green-fg}?{/green-fg}{/bold} ............. ` +
+        "show (this) help window\n" +
+    ""
+let helpW = 78
+let helpH = 20
+const help = new blessed.Box({
+    left:          Math.floor((screen.width  - helpW) / 2),
+    top:           Math.floor((screen.height - helpH) / 2),
+    width:         helpW,
+    height:        helpH,
+    padding:       1,
+    tags:          true,
+    border:        "line",
+    content:       helpText,
+    hidden:        true,
+    style: {
+        fg:        "default",
+        bg:        "default",
+        border:    { fg: "default" }
+    }
+})
+screen.append(help)
+help.setIndex(10)
+
 /*  handle keys  */
 let prefixMode = 0
 screen.on("keypress", (ch, key) => {
@@ -476,6 +526,11 @@ screen.on("keypress", (ch, key) => {
             /*  handle scrolling/visual mode  */
             terms[focused].scroll(0)
         }
+        else if (key.full === "?") {
+            /*  handle help screen toggling  */
+            help.show()
+            screen.render()
+        }
         else if (key.full === "k") {
             /*  kill the program  */
             die()
@@ -485,6 +540,10 @@ screen.on("keypress", (ch, key) => {
         /*  leave prefix mode  */
         terms[focused].enableInput(true)
         prefixMode = 0
+        if (help.visible) {
+            help.hide()
+            screen.render()
+        }
     }
 })
 
