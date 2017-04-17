@@ -120,6 +120,11 @@ option    ::= ("-f" | "--focus")                   /* focus terminal initially *
             | ("-d" | "--delay") number            /* delay <number> seconds on restart */
             | ("-t" | "--title") string            /* set title of terminal */
             | ("-s" | "--size") size               /* request a size on terminal */
+
+size      ::= /^\d+$/                              /* fixed character size */
+            | /^\d+\.\d+$/                         /* total size factor */
+            | /^\d+\/\d+$/                         /* total size fraction */
+            | /^\d+%$/                             /* total size percentage */
 ```
 
 The following keystrokes are supported under run-time:
