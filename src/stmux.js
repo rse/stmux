@@ -301,27 +301,93 @@ const provision = {
         if (node.type() !== "split")
             throw new Error("invalid AST node (expected \"split\")")
 
-        /*  provision termonals in a particular direction  */
+        /*  provision terminals in a particular direction  */
         let childs = node.childs()
-        const divide = (s, l, n) => {
-            let SL = []
+        const divide = (s, l, childs) => {
+            /*  sanity check situation  */
+            let n = childs.length
+            if (l < (n * 3))
+                throw new Error("terminal too small")
             let k = Math.floor(l / n)
             if (k === 0)
-                throw new Error("too small screen")
+                throw new Error("terminal too small")
+
+            /*  pass 1: calculcate size of explicitly sized terminals  */
+            let sizes = []
             for (let i = 0; i < n; i++) {
-                let _s = s + (i * k)
-                let _l = (i === (n - 1) ? (l - ((n - 1) * k)) : k)
-                SL.push({ s: _s, l: _l })
+                sizes[i] = -1
+                let sizeNode = childs[i].childs().find((node) =>
+                    node.get("name") === "size" && typeof node.get("value") === "string")
+                if (sizeNode) {
+                    let size = sizeNode.get("value")
+                    let m
+                    if (size.match(/^\d+$/))
+                        size = parseInt(size)
+                    else if (size.match(/^\d+\.\d+$/))
+                        size = Math.floor(l * parseFloat(size))
+                    else if ((m = size.match(/^(\d+)\/(\d+)$/)))
+                        size = Math.floor(l * (parseInt(m[1]) / parseInt(m[2])))
+                    else if ((m = size.match(/^(\d+)%$/)))
+                        size = Math.floor(l * (parseInt(m[1]) / 100))
+                    if (size < 3)
+                        size = 3
+                    else if (size > l)
+                        size = l
+                    sizes[i] = size
+                }
+            }
+
+            /*  pass 2: calculate size of implicitly sized terminals  */
+            for (let i = 0; i < n; i++) {
+                if (sizes[i] === -1) {
+                    let size = Math.floor(l / n)
+                    if (size < 3)
+                        size = 3
+                    sizes[i] = size
+                }
+            }
+
+            /*  pass 3: optionally shrink/grow sizes to fit total available size  */
+            while (true) {
+                let requested = 0
+                for (let i = 0; i < n; i++)
+                    requested += sizes[i]
+                if (requested > l) {
+                    let shrink = requested - l
+                    for (let i = 0; i < n && shrink > 0; i++) {
+                        if (sizes[i] > 3) {
+                            sizes[i]--
+                            shrink--
+                        }
+                    }
+                    continue
+                }
+                else if (requested < l) {
+                    let grow = l - requested
+                    for (let i = 0; i < n && grow > 0; i++) {
+                        sizes[i]++
+                        grow--
+                    }
+                    continue
+                }
+                break
+            }
+
+            /*  pass 4: provide results  */
+            let SL = []
+            for (let i = 0; i < n; i++) {
+                SL.push({ s: s, l: sizes[i] })
+                s += sizes[i]
             }
             return SL
         }
         if (node.get("horizontal") === true) {
-            let SL = divide(x, w, childs.length)
+            let SL = divide(x, w, childs)
             for (let i = 0; i < childs.length; i++)
                 provision.any(SL[i].s, y, SL[i].l, h, childs[i], initially)
         }
         else if (node.get("vertical") === true) {
-            let SL = divide(y, h, childs.length)
+            let SL = divide(y, h, childs)
             for (let i = 0; i < childs.length; i++)
                 provision.any(x, SL[i].s, w, SL[i].l, childs[i], initially)
         }

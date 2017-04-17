@@ -58,6 +58,6 @@
     },
     "scripts": {
         "prepublish": "grunt default",
-        "test":       "grunt default && node -- ./bin/stmux.js -n -w -- [ [ $SHELL .. 'date; false' ] : 'date; true' ]"
+        "test":       "grunt default && node -- ./bin/stmux.js -n -w -- [ [ -s 2/3 $SHELL .. 'date; false' .. date ] : -s 1/3 'date; true' ]"
     }
 }

@@ -119,6 +119,7 @@ option    ::= ("-f" | "--focus")                   /* focus terminal initially *
             | ("-r" | "--restart")                 /* restart command automatically */
             | ("-d" | "--delay") number            /* delay <number> seconds on restart */
             | ("-t" | "--title") string            /* set title of terminal */
+            | ("-s" | "--size") size               /* request a size on terminal */
 ```
 
 The following keystrokes are supported under run-time:
