@@ -114,7 +114,7 @@ For exact details see the [real PEG grammar of stmux](src/stmux.pegjs).
 spec      ::= "[" directive (":"  directive)* "]"  /* vertical   split */
             | "[" directive (".." directive)* "]"  /* horizontal split */
 
-directive ::= spec                                 /* RECURSION */
+directive ::= option* spec                         /* RECURSION */
             | option* string                       /* shell command */
 
 option    ::= ("-f" | "--focus")                   /* focus terminal initially */
