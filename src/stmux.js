@@ -254,6 +254,14 @@ const provision = {
             })
         }
 
+        /*  handle beep events  */
+        if (initially) {
+            term.on("beep", () => {
+                /*  pass-through to program  */
+                screen.program.output.write("\x07")
+            })
+        }
+
         /*  spawn command  */
         let shell = process.env.SHELL || "sh"
         let args  = [ "-c", node.get("cmd") ]
