@@ -98,6 +98,8 @@ $ stmux [-h] [-V] [-w] [-a <activator>] [-t <title>] [-f <file>] [-- <spec>]
   The default activator character is `a`.
 - `-t <title>`, `--title <title>`<br/>
   Set title on terminal. The default title is `stmux`.
+- `-n`, `--number`<br/>
+  Show terminal number in terminal title.
 - `-f <file>`, `--file <file>`<br/>
   Read specification `<spec>` from a configuration file. The
   default is to use the specification inside the command line arguments
@@ -127,6 +129,10 @@ The following keystrokes are supported under run-time:
   Switch the focus to the previous terminal in sequence.
 - `CTRL`+*activator* `RIGHT`/`SPACE`:<br/>
   Switch the focus to the next terminal in sequence.
+- `CTRL`+*activator* `1`/`2`/.../`9`:<br/>
+  Directly switch to a particular terminal.
+- `CTRL`+*activator* `n`:<br/>
+  Toggle showing/hiding of terminal numbers.
 - `CTRL`+*activator* `l`:<br/>
   Relayout the screen.
 - `CTRL`+*activator* `v`:<br/>

@@ -49,7 +49,7 @@ let argv = yargs
     .string("t").nargs("t", 1).alias("t", "title").default("t", "stmux")
         .describe("t", "set title on terminal")
     .boolean("n").alias("n", "number").default("n", false)
-        .describe("n", "number all terminals and support focus switching by number")
+        .describe("n", "show terminal number in terminal title")
     .string("f").nargs("f", 1).alias("f", "file").default("f", "-")
         .describe("f", "read specification from configuration file")
     .strict()
