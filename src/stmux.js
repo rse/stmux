@@ -365,7 +365,7 @@ screen.on("keypress", (ch, key) => {
             terms[focused].injectInput(ch)
         }
         else if (zoomed === -1 && (key.full === "left" || key.full === "right" || key.full === "space")) {
-            /*  handle terminal focus change  */
+            /*  handle terminal focus change (step-by-step)  */
             terms[focused].resetScroll()
             if (key.full === "left")
                 focused--
@@ -379,6 +379,7 @@ screen.on("keypress", (ch, key) => {
             screen.render()
         }
         else if (zoomed === -1 && key.full.match(/^[1-9]$/)) {
+            /*  handle terminal focus change (directly)  */
             let n = parseInt(key.full)
             if (n <= terms.length) {
                 focused = n - 1
@@ -387,19 +388,23 @@ screen.on("keypress", (ch, key) => {
             }
         }
         else if (key.full === "n") {
+            /*  handle number toggling  */
             argv.number = !argv.number
             provision.any(0, 0, screen.width, screen.height, result.ast, false)
             terms[focused].focus()
             screen.render()
         }
         else if (key.full === "l") {
+            /*  handle manual screen redrawing  */
             provision.any(0, 0, screen.width, screen.height, result.ast, false)
             screen.render()
         }
         else if (key.full === "z") {
+            /*  handle zooming  */
             zoomed = (zoomed === -1 ? focused : -1)
             provision.any(0, 0, screen.width, screen.height, result.ast, false)
             terms[focused].focus()
+            terms[focused].
             screen.render()
         }
         else if (key.full === "v") {
