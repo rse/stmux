@@ -139,14 +139,18 @@ The following keystrokes are supported under run-time:
   Directly switch to a particular terminal.
 - `CTRL`+*activator* `n`:<br/>
   Toggle showing/hiding of terminal numbers.
-- `CTRL`+*activator* `l`:<br/>
-  Relayout the screen.
+- `CTRL`+*activator* `z`:<br/>
+  Toggle the zooming of focused terminal.
 - `CTRL`+*activator* `v`:<br/>
   Switch the focused terminal into visual/scrolling mode.
   Use `PAGEUP`/`PAGEDOWN` during this mode to scroll up/down.
   Any other key leaves this mode.
+- `CTRL`+*activator* `l`:<br/>
+  Relayout the screen.
 - `CTRL`+*activator* `k`:<br/>
   Kill the application and all shell commands in all terminals.
+- `CTRL`+*activator* `?`:<br/>
+  Show help window.
 
 Specification Examples
 ----------------------
