@@ -100,6 +100,8 @@ $ stmux [-h] [-V] [-w] [-a <activator>] [-t <title>] [-f <file>] [-- <spec>]
   Set title on terminal. The default title is `stmux`.
 - `-n`, `--number`<br/>
   Show terminal number in terminal title.
+- `-e <regexp>`, `--error <regexp>`<br/>
+  Observe terminal for errors (global option).
 - `-f <file>`, `--file <file>`<br/>
   Read specification `<spec>` from a configuration file. The
   default is to use the specification inside the command line arguments
@@ -120,6 +122,7 @@ option    ::= ("-f" | "--focus")                   /* focus terminal initially *
             | ("-d" | "--delay") number            /* delay <number> seconds on restart */
             | ("-t" | "--title") string            /* set title of terminal */
             | ("-s" | "--size") size               /* request a size on terminal */
+            | ("-e" | "--error") regexp            /* observe terminal for errors (local option) */
 
 size      ::= /^\d+$/                              /* fixed character size */
             | /^\d+\.\d+$/                         /* total size factor */

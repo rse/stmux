@@ -33,6 +33,7 @@ import PEGUtil         from "pegjs-util"
 import blessed         from "blessed"
 import BlessedXTerm    from "blessed-xterm"
 import chalk           from "chalk"
+import stripAnsi       from "strip-ansi"
 import my              from "../package.json"
 
 /*  parse command-line arguments  */
@@ -50,6 +51,8 @@ let argv = yargs
         .describe("t", "set title on terminal")
     .boolean("n").alias("n", "number").default("n", false)
         .describe("n", "show terminal number in terminal title")
+    .string("e").nargs("e", 1).alias("e", "error").default("e", "(?:ERROR|Error|error)")
+        .describe("e", "observe terminal for errors (global option)")
     .string("f").nargs("f", 1).alias("f", "file").default("f", "-")
         .describe("f", "read specification from configuration file")
     .strict()
@@ -143,6 +146,28 @@ let terms      = []
 let focused    = -1
 let zoomed     = -1
 let terminated = 0
+
+/*  determine title of terminal  */
+const setTerminalTitle = (term) => {
+    let n = term.node.childs().find((node) =>
+        node.get("name") === "title" && typeof node.get("value") === "string")
+    let title = n ? n.get("value") : term.node.get("cmd")
+    title = `( {bold}${title}{/bold} )`
+    if (argv.number)
+        title = `[${term.stmuxNumber}]-${title}`
+    if (zoomed !== -1 && zoomed === (term.stmuxNumber - 1))
+        title = `${title}-[ZOOMED]`
+    if (term.stmuxError)
+        title = `${title}-[ERROR]`
+    if (term.scrolling)
+        title = `{red-fg}${title}{/red-fg}`
+    else if (term.stmuxError)
+        title = `{yellow-fg}${title}{/yellow-fg}`
+    else if (focused !== -1 && focused === (term.stmuxNumber - 1))
+        title = `{green-fg}${title}{/green-fg}`
+    term.stmuxTitle = title
+    term.setLabel(term.stmuxTitle)
+}
 const provision = {
     command (x, y, w, h, node, initially) {
         if (node.type() !== "command")
@@ -176,6 +201,7 @@ const provision = {
                 }
             })
             node.term = term
+            term.node = node
 
             /*  place XTerm widget on screen  */
             screen.append(term)
@@ -204,17 +230,8 @@ const provision = {
         else
             term.setIndex(1)
 
-        /*  determine title of terminal  */
-        let n = node.childs().find((node) =>
-            node.get("name") === "title" && typeof node.get("value") === "string")
-        let title = n ? n.get("value") : node.get("cmd")
-        title = `( {bold}${title}{/bold} )`
-        if (argv.number)
-            title = `[${term.stmuxNumber}]-${title}`
-        if (zoomed !== -1 && zoomed === (term.stmuxNumber - 1))
-            title = `${title}-[ZOOMED]`
-        term.stmuxTitle = title
-        term.setLabel(term.stmuxTitle)
+        /*  set terminal title  */
+        setTerminalTitle(term)
 
         /*  determine initial focus  */
         if (initially) {
@@ -228,16 +245,11 @@ const provision = {
         /*  handle focus/blur events  */
         if (initially) {
             term.on("focus", () => {
-                let label
-                if (term.scrolling)
-                    label = `{red-fg}${term.stmuxTitle}{/red-fg}`
-                else
-                    label = `{green-fg}${term.stmuxTitle}{/green-fg}`
-                term.setLabel(label)
+                setTerminalTitle(term)
                 screen.render()
             })
             term.on("blur", () => {
-                term.setLabel(term.stmuxTitle)
+                setTerminalTitle(term)
                 screen.render()
             })
         }
@@ -245,11 +257,11 @@ const provision = {
         /*  handle scrolling events  */
         if (initially) {
             term.on("scrolling-start", () => {
-                term.setLabel(`{red-fg}${term.stmuxTitle}{/red-fg}`)
+                setTerminalTitle(term)
                 screen.render()
             })
             term.on("scrolling-end", () => {
-                term.setLabel(`{green-fg}${term.stmuxTitle}{/green-fg}`)
+                setTerminalTitle(term)
                 screen.render()
             })
         }
@@ -259,6 +271,14 @@ const provision = {
             term.on("beep", () => {
                 /*  pass-through to program  */
                 screen.program.output.write("\x07")
+            })
+        }
+
+        /*  handle error observation  */
+        if (initially) {
+            term.stmuxUpdate = false
+            term.on("update", () => {
+                term.stmuxUpdate = true
             })
         }
 
@@ -475,6 +495,59 @@ screen.on("resize", () => {
         help.hide()
     screen.render()
 })
+
+/*  handle error detection  */
+setInterval(() => {
+    let dirty = false
+    terms.forEach((term) => {
+        if (term.stmuxUpdate) {
+            term.stmuxUpdate = false
+
+            /*  take screenshot  */
+            let screenshot = term.screenshot()
+            screenshot = stripAnsi(screenshot)
+            let regexp1 = argv.error
+            let n = term.node.childs().find((node) =>
+                node.get("name") === "error" && typeof node.get("value") === "string")
+            let regexp2
+            if (n)
+                regexp2 = n.get("value")
+            if (   (regexp1 && screenshot.match(regexp1))
+                || (regexp2 && screenshot.match(regexp2)))
+                term.stmuxError = true
+            else
+                term.stmuxError = false
+
+            /*  determine results  */
+            if (term.stmuxError && term.style.border.fg === "default") {
+                term.style.border.fg = "yellow"
+                dirty = true
+            }
+            else if (!term.stmuxError && term.style.border.fg === "yellow") {
+                term.style.border.fg = "default"
+                dirty = true
+            }
+            if (term.stmuxError && term.style.focus.border.fg === "green") {
+                term.style.border.fg = "yellow"
+                dirty = true
+            }
+            else if (!term.stmuxError && term.style.focus.border.fg === "yellow") {
+                term.style.border.fg = "green"
+                dirty = true
+            }
+            if (term.stmuxError && !term.stmuxTitle.match(/-\[ERROR\]/)) {
+                setTerminalTitle(term)
+                dirty = true
+            }
+            else if (!term.stmuxError && term.stmuxTitle.match(/-\[ERROR\]/)) {
+                setTerminalTitle(term)
+                dirty = true
+            }
+        }
+    })
+    if (dirty)
+        screen.render()
+}, 500)
 
 /*  handle keys  */
 let prefixMode = 0

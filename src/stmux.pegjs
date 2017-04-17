@@ -74,6 +74,12 @@ option "short or long option"
     /   "--size" (ws / "=") a:string {
             return ast("option").set({ name: "size", value: a.get("value") })
         }
+    /   "-e" _ a:string {
+            return ast("option").set({ name: "error", value: a.get("value") })
+        }
+    /   "--error" (ws / "=") a:string {
+            return ast("option").set({ name: "error", value: a.get("value") })
+        }
 
 string "quoted string literal or bareword"
     =   "\"" s:((stringEscapedChar / [^"])*) "\"" {
