@@ -139,8 +139,9 @@ const die = () => {
 }
 
 /*  provision Blessed screen layout with Blessed XTerm widgets  */
-let terms = []
-let focused = -1
+let terms      = []
+let focused    = -1
+let zoomed     = -1
 let terminated = 0
 const provision = {
     command (x, y, w, h, node, initially) {
@@ -192,6 +193,17 @@ const provision = {
             term.height = h
         }
 
+        /*  determine zoom  */
+        if (zoomed !== -1 && zoomed === (term.stmuxNumber - 1)) {
+            term.left   = 0
+            term.top    = 0
+            term.width  = screen.width
+            term.height = screen.height
+            term.setIndex(2)
+        }
+        else
+            term.setIndex(1)
+
         /*  determine title of terminal  */
         let n = node.childs().find((node) =>
             node.get("name") === "title" && typeof node.get("value") === "string")
@@ -199,6 +211,8 @@ const provision = {
         title = `( {bold}${title}{/bold} )`
         if (argv.number)
             title = `[${term.stmuxNumber}]-${title}`
+        if (zoomed !== -1 && zoomed === (term.stmuxNumber - 1))
+            title = `${title}-[ZOOMED]`
         term.stmuxTitle = title
         term.setLabel(term.stmuxTitle)
 
@@ -350,7 +364,7 @@ screen.on("keypress", (ch, key) => {
             let ch = String.fromCharCode(1 + argv.activator.charCodeAt(0) - "a".charCodeAt(0))
             terms[focused].injectInput(ch)
         }
-        else if (key.full === "left" || key.full === "right" || key.full === "space") {
+        else if (zoomed === -1 && (key.full === "left" || key.full === "right" || key.full === "space")) {
             /*  handle terminal focus change  */
             terms[focused].resetScroll()
             if (key.full === "left")
@@ -364,7 +378,7 @@ screen.on("keypress", (ch, key) => {
             terms[focused].focus()
             screen.render()
         }
-        else if (key.full.match(/^[1-9]$/)) {
+        else if (zoomed === -1 && key.full.match(/^[1-9]$/)) {
             let n = parseInt(key.full)
             if (n <= terms.length) {
                 focused = n - 1
@@ -380,6 +394,12 @@ screen.on("keypress", (ch, key) => {
         }
         else if (key.full === "l") {
             provision.any(0, 0, screen.width, screen.height, result.ast, false)
+            screen.render()
+        }
+        else if (key.full === "z") {
+            zoomed = (zoomed === -1 ? focused : -1)
+            provision.any(0, 0, screen.width, screen.height, result.ast, false)
+            terms[focused].focus()
             screen.render()
         }
         else if (key.full === "v") {
