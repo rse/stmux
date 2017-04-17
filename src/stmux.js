@@ -48,6 +48,8 @@ let argv = yargs
         .describe("a", "use CTRL+<activator> as the prefix to special commands")
     .string("t").nargs("t", 1).alias("t", "title").default("t", "stmux")
         .describe("t", "set title on terminal")
+    .boolean("n").alias("n", "number").default("n", false)
+        .describe("n", "number all terminals and support focus switching by number")
     .string("f").nargs("f", 1).alias("f", "file").default("f", "-")
         .describe("f", "read specification from configuration file")
     .strict()
@@ -173,6 +175,11 @@ const provision = {
                 }
             })
             node.term = term
+
+            /*  place XTerm widget on screen  */
+            screen.append(term)
+            term.stmuxNumber = terms.length + 1
+            terms.push(term)
         }
         else {
             /*  reuse XTerm widget  */
@@ -190,13 +197,18 @@ const provision = {
             node.get("name") === "title" && typeof node.get("value") === "string")
         let title = n ? n.get("value") : node.get("cmd")
         title = `( {bold}${title}{/bold} )`
-        term.setLabel(title)
+        if (argv.number)
+            title = `[${term.stmuxNumber}]-${title}`
+        term.stmuxTitle = title
+        term.setLabel(term.stmuxTitle)
 
         /*  determine initial focus  */
-        if (node.childs().find((node) => node.get("name") === "focus" && node.get("value") === true)) {
-            if (focused >= 0)
-                throw new Error("only a single command can be focused")
-            focused = terms.length
+        if (initially) {
+            if (node.childs().find((node) => node.get("name") === "focus" && node.get("value") === true)) {
+                if (focused >= 0)
+                    throw new Error("only a single command can be focused")
+                focused = terms.length
+            }
         }
 
         /*  handle focus/blur events  */
@@ -204,14 +216,14 @@ const provision = {
             term.on("focus", () => {
                 let label
                 if (term.scrolling)
-                    label = `{red-fg}${title}{/red-fg}`
+                    label = `{red-fg}${term.stmuxTitle}{/red-fg}`
                 else
-                    label = `{green-fg}${title}{/green-fg}`
+                    label = `{green-fg}${term.stmuxTitle}{/green-fg}`
                 term.setLabel(label)
                 screen.render()
             })
             term.on("blur", () => {
-                term.setLabel(title)
+                term.setLabel(term.stmuxTitle)
                 screen.render()
             })
         }
@@ -219,11 +231,11 @@ const provision = {
         /*  handle scrolling events  */
         if (initially) {
             term.on("scrolling-start", () => {
-                term.setLabel(`{red-fg}${title}{/red-fg}`)
+                term.setLabel(`{red-fg}${term.stmuxTitle}{/red-fg}`)
                 screen.render()
             })
             term.on("scrolling-end", () => {
-                term.setLabel(`{green-fg}${title}{/green-fg}`)
+                term.setLabel(`{green-fg}${term.stmuxTitle}{/green-fg}`)
                 screen.render()
             })
         }
@@ -269,12 +281,6 @@ const provision = {
                         die()
                 }
             })
-        }
-
-        /*  place XTerm widget on screen  */
-        if (initially) {
-            screen.append(term)
-            terms.push(term)
         }
     },
     split (x, y, w, h, node, initially) {
@@ -355,6 +361,20 @@ screen.on("keypress", (ch, key) => {
                 focused = terms.length - 1
             if (focused > terms.length - 1)
                 focused = 0
+            terms[focused].focus()
+            screen.render()
+        }
+        else if (key.full.match(/^[1-9]$/)) {
+            let n = parseInt(key.full)
+            if (n <= terms.length) {
+                focused = n - 1
+                terms[focused].focus()
+                screen.render()
+            }
+        }
+        else if (key.full === "n") {
+            argv.number = !argv.number
+            provision.any(0, 0, screen.width, screen.height, result.ast, false)
             terms[focused].focus()
             screen.render()
         }
