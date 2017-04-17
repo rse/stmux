@@ -408,12 +408,6 @@ if (focused === -1)
     focused = 0
 terms[focused].focus()
 
-/*  handle screen resizing  */
-screen.on("resize", () => {
-    provision.any(0, 0, screen.width, screen.height, result.ast, false)
-    screen.render()
-})
-
 /*  provide help window  */
 const helpText = "" +
     `{bold}${my.name} ${my.version} <${my.homepage}>{/bold}\n` +
@@ -462,7 +456,17 @@ const help = new blessed.Box({
     }
 })
 screen.append(help)
-help.setIndex(10)
+help.setIndex(100)
+
+/*  handle screen resizing  */
+screen.on("resize", () => {
+    provision.any(0, 0, screen.width, screen.height, result.ast, false)
+    help.left = Math.floor((screen.width  - helpW) / 2)
+    help.top  = Math.floor((screen.height - helpH) / 2)
+    if (help.visible)
+        help.hide()
+    screen.render()
+})
 
 /*  handle keys  */
 let prefixMode = 0
