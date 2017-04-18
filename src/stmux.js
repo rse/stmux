@@ -24,6 +24,7 @@
 */
 
 /*  external requirements  */
+import os              from "os"
 import path            from "path"
 import fs              from "fs"
 import yargs           from "yargs"
@@ -281,8 +282,16 @@ const provision = {
         }
 
         /*  spawn command  */
-        let shell = process.env.SHELL || "sh"
+        let shell = process.env.SHELL
         let args  = [ "-c", node.get("cmd") ]
+        if (!shell) {
+            if (os.platform() === "win32") {
+                shell = "cmd.exe"
+                args  = [ "/s", "/c", node.get("cmd") ]
+            }
+            else
+                shell = "sh"
+        }
         if (initially)
             term.spawn(shell, args)
 
