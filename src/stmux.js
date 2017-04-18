@@ -282,15 +282,14 @@ const provision = {
         }
 
         /*  spawn command  */
-        let shell = process.env.SHELL
-        let args  = [ "-c", node.get("cmd") ]
-        if (!shell) {
-            if (os.platform() === "win32") {
-                shell = "cmd.exe"
-                args  = [ "/s", "/c", node.get("cmd") ]
-            }
-            else
-                shell = "sh"
+        let shell, args
+        if (os.platform() === "win32") {
+            shell = "cmd.exe"
+            args  = [ "/s", "/c", node.get("cmd") ]
+        }
+        else {
+            shell = "sh"
+            args  = [ "-c", node.get("cmd") ]
         }
         if (initially)
             term.spawn(shell, args)
