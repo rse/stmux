@@ -128,6 +128,10 @@ if (result.error !== null) {
     process.exit(1)
 }
 
+/*  workaround for trouble under Windows + ConEmu + TERM=cygwin  */
+if (os.platform() === "win32" && process.env.TERM === "cygwin")
+    process.env.NCURSES_NO_UTF8_ACS = 1
+
 /*  establish Blessed screen  */
 const screen = blessed.screen({
     title:       argv.title,
