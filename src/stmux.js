@@ -289,7 +289,7 @@ const provision = {
         let shell, args
         if (os.platform() === "win32") {
             shell = "cmd.exe"
-            args  = [ "/s", "/c", node.get("cmd") ]
+            args  = [ "/d", "/s", "/c", node.get("cmd") ]
         }
         else {
             shell = "sh"
