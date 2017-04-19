@@ -26,7 +26,7 @@
 /*  external requirements  */
 import os              from "os"
 import path            from "path"
-import child_process   from "child_process"
+import childProcess    from "child_process"
 import fs              from "fs"
 import which           from "which"
 import yargs           from "yargs"
@@ -151,7 +151,7 @@ if (os.platform() === "win32" && process.env.TERM === "xterm" && !process.stdin.
         process.exit(1)
     }
     let args = process.argv.slice(0)
-    let child = child_process.spawnSync(winpty, args, {
+    let child = childProcess.spawnSync(winpty, args, {
         stdio: [ "inherit", "inherit", "inherit" ]
     })
     process.exit(child.status)
