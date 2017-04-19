@@ -301,7 +301,7 @@ const provision = {
             if (node.get("focus") === true) {
                 if (focused >= 0)
                     throw new Error("only a single command can be focused")
-                focused = terms.length
+                focused = terms.length - 1
             }
         }
 
