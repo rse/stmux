@@ -98,6 +98,8 @@ $ stmux [-h] [-V] [-w] [-a <activator>] [-t <title>] [-f <file>] [-- <spec>]
   The default activator character is `a`.
 - `-t <title>`, `--title <title>`<br/>
   Set title on terminal. The default title is `stmux`.
+- `-c <type>`, `--cursor <type>`<br/>
+  Set type of cursor  to `block` (default), `underline` or `line`.
 - `-n`, `--number`<br/>
   Show terminal number in terminal title.
 - `-e <regexp>`, `--error <regexp>`<br/>

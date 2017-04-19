@@ -52,6 +52,8 @@ let argv = yargs
         .describe("a", "use CTRL+<activator> as the prefix to special commands")
     .string("t").nargs("t", 1).alias("t", "title").default("t", "stmux")
         .describe("t", "set title on terminal")
+    .string("c").nargs("c", 1).alias("c", "cursor").default("c", "block")
+        .describe("c", "set type of cursor (block, underline or line)")
     .boolean("n").alias("n", "number").default("n", false)
         .describe("n", "show terminal number in terminal title")
     .string("e").nargs("e", 1).alias("e", "error").default("e", "(?:ERROR|Error|error)")
@@ -219,6 +221,8 @@ const provision = {
                 args:          [],
                 env:           process.env,
                 cwd:           process.cwd(),
+                cursorType:    argv.cursor,
+                cursorBlink:   true,
                 ignoreKeys:    [],
                 controlKey:    "none",
                 fg:            "normal",
