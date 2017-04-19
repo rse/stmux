@@ -132,6 +132,12 @@ if (result.error !== null) {
     process.exit(1)
 }
 
+/*  Older/ancient Windows console API does not support inverse
+    or underline for displaying the emulated cursor, so we have
+    to force the use of the special character based "line" cursor.  */
+if (os.platform() === "win32" && !os.release().match(/^10\./))
+    argv.cursor = "line"
+
 /*  workaround for trouble under Windows + ConEmu + TERM=cygwin
     (where Blessed needs a hint to work correctly under the "cygwin"
     terminal type and for even better rendering quality we switch to the
