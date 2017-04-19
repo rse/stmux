@@ -172,6 +172,21 @@ const screen = blessed.screen({
     warnings:    false
 })
 
+/*  determine screen size  */
+let screenWidth  = screen.width
+let screenHeight = screen.height
+if (screenWidth < 3 || screenHeight < 3) {
+    process.stderr.write(`${my.name}: ERROR: attached terminal is too small\n`)
+    process.exit(1)
+}
+if (os.platform() === "win32" && !os.release().match(/^10\./)) {
+    /*  nasty hack for older Windows versions where all types of consoles
+        (including ConEmu) scroll by an extra line (which breaks the screen
+        rendering) once the right bottom character is rendered. As a workaround
+        ensure we are not hitting the right margin on the last line. */
+    screenWidth--
+}
+
 /*  gracefully terminate programm  */
 const die = () => {
     screen.destroy()
@@ -260,8 +275,8 @@ const provision = {
         if (zoomed !== -1 && zoomed === (term.stmuxNumber - 1)) {
             term.left   = 0
             term.top    = 0
-            term.width  = screen.width
-            term.height = screen.height
+            term.width  = screenWidth
+            term.height = screenHeight
             term.setIndex(2)
         }
         else
@@ -470,7 +485,7 @@ const provision = {
             throw new Error("invalid AST node (expected \"split\" or \"command\")")
     }
 }
-provision.any(0, 0, screen.width, screen.height, result.ast, true)
+provision.any(0, 0, screenWidth, screenHeight, result.ast, true)
 
 /*  manage initial terminal focus  */
 if (focused === -1)
@@ -509,8 +524,8 @@ const helpText = "" +
 let helpW = 78
 let helpH = 20
 const help = new blessed.Box({
-    left:          Math.floor((screen.width  - helpW) / 2),
-    top:           Math.floor((screen.height - helpH) / 2),
+    left:          Math.floor((screenWidth  - helpW) / 2),
+    top:           Math.floor((screenHeight - helpH) / 2),
     width:         helpW,
     height:        helpH,
     padding:       1,
@@ -529,9 +544,9 @@ help.setIndex(100)
 
 /*  handle screen resizing  */
 screen.on("resize", () => {
-    provision.any(0, 0, screen.width, screen.height, result.ast, false)
-    help.left = Math.floor((screen.width  - helpW) / 2)
-    help.top  = Math.floor((screen.height - helpH) / 2)
+    provision.any(0, 0, screenWidth, screenHeight, result.ast, false)
+    help.left = Math.floor((screenWidth  - helpW) / 2)
+    help.top  = Math.floor((screenHeight - helpH) / 2)
     if (help.visible)
         help.hide()
     screen.render()
@@ -628,19 +643,19 @@ screen.on("keypress", (ch, key) => {
         else if (key.full === "n") {
             /*  handle number toggling  */
             argv.number = !argv.number
-            provision.any(0, 0, screen.width, screen.height, result.ast, false)
+            provision.any(0, 0, screenWidth, screenHeight, result.ast, false)
             terms[focused].focus()
             screen.render()
         }
         else if (key.full === "l") {
             /*  handle manual screen redrawing  */
-            provision.any(0, 0, screen.width, screen.height, result.ast, false)
+            provision.any(0, 0, screenWidth, screenHeight, result.ast, false)
             screen.render()
         }
         else if (key.full === "z") {
             /*  handle zooming  */
             zoomed = (zoomed === -1 ? focused : -1)
-            provision.any(0, 0, screen.width, screen.height, result.ast, false)
+            provision.any(0, 0, screenWidth, screenHeight, result.ast, false)
             terms[focused].focus()
             screen.render()
         }
