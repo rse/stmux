@@ -345,17 +345,16 @@ const provision = {
         }
 
         /*  spawn command  */
-        let shell, args
         if (os.platform() === "win32") {
-            shell = "cmd.exe"
-            args  = [ "/d", "/s", "/c", node.get("cmd") ]
+            term.stmuxShell = "cmd.exe"
+            term.stmuxArgs  = [ "/d", "/s", "/c", node.get("cmd") ]
         }
         else {
-            shell = "sh"
-            args  = [ "-c", node.get("cmd") ]
+            term.stmuxShell = "sh"
+            term.stmuxArgs  = [ "-c", node.get("cmd") ]
         }
         if (initially)
-            term.spawn(shell, args)
+            term.spawn(term.stmuxShell, term.stmuxArgs)
 
         /*  handle command termination (and optional restarting)  */
         if (initially) {
@@ -380,9 +379,9 @@ const provision = {
                     /*  restart command  */
                     let delay = node.get("delay")
                     if (delay > 0)
-                        setTimeout(() => term.spawn(shell, args), delay)
+                        setTimeout(() => term.spawn(terms.stmuxShell, terms.stmuxArgs), delay)
                     else
-                        term.spawn(shell, args)
+                        term.spawn(terms.stmuxShell, terms.stmuxArgs)
                 }
                 else if (!argv.wait) {
                     /*  handle automatic program termination  */
@@ -526,13 +525,15 @@ const helpText = "" +
         "enable visual/scrolling mode on focused terminal\n" +
     `CTRL+${argv.activator} {bold}{green-fg}l{/green-fg}{/bold} ............. ` +
         "manually force redrawing of entire screen\n" +
+    `CTRL+${argv.activator} {bold}{green-fg}r{/green-fg}{/bold} ............. ` +
+        "restart shell command in focused terminal\n" +
     `CTRL+${argv.activator} {bold}{green-fg}k{/green-fg}{/bold} ............. ` +
         "kill stmux application (and all shell commands)\n" +
     `CTRL+${argv.activator} {bold}{green-fg}?{/green-fg}{/bold} ............. ` +
         "show (this) help window\n" +
     ""
 let helpW = 78
-let helpH = 20
+let helpH = 21
 const help = new blessed.Box({
     left:          Math.floor((screenWidth  - helpW) / 2),
     top:           Math.floor((screenHeight - helpH) / 2),
@@ -673,6 +674,11 @@ screen.on("keypress", (ch, key) => {
         else if (key.full === "v") {
             /*  handle scrolling/visual mode  */
             terms[focused].scroll(0)
+        }
+        else if (key.full === "r") {
+            /*  handle manual restarting  */
+            terms[focused].terminate()
+            terms[focused].spawn(terms[focused].stmuxShell, terms[focused].stmuxArgs)
         }
         else if (key.full === "?") {
             /*  handle help screen toggling  */

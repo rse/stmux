@@ -152,6 +152,8 @@ The following keystrokes are supported under run-time:
   Any other key leaves this mode.
 - `CTRL`+*activator* `l`:<br/>
   Relayout the screen.
+- `CTRL`+*activator* `r`:<br/>
+  Restart the program in the focused terminal.
 - `CTRL`+*activator* `k`:<br/>
   Kill the application and all shell commands in all terminals.
 - `CTRL`+*activator* `?`:<br/>
