@@ -26,7 +26,9 @@
 /*  external requirements  */
 import os              from "os"
 import path            from "path"
+import child_process   from "child_process"
 import fs              from "fs"
+import which           from "which"
 import yargs           from "yargs"
 import ASTY            from "asty"
 import PEG             from "pegjs-otf"
@@ -128,9 +130,38 @@ if (result.error !== null) {
     process.exit(1)
 }
 
-/*  workaround for trouble under Windows + ConEmu + TERM=cygwin  */
-if (os.platform() === "win32" && process.env.TERM === "cygwin")
+/*  workaround for trouble under Windows + ConEmu + TERM=cygwin
+    (where Blessed needs a hint to work correctly under the "cygwin"
+    terminal type and for even better rendering quality we switch to the
+    "windows-ansi" terminal type)  */
+if (os.platform() === "win32" && process.env.TERM === "cygwin") {
     process.env.NCURSES_NO_UTF8_ACS = 1
+    process.env.TERM = "windows-ansi"
+}
+
+/*  sanity check to prevent trouble under Windows + MinTTY
+    (where Node sees to TTY on stdio because MinTTY does not
+    actually emulate a real TTY. The only workaround is to
+    use the "winpty" utility and start Node with "winpty node"  */
+if (os.platform() === "win32" && process.env.TERM === "xterm" && !process.stdin.isTTY && !process.stdout.isTTY) {
+    let winpty
+    try { winpty = which.sync("winpty") }
+    catch (ex) {
+        process.stderr.write(`${my.name}: ERROR: under Windows/MinTTY you need the "winpty" utility on PATH`)
+        process.exit(1)
+    }
+    let args = process.argv.slice(0)
+    let child = child_process.spawnSync(winpty, args, {
+        stdio: [ "inherit", "inherit", "inherit" ]
+    })
+    process.exit(child.status)
+}
+
+/*  final sanity check for TTY  */
+if (!process.stdin.isTTY || !process.stdout.isTTY) {
+    process.stderr.write(`${my.name}: ERROR: we are not attached to a TTY device`)
+    process.exit(1)
+}
 
 /*  establish Blessed screen  */
 const screen = blessed.screen({
