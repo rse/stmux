@@ -708,3 +708,4 @@ screen.on("keypress", (ch, key) => {
 
 /*  render Blessed screen initially  */
 screen.render()
+
