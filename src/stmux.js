@@ -39,38 +39,6 @@ import chalk           from "chalk"
 import stripAnsi       from "strip-ansi"
 import my              from "../package.json"
 
-/*  workaround for trouble under Windows + ConEmu + TERM=cygwin
-    (where Blessed needs a hint to work correctly under the "cygwin"
-    terminal type and for even better rendering quality we switch to the
-    "windows-ansi" terminal type)  */
-if (os.platform() === "win32" && process.env.TERM === "cygwin") {
-    process.env.NCURSES_NO_UTF8_ACS = 1
-    process.env.TERM = "windows-ansi"
-}
-
-/*  sanity check to prevent trouble under Windows + MinTTY
-    (where Node sees to TTY on stdio because MinTTY does not
-    actually emulate a real TTY. The only workaround is to
-    use the "winpty" utility and start Node with "winpty node"  */
-if (os.platform() === "win32" && process.env.TERM === "xterm" && !process.stdin.isTTY && !process.stdout.isTTY) {
-    let winpty
-    try { winpty = which.sync("winpty") }
-    catch (ex) {
-        process.stderr.write(`${my.name}: ERROR: under Windows/MinTTY you need the "winpty" utility on PATH`)
-        process.exit(1)
-    }
-    let child = childProcess.spawnSync(winpty, process.argv, {
-        stdio: [ "inherit", "inherit", "inherit" ]
-    })
-    process.exit(child.status)
-}
-
-/*  final sanity check for TTY  */
-if (!process.stdin.isTTY || !process.stdout.isTTY) {
-    process.stderr.write(`${my.name}: ERROR: we are not attached to a TTY device`)
-    process.exit(1)
-}
-
 /*  parse command-line arguments  */
 let argv = yargs
     .usage("Usage: $0 [-h] [-v] [-w] [-a <activator>] [-t <title>] [-f <file>] [-- <spec>]")
@@ -159,6 +127,38 @@ let result = PEGUtil.parse(parser, spec, {
 if (result.error !== null) {
     process.stderr.write(`${my.name}: ERROR: Parsing Failure:\n` +
         PEGUtil.errorMessage(result.error, true).replace(/^/mg, `${my.name}: ERROR: `) + "\n")
+    process.exit(1)
+}
+
+/*  workaround for trouble under Windows + ConEmu + TERM=cygwin
+    (where Blessed needs a hint to work correctly under the "cygwin"
+    terminal type and for even better rendering quality we switch to the
+    "windows-ansi" terminal type)  */
+if (os.platform() === "win32" && process.env.TERM === "cygwin") {
+    process.env.NCURSES_NO_UTF8_ACS = 1
+    process.env.TERM = "windows-ansi"
+}
+
+/*  sanity check to prevent trouble under Windows + MinTTY
+    (where Node sees to TTY on stdio because MinTTY does not
+    actually emulate a real TTY. The only workaround is to
+    use the "winpty" utility and start Node with "winpty node"  */
+if (os.platform() === "win32" && process.env.TERM === "xterm" && !process.stdin.isTTY && !process.stdout.isTTY) {
+    let winpty
+    try { winpty = which.sync("winpty") }
+    catch (ex) {
+        process.stderr.write(`${my.name}: ERROR: under Windows/MinTTY you need the "winpty" utility on PATH`)
+        process.exit(1)
+    }
+    let child = childProcess.spawnSync(winpty, process.argv, {
+        stdio: [ "inherit", "inherit", "inherit" ]
+    })
+    process.exit(child.status)
+}
+
+/*  final sanity check for TTY  */
+if (!process.stdin.isTTY || !process.stdout.isTTY) {
+    process.stderr.write(`${my.name}: ERROR: we are not attached to a TTY device`)
     process.exit(1)
 }
 
