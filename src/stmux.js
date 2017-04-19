@@ -407,7 +407,7 @@ const provision = {
             if (k === 0)
                 throw new Error("terminal too small")
 
-            /*  pass 1: calculcate size of explicitly sized terminals  */
+            /*  pass 1: calculate size of explicitly sized terminals  */
             let sizes = []
             for (let i = 0; i < n; i++) {
                 sizes[i] = -1
