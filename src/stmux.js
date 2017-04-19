@@ -147,7 +147,7 @@ if (os.platform() === "win32" && process.env.TERM === "xterm" && !process.stdin.
     let winpty
     try { winpty = which.sync("winpty") }
     catch (ex) {
-        process.stderr.write(`${my.name}: ERROR: under Windows/MinTTY you need the "winpty" utility on PATH`)
+        process.stderr.write(`${my.name}: ERROR: under Windows/MinTTY you need the "winpty" utility on PATH\n`)
         process.exit(1)
     }
     let child = childProcess.spawnSync(winpty, process.argv, {
@@ -158,7 +158,7 @@ if (os.platform() === "win32" && process.env.TERM === "xterm" && !process.stdin.
 
 /*  final sanity check for TTY  */
 if (!process.stdin.isTTY || !process.stdout.isTTY) {
-    process.stderr.write(`${my.name}: ERROR: we are not attached to a TTY device`)
+    process.stderr.write(`${my.name}: ERROR: we are not attached to a TTY device\n`)
     process.exit(1)
 }
 
