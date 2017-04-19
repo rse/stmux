@@ -173,19 +173,23 @@ const screen = blessed.screen({
 })
 
 /*  determine screen size  */
-let screenWidth  = screen.width
-let screenHeight = screen.height
-if (screenWidth < 3 || screenHeight < 3) {
-    process.stderr.write(`${my.name}: ERROR: attached terminal is too small\n`)
-    process.exit(1)
+let screenWidth, screenHeight
+const calcScreenSize = () => {
+    screenWidth  = screen.width
+    screenHeight = screen.height
+    if (screenWidth < 3 || screenHeight < 3) {
+        process.stderr.write(`${my.name}: ERROR: attached terminal is too small\n`)
+        process.exit(1)
+    }
+    if (os.platform() === "win32" && !os.release().match(/^10\./)) {
+        /*  nasty hack for older Windows versions where all types of consoles
+            (including ConEmu) scroll by an extra line (which breaks the screen
+            rendering) once the right bottom character is rendered. As a workaround
+            ensure we are not hitting the right margin on the last line. */
+        screenWidth--
+    }
 }
-if (os.platform() === "win32" && !os.release().match(/^10\./)) {
-    /*  nasty hack for older Windows versions where all types of consoles
-        (including ConEmu) scroll by an extra line (which breaks the screen
-        rendering) once the right bottom character is rendered. As a workaround
-        ensure we are not hitting the right margin on the last line. */
-    screenWidth--
-}
+calcScreenSize()
 
 /*  gracefully terminate programm  */
 const die = () => {
@@ -544,6 +548,7 @@ help.setIndex(100)
 
 /*  handle screen resizing  */
 screen.on("resize", () => {
+    calcScreenSize()
     provision.any(0, 0, screenWidth, screenHeight, result.ast, false)
     help.left = Math.floor((screenWidth  - helpW) / 2)
     help.top  = Math.floor((screenHeight - helpH) / 2)
