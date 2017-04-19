@@ -51,9 +51,9 @@ more sophisticated use-cases please stick with the original
 
 Sample `package.json` entries from a top-level NPM-based project
 follows, which allows one to run the commands of two sub-projects.
-First, the build-time of the user interface (frontend) project.
-Second, the build-time of the server (backend) project.
-Third, the run-time of the server (backed) project.
+First, the build-time of the frontend user interface (UI) project.
+Second, the build-time of the backend server (SV) project.
+Third, the run-time of the backend server project.
 Forth, an additional regular shell.
 
 ```
