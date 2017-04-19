@@ -46,8 +46,8 @@ let argv = yargs
         .describe("h", "show usage help")
     .boolean("v").alias("v", "version").default("v", false)
         .describe("v", "show program version information")
-    .boolean("w").alias("w", "wait").default("w", false)
-        .describe("w", "wait after last finished command and do not shutdown automatically")
+    .string("w").nargs("w", 1).alias("w", "wait").default("w", "")
+        .describe("w", "wait after last finished command (on \"error\" or \"always\")")
     .string("a").nargs("a", 1).alias("a", "activator").default("a", "a")
         .describe("a", "use CTRL+<activator> as the prefix to special commands")
     .string("t").nargs("t", 1).alias("t", "title").default("t", "stmux")
@@ -204,10 +204,11 @@ const die = () => {
 }
 
 /*  provision Blessed screen layout with Blessed XTerm widgets  */
-let terms      = []
-let focused    = -1
-let zoomed     = -1
-let terminated = 0
+let terms           = []
+let focused         = -1
+let zoomed          = -1
+let terminated      = 0
+let terminatedError = 0
 
 /*  determine title of terminal  */
 const setTerminalTitle = (term) => {
@@ -383,11 +384,15 @@ const provision = {
                     else
                         term.spawn(terms.stmuxShell, terms.stmuxArgs)
                 }
-                else if (!argv.wait) {
+                else {
                     /*  handle automatic program termination  */
                     terminated++
-                    if (terminated >= terms.length)
-                        die()
+                    if (code !== 0)
+                        terminatedError++
+                    if (terminated >= terms.length) {
+                        if (argv.wait === "" || (argv.wait === "error" && terminatedError === 0))
+                            die()
+                    }
                 }
             })
         }

@@ -91,8 +91,9 @@ $ stmux [-h] [-V] [-w] [-a <activator>] [-t <title>] [-f <file>] [-- <spec>]
   Show usage help.
 - `-V`, `--version`<br/>
   Show program version information.
-- `-w`, `--wait`<br/>
-  Wait after last finished command and do not shutdown automatically.
+- `-w <condition>`, `--wait <condition>`<br/>
+  Wait after last finished command (and do not shutdown automatically),
+  either if any command terminated with an `error` or just `always`.
 - `-a <activator>`, `--activator <activator>`<br/>
   Use `CTRL+<activator>` as the prefix to special commands.
   The default activator character is `a`.
