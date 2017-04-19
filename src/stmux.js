@@ -391,7 +391,7 @@ const provision = {
                         terminatedError++
                     if (terminated >= terms.length) {
                         if (argv.wait === "" || (argv.wait === "error" && terminatedError === 0))
-                            die()
+                            setTimeout(() => die(), 2 * 1000)
                     }
                 }
             })
