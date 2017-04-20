@@ -606,9 +606,8 @@ setInterval(() => {
             const matches = (string, patterns) => {
                 for (let i = 0; i < patterns.length; i++) {
                     let matched = patterns[i].regexp.test(string)
-                    if (patterns[i].negate)
-                        matched = !matched
-                    if (!matched)
+                    if (!(   ( matched && !patterns[i].negate)
+                          || (!matched &&  patterns[i].negate)))
                         return false
                 }
                 return true
