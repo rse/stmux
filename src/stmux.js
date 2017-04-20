@@ -601,6 +601,14 @@ setInterval(() => {
             /*  take screenshot  */
             let screenshot = term.screenshot()
             screenshot = stripAnsi(screenshot)
+            let lines = screenshot.split(/\r?\n/)
+
+            /*  short-circuit processing  */
+            if (   globalErrorPatterns.length     === 0
+                && term.stmuxErrorPatterns.length === 0) {
+                term.stmuxError = false
+                return
+            }
 
             /*  match errors in screenshot  */
             const matches = (string, patterns) => {
@@ -612,11 +620,14 @@ setInterval(() => {
                 }
                 return true
             }
-            if (   (globalErrorPatterns.length     > 0 && matches(screenshot, globalErrorPatterns))
-                || (term.stmuxErrorPatterns.length > 0 && matches(screenshot, term.stmuxErrorPatterns)))
-                term.stmuxError = true
-            else
-                term.stmuxError = false
+            term.stmuxError = false
+            for (let i = 0; i < lines.length; i++) {
+                if (   (globalErrorPatterns.length     > 0 && matches(lines[i], globalErrorPatterns))
+                    || (term.stmuxErrorPatterns.length > 0 && matches(lines[i], term.stmuxErrorPatterns))) {
+                    term.stmuxError = true
+                    break
+                }
+            }
 
             /*  determine results  */
             if (term.stmuxError && term.style.border.fg === "default") {
