@@ -514,30 +514,30 @@ const helpText = "" +
     `Licensed under ${my.license} <http://spdx.org/licenses/${my.license}.html>\n` +
     "\n" +
     "Global Keys:\n" +
-    `CTRL+${argv.activator} {bold}{green-fg}${argv.activator}{/green-fg}{/bold} ............. ` +
+    `CTRL+${argv.activator} {bold}{green-fg}${argv.activator}{/green-fg}{/bold} ................... ` +
         `send CTRL+${argv.activator} to focused terminal\n` +
-    `CTRL+${argv.activator} {bold}{green-fg}LEFT{/green-fg}{/bold} .......... ` +
-        "switch focus to previous terminal in sequence\n" +
-    `CTRL+${argv.activator} {bold}{green-fg}RIGHT{/green-fg}{/bold}/{bold}{green-fg}SPACE{/green-fg}{/bold} ... ` +
+    `CTRL+${argv.activator} {bold}{green-fg}SPACE{/green-fg}{/bold} ............... ` +
         "switch focus to next terminal in sequence\n" +
-    `CTRL+${argv.activator} {bold}{green-fg}1{/green-fg}{/bold}/{bold}{green-fg}2{/green-fg}{/bold}/.../{bold}{green-fg}9{/green-fg}{/bold} ..... ` +
+    `CTRL+${argv.activator} {bold}{green-fg}LEFT{/green-fg}{/bold}/{bold}{green-fg}RIGHT{/green-fg}{/bold}/{bold}{green-fg}UP{/green-fg}{/bold}/{bold}{green-fg}DOWN{/green-fg}{/bold} .. ` +
+        "switch focus to best terminal in direction\n" +
+    `CTRL+${argv.activator} {bold}{green-fg}1{/green-fg}{/bold}/{bold}{green-fg}2{/green-fg}{/bold}/.../{bold}{green-fg}9{/green-fg}{/bold} ........... ` +
         "switch focus to terminal identified by number\n" +
-    `CTRL+${argv.activator} {bold}{green-fg}n{/green-fg}{/bold} ............. ` +
+    `CTRL+${argv.activator} {bold}{green-fg}n{/green-fg}{/bold} ................... ` +
         "toggle the display of sequence numbers\n" +
-    `CTRL+${argv.activator} {bold}{green-fg}z{/green-fg}{/bold} ............. ` +
+    `CTRL+${argv.activator} {bold}{green-fg}z{/green-fg}{/bold} ................... ` +
         "toggle the zooming of focused terminal\n" +
-    `CTRL+${argv.activator} {bold}{green-fg}v{/green-fg}{/bold} ............. ` +
-        "enable visual/scrolling mode on focused terminal\n" +
-    `CTRL+${argv.activator} {bold}{green-fg}l{/green-fg}{/bold} ............. ` +
+    `CTRL+${argv.activator} {bold}{green-fg}v{/green-fg}{/bold} ................... ` +
+        "enable scrolling mode on focused terminal\n" +
+    `CTRL+${argv.activator} {bold}{green-fg}l{/green-fg}{/bold} ................... ` +
         "manually force redrawing of entire screen\n" +
-    `CTRL+${argv.activator} {bold}{green-fg}r{/green-fg}{/bold} ............. ` +
+    `CTRL+${argv.activator} {bold}{green-fg}r{/green-fg}{/bold} ................... ` +
         "restart shell command in focused terminal\n" +
-    `CTRL+${argv.activator} {bold}{green-fg}k{/green-fg}{/bold} ............. ` +
+    `CTRL+${argv.activator} {bold}{green-fg}k{/green-fg}{/bold} ................... ` +
         "kill stmux application (and all shell commands)\n" +
-    `CTRL+${argv.activator} {bold}{green-fg}?{/green-fg}{/bold} ............. ` +
+    `CTRL+${argv.activator} {bold}{green-fg}?{/green-fg}{/bold} ................... ` +
         "show (this) help window\n" +
     ""
-let helpW = 78
+let helpW = 80
 let helpH = 21
 const help = new blessed.Box({
     left:          Math.floor((screenWidth  - helpW) / 2),
@@ -676,19 +676,124 @@ screen.on("keypress", (ch, key) => {
             let ch = String.fromCharCode(1 + argv.activator.charCodeAt(0) - "a".charCodeAt(0))
             terms[focused].injectInput(ch)
         }
-        else if (zoomed === -1 && (key.full === "left" || key.full === "right" || key.full === "space")) {
-            /*  handle terminal focus change (step-by-step)  */
+        else if (zoomed === -1 && key.full === "space") {
+            /*  handle terminal focus change (step-by-step, sequenced)  */
             terms[focused].resetScroll()
-            if (key.full === "left")
-                focused--
-            else if (key.full === "right" || key.full === "space")
-                focused++
-            if (focused < 0)
-                focused = terms.length - 1
+            focused++
             if (focused > terms.length - 1)
                 focused = 0
             terms[focused].focus()
             screen.render()
+        }
+        else if (   zoomed === -1
+                 && (   key.full === "left"
+                     || key.full === "right"
+                     || key.full === "up"
+                     || key.full === "down" )) {
+            /*  handle terminal focus change (step-by-step, directional)  */
+
+            /*  determine border of terminal  */
+            const border = (term, side) => {
+                let x1, x2, y1, y2
+                if (side === "left" || side === "right") {
+                    y1 = term.position.top
+                    y2 = y1 + term.position.height - 1
+                    if (side === "left")
+                        x1 = term.position.left
+                    else
+                        x1 = term.position.left + term.position.width - 1
+                    x2 = x1
+                }
+                else if (side === "top" || side === "bottom") {
+                    x1 = term.position.left
+                    x2 = x1 + term.position.width - 1
+                    if (side === "top")
+                        y1 = term.position.top
+                    else
+                        y1 = term.position.top + term.position.height - 1
+                    y2 = y1
+                }
+                return { x1, x2, y1, y2, side }
+            }
+
+            /*  determine border of focused terminal where we want to logically break through  */
+            let leave, enteron
+            if (key.full === "left") {
+                leave = border(terms[focused], "left")
+                enteron = "right"
+            }
+            else if (key.full === "right") {
+                leave = border(terms[focused], "right")
+                enteron = "left"
+            }
+            else if (key.full === "up") {
+                leave = border(terms[focused], "top")
+                enteron = "bottom"
+            }
+            else if (key.full === "down") {
+                leave = border(terms[focused], "bottom")
+                enteron = "top"
+            }
+
+            /*  find touches  */
+            const touches = (a1, a2, b1, b2) => {
+                /*  +--a--+ +--b--+  */
+                if (a2 < b1)
+                    return 0
+                /*  +--b--+ +--a--+  */
+                else if (a1 > b2)
+                    return 0
+                /*  +---a---+
+                     +--b--+   */
+                else if (a1 <= b1 && b2 <= a2)
+                    return b2 - b1
+                /*  +---b---+
+                     +--a--+   */
+                else if (b1 <= a1 && a2 <= b2)
+                    return a2 - a1
+                /*     +--a--+
+                    +--b--+   */
+                else if (b1 < a1 && b2 <= a2)
+                    return b2 - a1
+                /*  +--a--+
+                       +--b--+   */
+                else if (a1 <= b1 && b2 > a2)
+                    return a2 - b1
+                /*  actually cannot happen!?  */
+                else
+                    return 0
+            }
+
+            /*  find the touchpoints of terminals with our border  */
+            let touchpoints = []
+            for (let i = 0; i < terms.length; i++) {
+                if (i === focused)
+                    touchpoints[i] = { i, touches: 0 }
+                else {
+                    let enter = border(terms[i], enteron)
+                    if (enteron === "left" && enter.x1 === (leave.x1 + 1))
+                        touchpoints[i] = { i, touches: touches(leave.y1, leave.y2, enter.y1, enter.y2) }
+                    else if (enteron === "right" && enter.x1 === (leave.x1 - 1))
+                        touchpoints[i] = { i, touches: touches(leave.y1, leave.y2, enter.y1, enter.y2) }
+                    else if (enteron === "top" && enter.y1 === (leave.y1 + 1))
+                        touchpoints[i] = { i, touches: touches(leave.x1, leave.x2, enter.x1, enter.x2) }
+                    else if (enteron === "bottom" && enter.y1 === (leave.y1 - 1))
+                        touchpoints[i] = { i, touches: touches(leave.x1, leave.x2, enter.x1, enter.x2) }
+                    else
+                        touchpoints[i] = { i, touches: 0 }
+                }
+            }
+
+            /*  determine best matching terminal  */
+            let bestMatch = touchpoints.sort((t1, t2) => t2.touches - t1.touches)[0]
+
+            /*  switch to best matching one  */
+            if (bestMatch.touches > 0) {
+                terms[focused].resetScroll()
+                focused = bestMatch.i
+                terms[focused].focus()
+                screen.render()
+            }
         }
         else if (zoomed === -1 && key.full.match(/^[1-9]$/)) {
             /*  handle terminal focus change (directly)  */
