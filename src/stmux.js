@@ -518,9 +518,11 @@ const helpText = "" +
         `send CTRL+${argv.activator} to focused terminal\n` +
     `CTRL+${argv.activator} {bold}{green-fg}SPACE{/green-fg}{/bold} ............... ` +
         "switch focus to next terminal in sequence\n" +
-    `CTRL+${argv.activator} {bold}{green-fg}LEFT{/green-fg}{/bold}/{bold}{green-fg}RIGHT{/green-fg}{/bold}/{bold}{green-fg}UP{/green-fg}{/bold}/{bold}{green-fg}DOWN{/green-fg}{/bold} .. ` +
+    `CTRL+${argv.activator} {bold}{green-fg}LEFT{/green-fg}{/bold}/{bold}{green-fg}RIGHT{/green-fg}{/bold}/` +
+        "{bold}{green-fg}UP{/green-fg}{/bold}/{bold}{green-fg}DOWN{/green-fg}{/bold} .. " +
         "switch focus to best terminal in direction\n" +
-    `CTRL+${argv.activator} {bold}{green-fg}1{/green-fg}{/bold}/{bold}{green-fg}2{/green-fg}{/bold}/.../{bold}{green-fg}9{/green-fg}{/bold} ........... ` +
+    `CTRL+${argv.activator} {bold}{green-fg}1{/green-fg}{/bold}/{bold}{green-fg}2{/green-fg}{/bold}/.../` +
+        "{bold}{green-fg}9{/green-fg}{/bold} ........... " +
         "switch focus to terminal identified by number\n" +
     `CTRL+${argv.activator} {bold}{green-fg}n{/green-fg}{/bold} ................... ` +
         "toggle the display of sequence numbers\n" +
