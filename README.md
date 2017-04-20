@@ -140,6 +140,8 @@ The following keystrokes are supported under run-time:
 
 - `CTRL`+*activator* *activator*:<br/>
   Send the `CTRL`+*activator* key-sequence to the focused terminal.
+- `CTRL`+*activator* `BACKSPACE`:<br/>
+  Switch the focus to the previous terminal in sequence.
 - `CTRL`+*activator* `SPACE`:<br/>
   Switch the focus to the next terminal in sequence.
 - `CTRL`+*activator* `LEFT`/`RIGHT`/`UP`/`DOWN`:<br/>

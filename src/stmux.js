@@ -516,6 +516,8 @@ const helpText = "" +
     "Global Keys:\n" +
     `CTRL+${argv.activator} {bold}{green-fg}${argv.activator}{/green-fg}{/bold} ................... ` +
         `send CTRL+${argv.activator} to focused terminal\n` +
+    `CTRL+${argv.activator} {bold}{green-fg}BACKSPACE{/green-fg}{/bold} ........... ` +
+        "switch focus to previous terminal in sequence\n" +
     `CTRL+${argv.activator} {bold}{green-fg}SPACE{/green-fg}{/bold} ............... ` +
         "switch focus to next terminal in sequence\n" +
     `CTRL+${argv.activator} {bold}{green-fg}LEFT{/green-fg}{/bold}/{bold}{green-fg}RIGHT{/green-fg}{/bold}/` +
@@ -540,7 +542,7 @@ const helpText = "" +
         "show (this) help window\n" +
     ""
 let helpW = 80
-let helpH = 21
+let helpH = 22
 const help = new blessed.Box({
     left:          Math.floor((screenWidth  - helpW) / 2),
     top:           Math.floor((screenHeight - helpH) / 2),
@@ -677,6 +679,15 @@ screen.on("keypress", (ch, key) => {
             /*  handle special prefix activator character  */
             let ch = String.fromCharCode(1 + argv.activator.charCodeAt(0) - "a".charCodeAt(0))
             terms[focused].injectInput(ch)
+        }
+        else if (zoomed === -1 && key.full === "backspace") {
+            /*  handle terminal focus change (step-by-step, sequenced)  */
+            terms[focused].resetScroll()
+            focused--
+            if (focused < 0)
+                focused = terms.length - 1
+            terms[focused].focus()
+            screen.render()
         }
         else if (zoomed === -1 && key.full === "space") {
             /*  handle terminal focus change (step-by-step, sequenced)  */
