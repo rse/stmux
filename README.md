@@ -103,8 +103,11 @@ $ stmux [-h] [-V] [-w] [-a <activator>] [-t <title>] [-f <file>] [-- <spec>]
   Set type of cursor  to `block` (default), `underline` or `line`.
 - `-n`, `--number`<br/>
   Show terminal number in terminal title.
-- `-e <regexp>`, `--error <regexp>`<br/>
+- `-e <regexp>[,...]`, `--error <regexp>[,...]`<br/>
   Observe terminal for errors (global option).
+  One or more regular expressions can be specified and have to match.
+  If a regular expression is preceeded with the prefix `!`, it is
+  required that it does not match.
 - `-f <file>`, `--file <file>`<br/>
   Read specification `<spec>` from a configuration file. The
   default is to use the specification inside the command line arguments

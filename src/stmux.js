@@ -569,6 +569,28 @@ screen.on("resize", () => {
     screen.render()
 })
 
+/*  determine error patterns  */
+const parseErrorPatterns = (patterns) => {
+    let result = []
+    while (patterns) {
+        let [ , pattern, rest ] = patterns.match(/^((?:\\,|.)+?)(?:,(.+))?$/)
+        let m = pattern.match(/^!(.+)$/)
+        let negate = false
+        if (m) {
+            negate = true
+            pattern = m[1]
+        }
+        result.push({ negate, regexp: new RegExp(pattern) })
+        patterns = rest
+    }
+    return result
+}
+let globalErrorPatterns = parseErrorPatterns(argv.error)
+terms.forEach((term) => {
+    let patterns = term.node.get("error")
+    term.stmuxErrorPatterns = patterns ? parseErrorPatterns(patterns) : []
+})
+
 /*  handle error detection  */
 setInterval(() => {
     let dirty = false
@@ -579,10 +601,20 @@ setInterval(() => {
             /*  take screenshot  */
             let screenshot = term.screenshot()
             screenshot = stripAnsi(screenshot)
-            let regexp1 = argv.error
-            let regexp2 = term.node.get("error")
-            if (   (regexp1 && screenshot.match(regexp1))
-                || (regexp2 && screenshot.match(regexp2)))
+
+            /*  match errors in screenshot  */
+            const matches = (string, patterns) => {
+                for (let i = 0; i < patterns.length; i++) {
+                    let matched = patterns[i].regexp.test(string)
+                    if (patterns[i].negate)
+                        matched = !matched
+                    if (!matched)
+                        return false
+                }
+                return true
+            }
+            if (   (globalErrorPatterns.length     > 0 && matches(screenshot, globalErrorPatterns))
+                || (term.stmuxErrorPatterns.length > 0 && matches(screenshot, term.stmuxErrorPatterns)))
                 term.stmuxError = true
             else
                 term.stmuxError = false
