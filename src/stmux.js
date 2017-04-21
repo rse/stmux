@@ -810,18 +810,20 @@ screen.on("keypress", (ch, key) => {
 
             /*  find touches  */
             const touches = (a1, a2, b1, b2) => {
-                /*  +--a--+ +--b--+  */
+                /*  +--a--+
+                            +--b--+  */
                 if (a2 < b1)
                     return 0
-                /*  +--b--+ +--a--+  */
+                /*          +--a--+
+                    +--b--+  */
                 else if (a1 > b2)
                     return 0
                 /*  +---a---+
                      +--b--+   */
                 else if (a1 <= b1 && b2 <= a2)
                     return b2 - b1
-                /*  +---b---+
-                     +--a--+   */
+                /*   +--a--+
+                    +---b---+  */
                 else if (b1 <= a1 && a2 <= b2)
                     return a2 - a1
                 /*     +--a--+
