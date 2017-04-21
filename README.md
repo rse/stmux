@@ -97,7 +97,7 @@ to provide the necessary C/C++ compiler environment on your operating
 system. Under Linux or FreeBSD you usually don't have to do anything.
 Under macOS you have to install the "Command Line Tools" in Xcode
 under "Preferences &gt; Downloads". Under Windows you once have to
-open an elevated `CMD.EXE` and run the commands `npm install --global
+open an elevated `cmd.exe` and run the commands `npm install --global
 windows-build-tools` and `npm config set msvs_version 2015 --global`.
 
 Usage
