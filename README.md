@@ -24,8 +24,7 @@ detection and notification feature and can automatically close or
 wait after all spawned commands have (successfully or unsuccessfully)
 completed.
 
-Notice
-------
+### Notice
 
 This module requires the essential Node.js module
 [node-pty](https://github.com/Tyriar/node-pty). Unfortunately,
