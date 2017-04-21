@@ -24,20 +24,6 @@ detection and notification feature, can restart terminated commands,
 and can automatically close or wait after all spawned commands have
 successfully or unsuccessfully terminated.
 
-### Notice
-
-This module requires the essential Node.js module
-[node-pty](https://github.com/Tyriar/node-pty). Unfortunately,
-this module contains a native part which has to be built by
-[node-gyp](https://github.com/nodejs/node-gyp). Please check out the
-documentation of [node-gyp](https://github.com/nodejs/node-gyp) on how
-to provide the necessary C/C++ compiler environment on your operating
-system. Under Linux or FreeBSD you usually don't have to do anything.
-Under macOS you have to install the "Command Line Tools" in Xcode
-under "Preferences &gt; Downloads". Under Windows you once have to
-open an elevated `CMD.EXE` and run the commands `npm install --global
-windows-build-tools` and `npm config set msvs_version 2015 --global`.
-
 Example
 -------
 
@@ -69,17 +55,30 @@ Second, the build-time of the backend server (SV) project.
 Third, the run-time of the backend server project.
 Forth, an additional regular shell.
 
-```
+```js
 {
     ...
-    "devDependencies": {
-        "stmux": "*"
+    "dependencies": {
+        "stmux":      "*"
     },
     "scripts": {
-        "dev":      "stmux -- [ [ 'npm run build:ui' .. 'npm run build:sv' ] : -s 1/3 [ 'npm start' .. $SHELL ] ]",
-        "build:ui": "cd ui && npm build:watch",
-        "build:sv": "cd sv && npm build:watch",
-        "start":    "cd sv && npm start"
+        "install":    "npm run install:ui && npm run install:sv",
+        "install:ui": "cd ui && npm install",
+        "install:sv": "cd sv && npm install",
+
+        "build":      "npm run build:ui && npm run build:sv",
+        "build:ui":   "cd ui && npm run build",
+        "build:sv":   "cd sv && npm run build",
+
+        "start":      "cd sv && npm start",
+
+        "clean":      "npm run clean:ui && npm run clean:sv"
+        "clean:ui":   "cd ui && npm run clean",
+        "clean:sv":   "cd sv && npm run clean",
+
+        "dev":        "stmux -w always -e ERROR -m beep,system -- [ [ \"npm run dev:ui\" .. \"npm run dev:sv\" ] : -s 1/3 -f \"npm start\" ]",
+        "dev:ui":     "cd ui && npm run build:watch"
+        "dev:sv":     "cd sv && npm run build:watch"
     }
 }
 ```
@@ -90,6 +89,20 @@ Installation
 ```
 $ npm install -g stmux
 ```
+
+### Notice
+
+This module requires the essential Node.js module
+[node-pty](https://github.com/Tyriar/node-pty). Unfortunately,
+this module contains a native part which has to be built by
+[node-gyp](https://github.com/nodejs/node-gyp). Please check out the
+documentation of [node-gyp](https://github.com/nodejs/node-gyp) on how
+to provide the necessary C/C++ compiler environment on your operating
+system. Under Linux or FreeBSD you usually don't have to do anything.
+Under macOS you have to install the "Command Line Tools" in Xcode
+under "Preferences &gt; Downloads". Under Windows you once have to
+open an elevated `CMD.EXE` and run the commands `npm install --global
+windows-build-tools` and `npm config set msvs_version 2015 --global`.
 
 Usage
 -----
