@@ -113,7 +113,7 @@ Usage
 The following command line arguments are supported:
 
 ```
-$ stmux [-h] [-V] [-w] [-a <activator>] [-t <title>] [-f <file>] [-- <spec>]
+$ stmux [-h] [-V] [-w <condition>] [-a <activator>] [-t <title>] [-c <type>] [-n] [-e <regexp>] [-m <method>] [-f <file>] [-- <spec>]
 ```
 
 - `-h`, `--help`<br/>
