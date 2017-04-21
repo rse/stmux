@@ -44,16 +44,12 @@ Intention
 
 This utility is primarily intended to be used from within a
 `package.json` `script` to easily side-by-side run various
-NPM-based commands in a Node.js build-time environment. For
-more sophisticated use-cases please stick with the original
-[tmux](https://tmux.github.io/), of course.
-
+NPM-based commands in a Node.js build-time environment.
 Sample `package.json` entries from a top-level NPM-based project
 follows, which allows one to run the commands of two sub-projects.
 First, the build-time of the frontend user interface (UI) project.
 Second, the build-time of the backend server (SV) project.
 Third, the run-time of the backend server project.
-Forth, an additional regular shell.
 
 ```js
 {
