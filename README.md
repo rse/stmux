@@ -30,7 +30,7 @@ Example
 The following command...
 
 ```
-$ stmux -w -- [ [ bash .. vim ] : mc ]
+$ stmux [ [ bash .. vim ] : mc ]
 ```
 
 ...leads to the following particular terminal multiplexing environment,
