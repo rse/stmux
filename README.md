@@ -28,9 +28,9 @@ Internally, stmux is based on the awesome
 [Blessed](https://github.com/chjj/blessed) screen rendering environment
 and emulates full XTerm-compatible pseudo-terminals
 to the spawned programs with the help of [Blessed XTerm](https://github.com/rse/blessed-xterm)
-and its underlying [XTerm.js](https://github.com/sourcelair/xterm.js) terminal rendering
+and the underlying [XTerm.js](https://github.com/sourcelair/xterm.js) terminal rendering
 and [node-pty](https://github.com/Tyriar/node-pty) pseudo-terminal
-device modules.
+integration modules.
 
 Example
 -------
