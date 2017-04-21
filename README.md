@@ -46,7 +46,7 @@ where GNU bash, Vim and Midnight Commander are running side-by-side
 inside their own XTerm emulating terminal widget (and `CTRL+a` `?` was
 pressed to open up the stmux help window):
 
-![stmux usage](screenshot1.png)
+![stmux usage](etc/screenshot1.png)
 
 Intention
 ---------
@@ -91,7 +91,7 @@ run-time of the backend server project.
 In case of a build-time error in the frontend user interface (SV), the
 result might be similar to the following one:
 
-![stmux example](screenshot2.png)
+![stmux example](etc/screenshot2.png)
 
 Installation
 ------------
