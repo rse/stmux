@@ -20,7 +20,7 @@ is intended to provide just a very tiny subset of the original
 [tmux](https://tmux.github.io/) functionality, but in a portable way for
 bare Node.js environments and with some special features for application
 build environments. Most notably, stmux has a built-time error
-detection and notification feature, can restart terminated commands,
+detection and notification feature, can automatically restart terminated commands,
 and can automatically close or wait after all spawned commands have
 successfully or unsuccessfully terminated.
 
