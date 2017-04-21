@@ -108,6 +108,11 @@ $ stmux [-h] [-V] [-w] [-a <activator>] [-t <title>] [-f <file>] [-- <spec>]
   One or more regular expressions can be specified and have to match on a single line.
   If a regular expression is preceeded with the prefix `!`, it is
   required that it does not match.
+- `-m <methods>`, `--method <methods>`<br/>
+  In case of detected errors, use the comma-separated
+  list of methods to perform user notification. The default
+  is no extra notification (just the terminal annotation).
+  Possible methods are `beep` and `system`.
 - `-f <file>`, `--file <file>`<br/>
   Read specification `<spec>` from a configuration file. The
   default is to use the specification inside the command line arguments

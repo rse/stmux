@@ -37,6 +37,7 @@ import blessed         from "blessed"
 import BlessedXTerm    from "blessed-xterm"
 import chalk           from "chalk"
 import stripAnsi       from "strip-ansi"
+import notifier        from "node-notifier"
 import my              from "../package.json"
 
 /*  parse command-line arguments  */
@@ -58,6 +59,8 @@ let argv = yargs
         .describe("n", "show terminal number in terminal title")
     .string("e").nargs("e", 1).alias("e", "error").default("e", "(?:ERROR|Error|error)")
         .describe("e", "observe terminal for errors (global option)")
+    .string("m").nargs("m", 1).alias("m", "method").default("m", "")
+        .describe("m", "notification method(s) in case an error was detected")
     .string("f").nargs("f", 1).alias("f", "file").default("f", "-")
         .describe("f", "read specification from configuration file")
     .strict()
@@ -593,75 +596,132 @@ let globalErrorPatterns = parseErrorPatterns(argv.error)
 terms.forEach((term) => {
     let patterns = term.node.get("error")
     term.stmuxErrorPatterns = patterns ? parseErrorPatterns(patterns) : []
+    term.stmuxError = false
 })
 
 /*  handle error detection  */
+let notifyLocked = false
+let notifyStateOld = []
+let notifyStateNew = []
+terms.forEach((term) => {
+    notifyStateOld[term.stmuxNumber - 1] = ""
+    notifyStateNew[term.stmuxNumber - 1] = ""
+})
 setInterval(() => {
     let dirty = false
+    let notify = []
     terms.forEach((term) => {
-        if (term.stmuxUpdate) {
-            term.stmuxUpdate = false
+        /*  act only if an update exists  */
+        if (!term.stmuxUpdate)
+            return
+        term.stmuxUpdate = false
 
-            /*  take screenshot  */
-            let screenshot = term.screenshot()
-            screenshot = stripAnsi(screenshot)
-            let lines = screenshot.split(/\r?\n/)
+        /*  short-circuit processing  */
+        if (   globalErrorPatterns.length     === 0
+            && term.stmuxErrorPatterns.length === 0)
+            return
 
-            /*  short-circuit processing  */
-            if (   globalErrorPatterns.length     === 0
-                && term.stmuxErrorPatterns.length === 0) {
-                term.stmuxError = false
-                return
-            }
+        /*  take screenshot  */
+        let screenshot = term.screenshot()
+        screenshot = stripAnsi(screenshot)
+        let lines = screenshot.split(/\r?\n/)
 
-            /*  match errors in screenshot  */
-            const matches = (string, patterns) => {
-                for (let i = 0; i < patterns.length; i++) {
-                    let matched = patterns[i].regexp.test(string)
-                    if (!(   ( matched && !patterns[i].negate)
-                          || (!matched &&  patterns[i].negate)))
-                        return false
-                }
-                return true
+        /*  match errors in screenshot  */
+        const matches = (string, patterns) => {
+            for (let i = 0; i < patterns.length; i++) {
+                let matched = patterns[i].regexp.test(string)
+                if (!(   ( matched && !patterns[i].negate)
+                      || (!matched &&  patterns[i].negate)))
+                    return false
             }
-            term.stmuxError = false
-            for (let i = 0; i < lines.length; i++) {
-                if (   (globalErrorPatterns.length     > 0 && matches(lines[i], globalErrorPatterns))
-                    || (term.stmuxErrorPatterns.length > 0 && matches(lines[i], term.stmuxErrorPatterns))) {
-                    term.stmuxError = true
-                    break
-                }
-            }
-
-            /*  determine results  */
-            if (term.stmuxError && term.style.border.fg === "default") {
-                term.style.border.fg = "red"
-                dirty = true
-            }
-            else if (!term.stmuxError && term.style.border.fg === "red") {
-                term.style.border.fg = "default"
-                dirty = true
-            }
-            if (term.stmuxError && term.style.focus.border.fg === "green") {
-                term.style.border.fg = "red"
-                dirty = true
-            }
-            else if (!term.stmuxError && term.style.focus.border.fg === "red") {
-                term.style.border.fg = "green"
-                dirty = true
-            }
-            if (term.stmuxError && !term.stmuxTitle.match(/-\[ERROR\]/)) {
-                setTerminalTitle(term)
-                dirty = true
-            }
-            else if (!term.stmuxError && term.stmuxTitle.match(/-\[ERROR\]/)) {
-                setTerminalTitle(term)
-                dirty = true
+            return true
+        }
+        term.stmuxError = false
+        for (let i = 0; i < lines.length; i++) {
+            if (   (globalErrorPatterns.length     > 0 && matches(lines[i], globalErrorPatterns))
+                || (term.stmuxErrorPatterns.length > 0 && matches(lines[i], term.stmuxErrorPatterns))) {
+                term.stmuxError = true
+                break
             }
         }
+
+        /*  record notification state  */
+        if (term.stmuxError) {
+            notifyStateNew[term.stmuxNumber - 1] = screenshot
+            notify.push(term)
+        }
+        else
+            notifyStateNew[term.stmuxNumber - 1] = ""
+
+        /*  determine and record screen updates  */
+        if (term.stmuxError && term.style.border.fg === "default") {
+            term.style.border.fg = "red"
+            dirty = true
+        }
+        else if (!term.stmuxError && term.style.border.fg === "red") {
+            term.style.border.fg = "default"
+            dirty = true
+        }
+        if (term.stmuxError && term.style.focus.border.fg === "green") {
+            term.style.border.fg = "red"
+            dirty = true
+        }
+        else if (!term.stmuxError && term.style.focus.border.fg === "red") {
+            term.style.border.fg = "green"
+            dirty = true
+        }
+        if (term.stmuxError && !term.stmuxTitle.match(/-\[ERROR\]/)) {
+            setTerminalTitle(term)
+            dirty = true
+        }
+        else if (!term.stmuxError && term.stmuxTitle.match(/-\[ERROR\]/)) {
+            setTerminalTitle(term)
+            dirty = true
+        }
     })
+
+    /*  update screen  */
     if (dirty)
         screen.render()
+
+    /*  raise notification  */
+    if (argv.method !== "" && notify.length > 0 && !notifyLocked) {
+        let stateOld = notifyStateOld.reduce((a, v) => a + v, "")
+        let stateNew = notifyStateNew.reduce((a, v) => a + v, "")
+        if (stateOld !== stateNew) {
+            /*  determine message  */
+            let notifyMsg = `stmux: ERROR situation${notify.length > 1 ? "s" : ""} ` +
+                `detected in terminal${notify.length > 1 ? "s" : ""} ` +
+                notify.map((term) => "#" + term.stmuxNumber).join(", ")
+
+            /*  determine method(s)  */
+            let methods = {}
+            argv.method.split(",").forEach((method) => { methods[method] = true })
+
+            /*  send notification(s)  */
+            if (methods.beep)
+                screen.program.output.write("\x07")
+            if (methods.system) {
+                notifier.notify({
+                    title:   `stmux: Detected new ERROR situation${notify.length > 1 ? "s" : ""}`,
+                    message: notifyMsg,
+                    wait:    false
+                })
+            }
+
+            /*  swap notification state  */
+            terms.forEach((term) => {
+                notifyStateOld[term.stmuxNumber - 1] = notifyStateNew[term.stmuxNumber - 1]
+                notifyStateNew[term.stmuxNumber - 1] = ""
+            })
+
+            /*  lock notification for some time to not bug the user too much  */
+            notifyLocked = true
+            setTimeout(() => {
+                notifyLocked = false
+            }, 5 * 1000)
+        }
+    }
 }, 500)
 
 /*  handle keys  */
