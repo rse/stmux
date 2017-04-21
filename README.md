@@ -35,7 +35,8 @@ $ stmux [ [ bash .. vim ] : mc ]
 
 ...leads to the following particular terminal multiplexing environment,
 where GNU bash, Vim and Midnight Commander are running side-by-side
-inside their own XTerm emulating terminal widget:
+inside their own XTerm emulating terminal widget (and `CTRL+a` `?` was
+pressed to open up the stmux help window):
 
 ![stmux usage](screenshot1.png)
 
