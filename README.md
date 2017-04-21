@@ -24,6 +24,14 @@ detection and notification feature, can automatically restart terminated command
 and can automatically close or wait after all spawned commands have
 successfully or unsuccessfully terminated.
 
+Internally, stmux is based on the awesome
+[Blessed](https://github.com/chjj/blessed) screen rendering environment
+and emulates full XTerm-compatible pseudo-terminals
+to the spawned programs with the help of [Blessed XZerm](https://github.com/rse/blessed-xterm)
+and its underlying [XTerm.js](https://github.com/sourcelair/xterm.js) terminal rendering
+and [node-pty](https://github.com/Tyriar/node-pty) pseudo-terminal
+device modules.
+
 Example
 -------
 
