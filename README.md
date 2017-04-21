@@ -15,15 +15,29 @@ Abstract
 
 This is a simple terminal multiplexing utility for Node.js
 environments. It is inspired by the awesome and unreachable
-[tmux](https://tmux.github.io/) native Unix utility. It is
-intended to provide just a very tiny subset of the original
+[tmux](https://tmux.github.io/) native Unix utility. The stmux utility
+is intended to provide just a very tiny subset of the original
 [tmux](https://tmux.github.io/) functionality, but in a portable way for
-bare Node.js environments. It's only nasty dependency is the essential
-native Node.js module [node-pty](https://github.com/Tyriar/node-pty). As
-a consequence, this utility can be installed via just NPM and without
-any surrounding Unix-like environments (like Cygwin or MinGW under
-Windows, MacPorts or Homebrew under macOS, etc), which the original
-[tmux](https://tmux.github.io/) would require.
+bare Node.js environments and with some special features for application
+build environments. Most notably, stmux has a special built-time error
+detection and notification feature and can automatically close or
+wait after all spawned commands have (successfully or unsuccessfully)
+completed.
+
+Notice
+------
+
+This module requires the essential Node.js module
+[node-pty](https://github.com/Tyriar/node-pty). Unfortunately,
+this module contains a native part which has to be built by
+[node-gyp](https://github.com/nodejs/node-gyp). Please check out the
+documentation of [node-gyp](https://github.com/nodejs/node-gyp) on how
+to provide the necessary C/C++ compiler environment on your operating
+system. Under Linux or FreeBSD you usually don't have to do anything.
+Under macOS you have to install the "Command Line Tools" in Xcode
+under "Preferences &gt; Downloads". Under Windows you once have to
+open an elevated `CMD.EXE` and run the commands `npm install --global
+windows-build-tools` and `npm config set msvs_version 2015 --global`.
 
 Example
 -------
