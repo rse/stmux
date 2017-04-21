@@ -37,7 +37,7 @@ $ stmux [ [ bash .. vim ] : mc ]
 where GNU bash, Vim and Midnight Commander are running side-by-side
 inside their own XTerm emulating terminal widget:
 
-![stmux usage](screenshot.png)
+![stmux usage](screenshot1.png)
 
 Intention
 ---------
@@ -78,6 +78,11 @@ run-time of the backend server project.
     }
 }
 ```
+
+In case of a build-time error in the frontend user interface (SV), the
+result might be similar to the following one:
+
+![stmux example](screenshot2.png)
 
 Installation
 ------------
