@@ -31,7 +31,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         eslint: {
             options: {
-                configFile: "eslint.yaml"
+                configFile: "etc/eslint.yaml"
             },
             "stmux": [ "src/**/*.js" ]
         },
