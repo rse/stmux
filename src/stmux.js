@@ -25,7 +25,7 @@
 
 import aggregation     from "aggregation/es6"
 
-import stmuxVersion    from "./stmux-version"
+import stmuxInfo       from "./stmux-info"
 import stmuxOptions    from "./stmux-options"
 import stmuxParser     from "./stmux-parser"
 import stmuxScreen     from "./stmux-screen"
@@ -37,7 +37,7 @@ import stmuxErrors     from "./stmux-errors"
 import stmuxKeys       from "./stmux-keys"
 
 class STMUX extends aggregation(
-    stmuxVersion,
+    stmuxInfo,
     stmuxOptions,
     stmuxParser,
     stmuxScreen,

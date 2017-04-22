@@ -24,12 +24,9 @@
 
 import my from "../package.json"
 
-export default class stmuxVersion {
+export default class stmuxInfo {
     constructor () {
         this.my = my
-    }
-    get version () {
-        return { major: 1, minor: 3, micro: 2, date:  20170422 }
     }
 }
 
