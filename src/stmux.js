@@ -30,7 +30,7 @@ import stmuxOptions    from "./stmux-options"
 import stmuxParser     from "./stmux-parser"
 import stmuxScreen     from "./stmux-screen"
 import stmuxTitle      from "./stmux-title"
-import stmuxLayout     from "./stmux-layout"
+import stmuxTerminal   from "./stmux-terminal"
 import stmuxBorder     from "./stmux-border"
 import stmuxHelp       from "./stmux-help"
 import stmuxErrors     from "./stmux-errors"
@@ -42,7 +42,7 @@ class STMUX extends aggregation(
     stmuxParser,
     stmuxScreen,
     stmuxTitle,
-    stmuxLayout,
+    stmuxTerminal,
     stmuxBorder,
     stmuxHelp,
     stmuxErrors,
