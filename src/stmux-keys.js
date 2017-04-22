@@ -150,6 +150,7 @@ export default class stmuxKeys {
                     /*  handle manual restarting  */
                     this.terms[this.focused].terminate()
                     this.terms[this.focused].spawn(this.terms[this.focused].stmuxShell, this.terms[this.focused].stmuxArgs)
+                    this.terminated--
                 }
                 else if (key.full === "?") {
                     /*  handle help screen toggling  */
