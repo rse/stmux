@@ -26,7 +26,7 @@ import os           from "os"
 import chalk        from "chalk"
 import BlessedXTerm from "blessed-xterm"
 
-export default class stmuxLayout {
+export default class stmuxTerminal {
     initializer () {
         this.terms           = []
         this.focused         = -1
