@@ -105,7 +105,7 @@ export default class stmuxTerminal {
             /*  determine initial focus  */
             if (node.get("focus") === true) {
                 if (this.focused >= 0)
-                    throw new Error("only a single command can be focused")
+                    this.fatal("only a single command can be focused")
                 this.focused = this.terms.length - 1
             }
 
@@ -201,10 +201,10 @@ export default class stmuxTerminal {
             /*  sanity check situation  */
             let n = childs.length
             if (l < (n * 3))
-                throw new Error("terminal too small")
+                this.fatal("terminal too small")
             let k = Math.floor(l / n)
             if (k === 0)
-                throw new Error("terminal too small")
+                this.fatal("terminal too small")
 
             /*  pass 1: calculate size of explicitly sized terminals  */
             let sizes = []
