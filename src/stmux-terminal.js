@@ -100,17 +100,16 @@ export default class stmuxTerminal {
         /*  set terminal title  */
         this.setTerminalTitle(term)
 
-        /*  determine initial focus  */
+        /*  some initial initializations  */
         if (initially) {
+            /*  determine initial focus  */
             if (node.get("focus") === true) {
                 if (this.focused >= 0)
                     throw new Error("only a single command can be focused")
                 this.focused = this.terms.length - 1
             }
-        }
 
-        /*  handle focus/blur events  */
-        if (initially) {
+            /*  handle focus/blur events  */
             term.on("focus", () => {
                 this.setTerminalTitle(term)
                 this.screen.render()
@@ -119,10 +118,8 @@ export default class stmuxTerminal {
                 this.setTerminalTitle(term)
                 this.screen.render()
             })
-        }
 
-        /*  handle scrolling events  */
-        if (initially) {
+            /*  handle scrolling events  */
             term.on("scrolling-start", () => {
                 this.setTerminalTitle(term)
                 this.screen.render()
@@ -131,38 +128,31 @@ export default class stmuxTerminal {
                 this.setTerminalTitle(term)
                 this.screen.render()
             })
-        }
 
-        /*  handle beep events  */
-        if (initially) {
+            /*  handle beep events  */
             term.on("beep", () => {
                 /*  pass-through to program  */
                 this.screen.program.output.write("\x07")
             })
-        }
 
-        /*  handle error observation  */
-        if (initially) {
+            /*  handle error observation  */
             term.stmuxUpdate = false
             term.on("update", () => {
                 term.stmuxUpdate = true
             })
-        }
 
-        /*  spawn command  */
-        if (os.platform() === "win32") {
-            term.stmuxShell = "cmd.exe"
-            term.stmuxArgs  = [ "/d", "/s", "/c", node.get("cmd") ]
-        }
-        else {
-            term.stmuxShell = "sh"
-            term.stmuxArgs  = [ "-c", node.get("cmd") ]
-        }
-        if (initially)
+            /*  spawn command  */
+            if (os.platform() === "win32") {
+                term.stmuxShell = "cmd.exe"
+                term.stmuxArgs  = [ "/d", "/s", "/c", node.get("cmd") ]
+            }
+            else {
+                term.stmuxShell = "sh"
+                term.stmuxArgs  = [ "-c", node.get("cmd") ]
+            }
             term.spawn(term.stmuxShell, term.stmuxArgs)
 
-        /*  handle command termination (and optional restarting)  */
-        if (initially) {
+            /*  handle command termination (and optional restarting)  */
             term.on("exit", (code) => {
                 if (code === 0)
                     term.write(
