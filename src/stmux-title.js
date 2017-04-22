@@ -1,5 +1,4 @@
-#!/usr/bin/env node
-/*!
+/*
 **  stmux -- Simple Terminal Multiplexing for Node Environments
 **  Copyright (c) 2017 Ralf S. Engelschall <rse@engelschall.com>
 **
@@ -23,51 +22,25 @@
 **  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import aggregation     from "aggregation/es6"
-
-import stmuxVersion    from "./stmux-version"
-import stmuxOptions    from "./stmux-options"
-import stmuxParser     from "./stmux-parser"
-import stmuxScreen     from "./stmux-screen"
-import stmuxTitle      from "./stmux-title"
-import stmuxLayout     from "./stmux-layout"
-import stmuxBorder     from "./stmux-border"
-import stmuxHelp       from "./stmux-help"
-import stmuxErrors     from "./stmux-errors"
-import stmuxKeys       from "./stmux-keys"
-
-class STMUX extends aggregation(
-    stmuxVersion,
-    stmuxOptions,
-    stmuxParser,
-    stmuxScreen,
-    stmuxTitle,
-    stmuxLayout,
-    stmuxBorder,
-    stmuxHelp,
-    stmuxErrors,
-    stmuxKeys
-) {
-    main () {
-        this.parseOptions()
-        this.parseSpec()
-        this.establishScreen()
-        this.provisionInitially()
-        this.establishHelp()
-        this.handleErrors()
-        this.handleKeys()
-        this.renderScreen()
-    }
-    fatal (msg) {
-        process.stderr.write(`${this.my.name}: ERROR: ${msg}\n`)
-        process.exit(1)
-    }
-    terminate () {
-        this.screen.destroy()
-        process.exit(0)
+export default class stmuxTitle {
+    /*  determine title of terminal  */
+    setTerminalTitle (term) {
+        let title = term.node.get("title") || term.node.get("cmd")
+        title = `( {bold}${title}{/bold} )`
+        if (this.argv.number)
+            title = `[${term.stmuxNumber}]-${title}`
+        if (this.zoomed !== -1 && this.zoomed === (term.stmuxNumber - 1))
+            title = `${title}-[ZOOMED]`
+        if (term.stmuxError)
+            title = `${title}-[ERROR]`
+        if (term.scrolling)
+            title = `{yellow-fg}${title}{/yellow-fg}`
+        else if (term.stmuxError)
+            title = `{red-fg}${title}{/red-fg}`
+        else if (this.focused !== -1 && this.focused === (term.stmuxNumber - 1))
+            title = `{green-fg}${title}{/green-fg}`
+        term.stmuxTitle = title
+        term.setLabel(term.stmuxTitle)
     }
 }
-
-let stmux = new STMUX()
-stmux.main()
 

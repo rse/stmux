@@ -1,5 +1,4 @@
-#!/usr/bin/env node
-/*!
+/*
 **  stmux -- Simple Terminal Multiplexing for Node Environments
 **  Copyright (c) 2017 Ralf S. Engelschall <rse@engelschall.com>
 **
@@ -23,51 +22,30 @@
 **  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import aggregation     from "aggregation/es6"
+import path     from "path"
+import ASTY     from "asty"
+import PEG      from "pegjs-otf"
+import PEGUtil  from "pegjs-util"
 
-import stmuxVersion    from "./stmux-version"
-import stmuxOptions    from "./stmux-options"
-import stmuxParser     from "./stmux-parser"
-import stmuxScreen     from "./stmux-screen"
-import stmuxTitle      from "./stmux-title"
-import stmuxLayout     from "./stmux-layout"
-import stmuxBorder     from "./stmux-border"
-import stmuxHelp       from "./stmux-help"
-import stmuxErrors     from "./stmux-errors"
-import stmuxKeys       from "./stmux-keys"
-
-class STMUX extends aggregation(
-    stmuxVersion,
-    stmuxOptions,
-    stmuxParser,
-    stmuxScreen,
-    stmuxTitle,
-    stmuxLayout,
-    stmuxBorder,
-    stmuxHelp,
-    stmuxErrors,
-    stmuxKeys
-) {
-    main () {
-        this.parseOptions()
-        this.parseSpec()
-        this.establishScreen()
-        this.provisionInitially()
-        this.establishHelp()
-        this.handleErrors()
-        this.handleKeys()
-        this.renderScreen()
-    }
-    fatal (msg) {
-        process.stderr.write(`${this.my.name}: ERROR: ${msg}\n`)
-        process.exit(1)
-    }
-    terminate () {
-        this.screen.destroy()
-        process.exit(0)
+export default class stmuxParser {
+    parseSpec () {
+        /*  parse specification into Abstract Syntax Tree (AST)  */
+        const asty = new ASTY()
+        const parser = PEG.generateFromFile(path.join(__dirname, "..", "src", "stmux-parser.pegjs"), {
+            optimize: "size",
+            trace:    false
+        })
+        let result = PEGUtil.parse(parser, this.spec, {
+            startRule: "split",
+            makeAST: (line, column, offset, args) => {
+                return asty.create.apply(asty, args).pos(line, column, offset)
+            }
+        })
+        if (result.error !== null)
+            this.fatal("parsing failure:\n" +
+                PEGUtil.errorMessage(result.error, true)
+                    .replace(/^/mg, `${this.my.name}: ERROR: `) + "\n")
+        this.ast = result.ast
     }
 }
-
-let stmux = new STMUX()
-stmux.main()
 

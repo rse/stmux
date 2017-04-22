@@ -1,5 +1,4 @@
-#!/usr/bin/env node
-/*!
+/*
 **  stmux -- Simple Terminal Multiplexing for Node Environments
 **  Copyright (c) 2017 Ralf S. Engelschall <rse@engelschall.com>
 **
@@ -23,51 +22,14 @@
 **  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import aggregation     from "aggregation/es6"
+import my from "../package.json"
 
-import stmuxVersion    from "./stmux-version"
-import stmuxOptions    from "./stmux-options"
-import stmuxParser     from "./stmux-parser"
-import stmuxScreen     from "./stmux-screen"
-import stmuxTitle      from "./stmux-title"
-import stmuxLayout     from "./stmux-layout"
-import stmuxBorder     from "./stmux-border"
-import stmuxHelp       from "./stmux-help"
-import stmuxErrors     from "./stmux-errors"
-import stmuxKeys       from "./stmux-keys"
-
-class STMUX extends aggregation(
-    stmuxVersion,
-    stmuxOptions,
-    stmuxParser,
-    stmuxScreen,
-    stmuxTitle,
-    stmuxLayout,
-    stmuxBorder,
-    stmuxHelp,
-    stmuxErrors,
-    stmuxKeys
-) {
-    main () {
-        this.parseOptions()
-        this.parseSpec()
-        this.establishScreen()
-        this.provisionInitially()
-        this.establishHelp()
-        this.handleErrors()
-        this.handleKeys()
-        this.renderScreen()
+export default class stmuxVersion {
+    constructor () {
+        this.my = my
     }
-    fatal (msg) {
-        process.stderr.write(`${this.my.name}: ERROR: ${msg}\n`)
-        process.exit(1)
-    }
-    terminate () {
-        this.screen.destroy()
-        process.exit(0)
+    get version () {
+        return { major: 1, minor: 3, micro: 2, date:  20170422 }
     }
 }
-
-let stmux = new STMUX()
-stmux.main()
 
