@@ -102,6 +102,10 @@ export default class stmuxTerminal {
 
         /*  some initial initializations  */
         if (initially) {
+            /*  optionally enable mouse event handling  */
+            if (this.argv.mouse)
+                term.enableMouse()
+
             /*  determine initial focus  */
             if (node.get("focus") === true) {
                 if (this.focused >= 0)

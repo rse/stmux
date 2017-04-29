@@ -172,6 +172,38 @@ export default class stmuxKeys {
                 }
             }
         })
+
+        /*  handle mouse  */
+        if (this.argv.mouse) {
+            this.terms.forEach((term) => {
+                term.on("wheeldown", (...args) => {
+                    /*  on-the-fly start scrolling  */
+                    if (!term.scrolling)
+                        term.scroll(0)
+
+                    /*  scroll 10% downwards  */
+                    let n = Math.max(1, Math.floor(term.height * 0.10))
+                    term.scroll(+n)
+
+                    /*  reset/stop scrolling once we reached the end (again)  */
+                    if (Math.ceil(term.getScrollPerc()) === 100)
+                        term.resetScroll()
+                })
+                term.on("wheelup", (...args) => {
+                    /*  on-the-fly start scrolling  */
+                    if (!term.scrolling)
+                        term.scroll(0)
+
+                    /*  scroll 10% upwards  */
+                    let n = Math.max(1, Math.floor(term.height * 0.10))
+                    term.scroll(-n)
+
+                    /*  reset/stop scrolling once we reached the end (again)  */
+                    if (Math.ceil(term.getScrollPerc()) === 100)
+                        term.resetScroll()
+                })
+            })
+        }
     }
 }
 

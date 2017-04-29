@@ -122,7 +122,7 @@ The following command line arguments are supported:
 
 ```
 $ stmux [-h] [-V] [-w <condition>] [-a <activator>] [-t <title>]
-        [-c <type>] [-n] [-e <regexp>] [-m <method>] [-f <file>]
+        [-c <type>] [-n] [-e <regexp>] [-m <method>] [-M] [-f <file>]
         [-- <spec>]
 ```
 
@@ -152,6 +152,10 @@ $ stmux [-h] [-V] [-w <condition>] [-a <activator>] [-t <title>]
   list of methods to perform user notification. The default
   is no extra notification (just the terminal annotation).
   Possible methods are `beep` and `system`.
+- `-M`, `--mouse`<br/>
+  Enable mouse event handling. This enables the focus switching
+  by left mouse click, the scrolling with mouse wheel and
+  sends down mouse events to the terminal as mouse key sequences.
 - `-f <file>`, `--file <file>`<br/>
   Read specification `<spec>` from a configuration file. The
   default is to use the specification inside the command line arguments

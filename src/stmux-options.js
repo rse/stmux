@@ -48,6 +48,8 @@ export default class stmuxOptions {
                 .describe("e", "observe terminal for errors (global option)")
             .string("m").nargs("m", 1).alias("m", "method").default("m", "")
                 .describe("m", "notification method(s) in case an error was detected")
+            .boolean("M").alias("M", "mouse").default("M", false)
+                .describe("M", "enable mouse event handling")
             .string("f").nargs("f", 1).alias("f", "file").default("f", "-")
                 .describe("f", "read specification from configuration file")
             .strict()

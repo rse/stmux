@@ -72,6 +72,10 @@ export default class stmuxScreen {
             warnings:    false
         })
 
+        /*  optionally enable mouse event handling  */
+        if (this.argv.mouse)
+            this.screen.enableMouse()
+
         /*  determine screen size  */
         this.calcScreenSize()
 
