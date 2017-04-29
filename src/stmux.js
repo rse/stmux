@@ -25,16 +25,16 @@
 
 import aggregation     from "aggregation/es6"
 
-import stmuxInfo       from "./stmux-info"
-import stmuxOptions    from "./stmux-options"
-import stmuxParser     from "./stmux-parser"
-import stmuxScreen     from "./stmux-screen"
-import stmuxTitle      from "./stmux-title"
-import stmuxTerminal   from "./stmux-terminal"
-import stmuxBorder     from "./stmux-border"
-import stmuxHelp       from "./stmux-help"
-import stmuxErrors     from "./stmux-errors"
-import stmuxKeys       from "./stmux-keys"
+import stmuxInfo       from "./stmux-0-info"
+import stmuxOptions    from "./stmux-1-options"
+import stmuxParser     from "./stmux-2-parser"
+import stmuxScreen     from "./stmux-3-screen"
+import stmuxTitle      from "./stmux-4-title"
+import stmuxTerminal   from "./stmux-5-terminal"
+import stmuxBorder     from "./stmux-6-border"
+import stmuxHelp       from "./stmux-7-help"
+import stmuxErrors     from "./stmux-8-errors"
+import stmuxKeys       from "./stmux-9-keys"
 
 class STMUX extends aggregation(
     stmuxInfo,

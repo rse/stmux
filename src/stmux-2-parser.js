@@ -31,7 +31,7 @@ export default class stmuxParser {
     parseSpec () {
         /*  parse specification into Abstract Syntax Tree (AST)  */
         const asty = new ASTY()
-        const parser = PEG.generateFromFile(path.join(__dirname, "..", "src", "stmux-parser.pegjs"), {
+        const parser = PEG.generateFromFile(path.join(__dirname, "..", "src", "stmux-2-parser.pegjs"), {
             optimize: "size",
             trace:    false
         })
