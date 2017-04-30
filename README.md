@@ -28,7 +28,7 @@ Internally, stmux is based on the awesome
 [Blessed](https://github.com/chjj/blessed) screen rendering environment
 and emulates full XTerm-compatible pseudo-terminals
 to the spawned programs with the help of [Blessed XTerm](https://github.com/rse/blessed-xterm)
-and the underlying [XTerm.js](https://github.com/sourcelair/xterm.js) terminal rendering
+and the underlying [XTerm.js](http://xtermjs.org) terminal rendering
 and [node-pty](https://github.com/Tyriar/node-pty) pseudo-terminal
 integration modules.
 
@@ -43,8 +43,8 @@ $ stmux -- [ [ -s 1/3 bash .. vim ] : mc ]
 
 ...leads to the following particular terminal multiplexing environment,
 where GNU bash, Vim and Midnight Commander are running side-by-side
-inside their own XTerm emulating terminal widget (and `CTRL+a` `?` was
-pressed to open up the stmux help window):
+inside their own XTerm emulating terminal widget (and, just for fun,
+`CTRL+a` `?` was pressed to open up the stmux help window):
 
 ![stmux usage](etc/screenshot1.png)
 
@@ -162,7 +162,7 @@ $ stmux [-h] [-V] [-w <condition>] [-a <activator>] [-t <title>]
   or (alternatively) to read the specification from `stdin`.
 
 The following PEG-style grammar loosly describes the specification `<spec>`.
-For exact details see the [real PEG grammar of stmux](src/stmux.pegjs).
+For exact details see the [real PEG grammar of stmux](src/stmux-2-parser.pegjs).
 
 ```
 spec      ::= "[" directive (":"  directive)* "]"  /* vertical   split */
