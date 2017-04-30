@@ -22,6 +22,8 @@
 **  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+import Blessed from "blessed"
+
 export default class stmuxKeys {
     handleKeys () {
         /*  handle keys  */
@@ -131,8 +133,20 @@ export default class stmuxKeys {
                     this.screen.render()
                 }
                 else if (key.full === "l") {
-                    /*  handle manual screen redrawing  */
+                    /*  handle manual screen redrawing
+                        (by forcing Blessed to redraw everything
+                        via temporarily opening a dummy box)  */
                     this.provisionAgain()
+                    this.dummyBox = new Blessed.Box({
+                        left:     0,
+                        top:      0,
+                        width:    this.screenWidth,
+                        height:   this.screenHeight,
+                        content:  ""
+                    })
+                    this.screen.append(this.dummyBox)
+                    this.screen.render()
+                    this.screen.remove(this.dummyBox)
                     this.screen.render()
                 }
                 else if (key.full === "z") {
