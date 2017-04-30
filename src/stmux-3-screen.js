@@ -72,6 +72,9 @@ export default class stmuxScreen {
             warnings:    false
         })
 
+        /*  disable cursor  */
+        this.screen.program.hideCursor()
+
         /*  optionally enable mouse event handling  */
         if (this.argv.mouse)
             this.screen.enableMouse()
