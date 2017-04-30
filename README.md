@@ -286,7 +286,7 @@ Specification Examples
     +-----+-----+
     ```
 
-- `stmux [ [ -s 1/3 A .. B ] : [ C .. -s 1/3 D ] ]`:
+- `stmux -- [ [ -s 1/3 A .. B ] : [ C .. -s 1/3 D ] ]`:
 
     ```
     +---+-------+
