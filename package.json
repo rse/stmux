@@ -23,6 +23,7 @@
         "stmux":  "./bin/stmux.js"
     },
     "devDependencies": {
+        "in-publish":                                "~2.0.0",
         "grunt":                                     "~1.0.1",
         "grunt-cli":                                 "~1.2.0",
         "grunt-contrib-clean":                       "~1.1.0",
@@ -61,7 +62,7 @@
         "node":                                      ">=6.0.0"
     },
     "scripts": {
-        "prepublish": "grunt default",
+        "prepublish": "not-in-install && grunt default || in-install",
         "test":       "grunt default && node -- ./bin/stmux.js -n -w error -e \"ERROR,!style errors\" -m beep,system -- [ -s 2/3 [ -s 60% -e foo -t shell $SHELL .. 'date; true' ] : 'date; true' ]"
     }
 }
