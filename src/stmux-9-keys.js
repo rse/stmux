@@ -93,11 +93,10 @@ export default class stmuxKeys {
                             touchpoints[i] = { i, touches: 0 }
                         else {
                             let enter = this.border(this.terms[i], enteron)
-                            if (   (enteron === "left"   && enter.x1 === (leave.x1 + 1))
+                            if ((enteron === "left"   && enter.x1 === (leave.x1 + 1))
                                 || (enteron === "right"  && enter.x1 === (leave.x1 - 1)))
                                 touchpoints[i] = { i, touches: this.touches(leave.y1, leave.y2, enter.y1, enter.y2) }
-                            else if (
-                                   (enteron === "top"    && enter.y1 === (leave.y1 + 1))
+                            else if ((enteron === "top"    && enter.y1 === (leave.y1 + 1))
                                 || (enteron === "bottom" && enter.y1 === (leave.y1 - 1)))
                                 touchpoints[i] = { i, touches: this.touches(leave.x1, leave.x2, enter.x1, enter.x2) }
                             else
