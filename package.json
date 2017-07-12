@@ -31,7 +31,7 @@
         "grunt-mocha-test":                          "~0.13.2",
         "grunt-eslint":                              "~20.0.0",
         "babel-eslint":                              "~7.2.3",
-        "eslint":                                    "~4.1.1",
+        "eslint":                                    "~4.2.0",
         "eslint-config-standard":                    "~10.2.1",
         "eslint-plugin-standard":                    "~3.0.1",
         "eslint-plugin-promise":                     "~3.5.0",
@@ -47,7 +47,7 @@
     "dependencies" : {
         "aggregation":                               "~1.2.0",
         "blessed":                                   "~0.1.81",
-        "blessed-xterm":                             "~1.1.10",
+        "blessed-xterm":                             "~1.1.12",
         "chalk":                                     "~2.0.1",
         "strip-ansi":                                "~4.0.0",
         "yargs":                                     "~8.0.2",
