@@ -61,8 +61,8 @@
         "node":                                      ">=6.0.0"
     },
     "scripts": {
-        "prepublish": "npm run build",
-        "build":      "grunt default",
-        "test":       "grunt default && node -- ./bin/stmux.js -n -w error -e \"ERROR,!style errors\" -m beep,system -- [ -s 2/3 [ -s 60% -e foo -t shell $SHELL .. 'date; true' ] : 'date; true' ]"
+        "prepublishOnly": "npm run build",
+        "build":          "grunt default",
+        "test":           "grunt default && node -- ./bin/stmux.js -n -w error -e \"ERROR,!style errors\" -m beep,system -- [ -s 2/3 [ -s 60% -e foo -t shell $SHELL .. 'date; true' ] : 'date; true' ]"
     }
 }
