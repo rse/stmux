@@ -47,7 +47,7 @@
     "dependencies" : {
         "aggregation":                               "1.2.2",
         "blessed":                                   "0.1.81",
-        "blessed-xterm":                             "1.1.16",
+        "blessed-xterm":                             "1.1.17",
         "chalk":                                     "2.4.1",
         "strip-ansi":                                "4.0.0",
         "yargs":                                     "11.0.0",
