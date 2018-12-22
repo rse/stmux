@@ -115,10 +115,20 @@ export default class stmuxTerminal {
 
             /*  handle focus/blur events  */
             term.on("focus", () => {
+                /*  redetermine our view of the current focused terminal  */
+                for (let i = 0; i < this.terms.length; i++) {
+                    if (this.terms[i].focused) {
+                        this.focused = i
+                        break
+                    }
+                }
+
+                /*  repaint focused  */
                 this.setTerminalTitle(term)
                 this.screen.render()
             })
             term.on("blur", () => {
+                /*  repaint blurred  */
                 this.setTerminalTitle(term)
                 this.screen.render()
             })
