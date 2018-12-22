@@ -29,13 +29,15 @@ export default class stmuxOptions {
     parseOptions () {
         /*  parse command-line arguments  */
         this.argv = yargs
-            .usage("Usage: $0 [-h] [-v] [-w] [-a <activator>] [-t <title>] [-f <file>] [-- <spec>]")
+            .usage("Usage: $0 [-h] [-v] [-w] [-x] [-a <activator>] [-t <title>] [-f <file>] [-- <spec>]")
             .help("h").alias("h", "help").default("h", false)
             .describe("h", "show usage help")
             .boolean("v").alias("v", "version").default("v", false)
             .describe("v", "show program version information")
             .string("w").nargs("w", 1).alias("w", "wait").default("w", "")
             .describe("w", "wait after last finished command (on \"error\" or \"always\")")
+            .boolean("x").alias("x", "ctrl-c").default("x", false)
+            .describe("x", "terminate with Ctrl-C")
             .string("a").nargs("a", 1).alias("a", "activator").default("a", "a")
             .describe("a", "use CTRL+<activator> as the prefix to special commands")
             .string("t").nargs("t", 1).alias("t", "title").default("t", "stmux")

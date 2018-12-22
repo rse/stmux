@@ -121,7 +121,7 @@ Usage
 The following command line arguments are supported:
 
 ```
-$ stmux [-h] [-V] [-w <condition>] [-a <activator>] [-t <title>]
+$ stmux [-h] [-V] [-w <condition>] -[x] [-a <activator>] [-t <title>]
         [-c <type>] [-n] [-e <regexp>] [-m <method>] [-M] [-f <file>]
         [-- <spec>]
 ```
@@ -133,6 +133,8 @@ $ stmux [-h] [-V] [-w <condition>] [-a <activator>] [-t <title>]
 - `-w <condition>`, `--wait <condition>`<br/>
   Wait after last finished command (and do not shutdown automatically),
   either if any command terminated with an `error` or just `always`.
+- `-x`, `--ctrl-c`<br/>
+  Terminate program with Ctrl-C (instead of sending it to the subprocess).
 - `-a <activator>`, `--activator <activator>`<br/>
   Use `CTRL+<activator>` as the prefix to special commands.
   The default activator character is `a`.
