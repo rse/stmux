@@ -100,20 +100,27 @@ Installation
 $ npm install -g stmux
 ```
 
-### Notice
+### Dependency: node-gyp
 
-This module requires the essential Node.js module
-[node-pty](https://github.com/Tyriar/node-pty). Unfortunately,
-this module contains a native part which has to be built
-by [node-gyp](https://github.com/nodejs/node-gyp) on
-`npm install`. Please check out the documentation of
+You must have [node-gyp](https://github.com/nodejs/node-gyp) installed,
+as stmux requires [node-pty](https://github.com/Tyriar/node-pty) which 
+must be built with [node-gyp](https://github.com/nodejs/node-gyp) during 
+`npm install`.
+
+Please check out the documentation of
 [node-gyp](https://github.com/nodejs/node-gyp) on how to provide
 the necessary C/C++ compiler environment on your operating system.
-Under Linux or FreeBSD you usually don't have to do anything. Under
-macOS you have to install the "Command Line Tools" in Xcode under
-"Preferences &gt; Downloads". Under Windows you once have to open
-an elevated `cmd.exe` and run the commands `npm install --global
-windows-build-tools` and `npm config set msvs_version 2015 --global`.
+
+* OSX: install the "Command Line Tools" under 
+"Preferences &gt; Downloads" in Xcode.
+* Windows: open an elevated `cmd.exe` and run the commands 
+`npm install --global windows-build-tools` and 
+`npm config set msvs_version 2015 --global`
+* Windows Subsystem for Linux (WSL), Ubuntu distribution: run the commands
+ `sudo apt-get update` and 
+ `sudo apt-get install -y python make build-essential` 
+* Under Linux or FreeBSD you usually don't have to do anything. 
+
 
 Usage
 -----
