@@ -190,7 +190,7 @@ size      ::= /^\d+$/                              /* fixed character size */
             | /^\d+%$/                             /* total size percentage */
 ```
 
-The following keystrokes are supported under run-time:
+The following keystrokes are used:
 
 - `CTRL`+*activator* *activator*:<br/>
   Send the `CTRL`+*activator* key-sequence to the focused terminal.
