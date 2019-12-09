@@ -192,31 +192,31 @@ size      ::= /^\d+$/                              /* fixed character size */
 
 The following keystrokes are used:
 
-- `CTRL`+*activator* *activator*:<br/>
+- `CTRL`+*activator* then *activator*:<br/>
   Send the `CTRL`+*activator* key-sequence to the focused terminal.
-- `CTRL`+*activator* `BACKSPACE`:<br/>
+- `CTRL`+*activator* then `BACKSPACE`:<br/>
   Switch the focus to the previous terminal in sequence.
-- `CTRL`+*activator* `SPACE`:<br/>
+- `CTRL`+*activator* then `SPACE`:<br/>
   Switch the focus to the next terminal in sequence.
-- `CTRL`+*activator* `LEFT`/`RIGHT`/`UP`/`DOWN`:<br/>
+- `CTRL`+*activator*  then`LEFT`/`RIGHT`/`UP`/`DOWN`:<br/>
   Switch the focus to the best matching terminal in a direction.
-- `CTRL`+*activator* `1`/`2`/.../`9`:<br/>
+- `CTRL`+*activator* then `1`/`2`/.../`9`:<br/>
   Directly switch to a particular terminal.
-- `CTRL`+*activator* `n`:<br/>
+- `CTRL`+*activator* then `n`:<br/>
   Toggle showing/hiding of terminal numbers.
-- `CTRL`+*activator* `z`:<br/>
+- `CTRL`+*activator* then `z`:<br/>
   Toggle the zooming of focused terminal.
-- `CTRL`+*activator* `v`:<br/>
+- `CTRL`+*activator* then `v`:<br/>
   Switch the focused terminal into visual/scrolling mode.
   Use `PAGEUP`/`PAGEDOWN` during this mode to scroll up/down.
   Any other key leaves this mode.
-- `CTRL`+*activator* `l`:<br/>
+- `CTRL`+*activator* then `l`:<br/>
   Relayout the screen.
-- `CTRL`+*activator* `r`:<br/>
+- `CTRL`+*activator* then `r`:<br/>
   Restart the program in the focused terminal.
-- `CTRL`+*activator* `k`:<br/>
+- `CTRL`+*activator* then `k`:<br/>
   Kill the application and all shell commands in all terminals.
-- `CTRL`+*activator* `?`:<br/>
+- `CTRL`+*activator* then `?`:<br/>
   Show help window.
 
 Specification Examples
