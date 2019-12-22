@@ -35,7 +35,7 @@ export default class stmuxParser {
             optimize: "size",
             trace:    false
         })
-        let result = PEGUtil.parse(parser, this.spec, {
+        const result = PEGUtil.parse(parser, this.spec, {
             startRule: "split",
             makeAST: (line, column, offset, args) => {
                 return asty.create.apply(asty, args).pos(line, column, offset)

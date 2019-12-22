@@ -186,7 +186,7 @@ export default class stmuxTerminal {
                 /*  handle termination and restarting  */
                 if (node.get("restart") === true) {
                     /*  restart command  */
-                    let delay = node.get("delay")
+                    const delay = node.get("delay")
                     if (delay > 0)
                         setTimeout(() => term.spawn(term.stmuxShell, term.stmuxArgs), delay)
                     else
@@ -210,18 +210,18 @@ export default class stmuxTerminal {
             this.fatal("invalid AST node (expected \"split\")")
 
         /*  provision terminals in a particular direction  */
-        let childs = node.childs()
+        const childs = node.childs()
         const divide = (s, l, childs) => {
             /*  sanity check situation  */
-            let n = childs.length
+            const n = childs.length
             if (l < (n * 3))
                 this.fatal("terminal too small")
-            let k = Math.floor(l / n)
+            const k = Math.floor(l / n)
             if (k === 0)
                 this.fatal("terminal too small")
 
             /*  pass 1: calculate size of explicitly sized terminals  */
-            let sizes = []
+            const sizes = []
             for (let i = 0; i < n; i++) {
                 sizes[i] = -1
                 let size = childs[i].get("size")
@@ -280,7 +280,7 @@ export default class stmuxTerminal {
             }
 
             /*  pass 4: provide results  */
-            let SL = []
+            const SL = []
             for (let i = 0; i < n; i++) {
                 SL.push({ s: s, l: sizes[i] })
                 s += sizes[i]
@@ -288,12 +288,12 @@ export default class stmuxTerminal {
             return SL
         }
         if (node.get("horizontal") === true) {
-            let SL = divide(x, w, childs)
+            const SL = divide(x, w, childs)
             for (let i = 0; i < childs.length; i++)
                 this.provision(SL[i].s, y, SL[i].l, h, childs[i], initially)
         }
         else if (node.get("vertical") === true) {
-            let SL = divide(y, h, childs)
+            const SL = divide(y, h, childs)
             for (let i = 0; i < childs.length; i++)
                 this.provision(x, SL[i].s, w, SL[i].l, childs[i], initially)
         }

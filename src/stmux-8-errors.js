@@ -29,10 +29,10 @@ export default class stmuxErrors {
     handleErrors () {
         /*  determine error patterns  */
         const parseErrorPatterns = (patterns) => {
-            let result = []
+            const result = []
             while (patterns) {
                 let [ , pattern, rest ] = patterns.match(/^((?:\\,|.)+?)(?:,(.+))?$/)
-                let m = pattern.match(/^!(.+)$/)
+                const m = pattern.match(/^!(.+)$/)
                 let negate = false
                 if (m) {
                     negate = true
@@ -43,24 +43,24 @@ export default class stmuxErrors {
             }
             return result
         }
-        let globalErrorPatterns = parseErrorPatterns(this.argv.error)
+        const globalErrorPatterns = parseErrorPatterns(this.argv.error)
         this.terms.forEach((term) => {
-            let patterns = term.node.get("error")
+            const patterns = term.node.get("error")
             term.stmuxErrorPatterns = patterns ? parseErrorPatterns(patterns) : []
             term.stmuxError = false
         })
 
         /*  handle error detection  */
         let notifyLocked = false
-        let notifyStateOld = []
-        let notifyStateNew = []
+        const notifyStateOld = []
+        const notifyStateNew = []
         this.terms.forEach((term) => {
             notifyStateOld[term.stmuxNumber - 1] = ""
             notifyStateNew[term.stmuxNumber - 1] = ""
         })
         setInterval(() => {
             let dirty = false
-            let notify = []
+            const notify = []
             this.terms.forEach((term) => {
                 /*  act only if an update exists  */
                 if (!term.stmuxUpdate)
@@ -75,12 +75,12 @@ export default class stmuxErrors {
                 /*  take screenshot  */
                 let screenshot = term.screenshot()
                 screenshot = stripAnsi(screenshot)
-                let lines = screenshot.split(/\r?\n/)
+                const lines = screenshot.split(/\r?\n/)
 
                 /*  match errors in screenshot  */
                 const matches = (string, patterns) => {
                     for (let i = 0; i < patterns.length; i++) {
-                        let matched = patterns[i].regexp.test(string)
+                        const matched = patterns[i].regexp.test(string)
                         if (!(   ( matched && !patterns[i].negate)
                               || (!matched &&  patterns[i].negate)))
                             return false
@@ -137,16 +137,16 @@ export default class stmuxErrors {
 
             /*  raise notification  */
             if (this.argv.method !== "" && notify.length > 0 && !notifyLocked) {
-                let stateOld = notifyStateOld.reduce((a, v) => a + v, "")
-                let stateNew = notifyStateNew.reduce((a, v) => a + v, "")
+                const stateOld = notifyStateOld.reduce((a, v) => a + v, "")
+                const stateNew = notifyStateNew.reduce((a, v) => a + v, "")
                 if (stateOld !== stateNew) {
                     /*  determine message  */
-                    let notifyMsg = `${this.my.name}: ERROR situation${notify.length > 1 ? "s" : ""} ` +
+                    const notifyMsg = `${this.my.name}: ERROR situation${notify.length > 1 ? "s" : ""} ` +
                         `detected in terminal${notify.length > 1 ? "s" : ""} ` +
                         notify.map((term) => "#" + term.stmuxNumber).join(", ")
 
                     /*  determine method(s)  */
-                    let methods = {}
+                    const methods = {}
                     this.argv.method.split(",").forEach((method) => { methods[method] = true })
 
                     /*  send notification(s)  */

@@ -39,7 +39,7 @@ export default class stmuxKeys {
                 prefixMode = 2
                 if (key.full === this.argv.activator) {
                     /*  handle special prefix activator character  */
-                    let ch = String.fromCharCode(1 + this.argv.activator.charCodeAt(0) - "a".charCodeAt(0))
+                    const ch = String.fromCharCode(1 + this.argv.activator.charCodeAt(0) - "a".charCodeAt(0))
                     this.terms[this.focused].injectInput(ch)
                 }
                 else if (this.zoomed === -1 && key.full === "backspace") {
@@ -87,12 +87,12 @@ export default class stmuxKeys {
                     }
 
                     /*  find the touchpoints of terminals with our border  */
-                    let touchpoints = []
+                    const touchpoints = []
                     for (let i = 0; i < this.terms.length; i++) {
                         if (i === this.focused)
                             touchpoints[i] = { i, touches: 0 }
                         else {
-                            let enter = this.border(this.terms[i], enteron)
+                            const enter = this.border(this.terms[i], enteron)
                             if ((enteron === "left"   && enter.x1 === (leave.x1 + 1))
                                 || (enteron === "right"  && enter.x1 === (leave.x1 - 1)))
                                 touchpoints[i] = { i, touches: this.touches(leave.y1, leave.y2, enter.y1, enter.y2) }
@@ -105,7 +105,7 @@ export default class stmuxKeys {
                     }
 
                     /*  determine best matching terminal  */
-                    let bestMatch = touchpoints.sort((t1, t2) => t2.touches - t1.touches)[0]
+                    const bestMatch = touchpoints.sort((t1, t2) => t2.touches - t1.touches)[0]
 
                     /*  switch to best matching one  */
                     if (bestMatch.touches > 0) {
@@ -117,7 +117,7 @@ export default class stmuxKeys {
                 }
                 else if (this.zoomed === -1 && key.full.match(/^[1-9]$/)) {
                     /*  handle terminal focus change (directly)  */
-                    let n = parseInt(key.full)
+                    const n = parseInt(key.full)
                     if (n <= this.terms.length) {
                         this.focused = n - 1
                         this.terms[this.focused].focus()
@@ -195,7 +195,7 @@ export default class stmuxKeys {
                         term.scroll(0)
 
                     /*  scroll 10% downwards  */
-                    let n = Math.max(1, Math.floor(term.height * 0.10))
+                    const n = Math.max(1, Math.floor(term.height * 0.10))
                     term.scroll(+n)
 
                     /*  reset/stop scrolling once we reached the end (again)  */
@@ -208,7 +208,7 @@ export default class stmuxKeys {
                         term.scroll(0)
 
                     /*  scroll 10% upwards  */
-                    let n = Math.max(1, Math.floor(term.height * 0.10))
+                    const n = Math.max(1, Math.floor(term.height * 0.10))
                     term.scroll(-n)
 
                     /*  reset/stop scrolling once we reached the end (again)  */

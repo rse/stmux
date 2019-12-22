@@ -68,6 +68,6 @@ class STMUX extends aggregation(
     }
 }
 
-let stmux = new STMUX()
+const stmux = new STMUX()
 stmux.main()
 

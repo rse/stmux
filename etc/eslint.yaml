@@ -62,4 +62,6 @@ rules:
     object-property-newline:             off
     curly:                               off
     space-in-parens:                     off
+    lines-between-class-members:         off
+    array-bracket-spacing:               off
 

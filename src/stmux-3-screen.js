@@ -54,7 +54,7 @@ export default class stmuxScreen {
             catch (ex) {
                 this.fatal("under Windows/MinTTY you need the \"winpty\" utility on PATH")
             }
-            let child = childProcess.spawnSync(winpty, process.argv, {
+            const child = childProcess.spawnSync(winpty, process.argv, {
                 stdio: [ "inherit", "inherit", "inherit" ]
             })
             process.exit(child.status)

@@ -80,8 +80,8 @@ export default class stmuxOptions {
                 /*  via stdin  */
                 this.spec = ""
                 process.stdin.setEncoding("utf-8")
-                let BUFSIZE = 256
-                let buf = Buffer.alloc(BUFSIZE)
+                const BUFSIZE = 256
+                const buf = Buffer.alloc(BUFSIZE)
                 while (true) {
                     let bytesRead = 0
                     try {
