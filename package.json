@@ -2,7 +2,7 @@
     "name":        "stmux",
     "homepage":    "http://github.com/rse/stmux",
     "description": "Simple Terminal Multiplexing for Node Environments",
-    "version":     "1.7.1",
+    "version":     "1.8.0",
     "license":     "MIT",
     "author": {
         "name":    "Dr. Ralf S. Engelschall",
