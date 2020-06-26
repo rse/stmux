@@ -174,6 +174,11 @@ export default class stmuxKeys {
                     /*  kill the program  */
                     this.terminate()
                 }
+                else if (key.full === "c") {
+                    /*  send Ctrl-C to all terminals and disable waiting */
+                    this.argv.wait = ""
+                    this.terms.forEach(term => term.injectInput("\x03"))
+                }
             }
             else if (prefixMode === 2) {
                 /*  leave prefix mode  */

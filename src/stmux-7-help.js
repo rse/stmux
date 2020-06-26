@@ -57,6 +57,8 @@ export default class stmuxHelp {
                 "restart shell command in focused terminal\n" +
             `CTRL+${this.argv.activator} {bold}{green-fg}k{/green-fg}{/bold} ................... ` +
                 "kill stmux application (and all shell commands)\n" +
+            `CTRL+${this.argv.activator} {bold}{green-fg}c{/green-fg}{/bold} ................... ` +
+                "quit stmux gracefully (send Ctrl-C to all terminals)\n" +
             `CTRL+${this.argv.activator} {bold}{green-fg}?{/green-fg}{/bold} ................... ` +
                 "show (this) help window\n" +
             ""
