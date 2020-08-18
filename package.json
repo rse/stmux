@@ -1,67 +1,69 @@
 {
-    "name":        "stmux",
-    "homepage":    "http://github.com/rse/stmux",
+    "name": "stmux",
+    "homepage": "http://github.com/rse/stmux",
     "description": "Simple Terminal Multiplexing for Node Environments",
-    "version":     "1.8.0",
-    "license":     "MIT",
+    "version": "1.8.0",
+    "license": "MIT",
     "author": {
-        "name":    "Dr. Ralf S. Engelschall",
-        "email":   "rse@engelschall.com",
-        "url":     "http://engelschall.com"
+        "name": "Dr. Ralf S. Engelschall",
+        "email": "rse@engelschall.com",
+        "url": "http://engelschall.com"
     },
     "keywords": [
-        "simple", "terminal", "multiplexing"
+        "simple",
+        "terminal",
+        "multiplexing"
     ],
     "repository": {
         "type": "git",
-        "url":  "git://github.com/rse/stmux.git"
+        "url": "git://github.com/rse/stmux.git"
     },
     "bugs": {
-        "url":  "http://github.com/rse/stmux/issues"
+        "url": "http://github.com/rse/stmux/issues"
     },
     "bin": {
-        "stmux":  "./bin/stmux.js"
+        "stmux": "./bin/stmux.js"
     },
     "devDependencies": {
-        "grunt":                                     "1.0.4",
-        "grunt-cli":                                 "1.3.2",
-        "grunt-contrib-clean":                       "2.0.0",
-        "grunt-contrib-watch":                       "1.1.0",
-        "grunt-babel":                               "8.0.0",
-        "grunt-mocha-test":                          "0.13.3",
-        "mocha":                                     "6.2.2",
-        "grunt-eslint":                              "22.0.0",
-        "babel-eslint":                              "10.0.3",
-        "eslint":                                    "6.8.0",
-        "eslint-config-standard":                    "14.1.0",
-        "eslint-plugin-standard":                    "4.0.1",
-        "eslint-plugin-promise":                     "4.2.1",
-        "eslint-plugin-import":                      "2.19.1",
-        "eslint-plugin-node":                        "10.0.0",
-        "@babel/core":                               "7.7.7",
-        "@babel/preset-env":                         "7.7.7",
-        "@babel/plugin-transform-runtime":           "7.7.6"
+        "@babel/core": "7.7.7",
+        "@babel/plugin-transform-runtime": "7.7.6",
+        "@babel/preset-env": "7.7.7",
+        "babel-eslint": "10.0.3",
+        "eslint": "6.8.0",
+        "eslint-config-standard": "14.1.0",
+        "eslint-plugin-import": "2.19.1",
+        "eslint-plugin-node": "10.0.0",
+        "eslint-plugin-promise": "4.2.1",
+        "eslint-plugin-standard": "4.0.1",
+        "grunt": "1.0.4",
+        "grunt-babel": "8.0.0",
+        "grunt-cli": "1.3.2",
+        "grunt-contrib-clean": "2.0.0",
+        "grunt-contrib-watch": "1.1.0",
+        "grunt-eslint": "22.0.0",
+        "grunt-mocha-test": "0.13.3",
+        "mocha": "^8.1.1"
     },
-    "dependencies" : {
-        "@babel/runtime":                            "7.7.7",
-        "aggregation":                               "1.2.6",
-        "blessed":                                   "0.1.81",
-        "blessed-xterm":                             "1.4.0",
-        "chalk":                                     "3.0.0",
-        "strip-ansi":                                "6.0.0",
-        "yargs":                                     "15.0.2",
-        "which":                                     "2.0.2",
-        "asty":                                      "1.8.9",
-        "pegjs-otf":                                 "1.2.16",
-        "pegjs-util":                                "1.4.19",
-        "node-notifier":                             "6.0.0"
+    "dependencies": {
+        "@babel/runtime": "7.7.7",
+        "aggregation": "1.2.6",
+        "asty": "1.8.9",
+        "blessed": "0.1.81",
+        "blessed-xterm": "1.4.0",
+        "chalk": "3.0.0",
+        "node-notifier": "6.0.0",
+        "pegjs-otf": "1.2.16",
+        "pegjs-util": "1.4.19",
+        "strip-ansi": "6.0.0",
+        "which": "2.0.2",
+        "yargs": "^15.4.1"
     },
     "engines": {
-        "node":                                      ">=8.0.0"
+        "node": ">=8.0.0"
     },
     "scripts": {
         "prepublishOnly": "npm run build",
-        "build":          "grunt default",
-        "test":           "grunt default && node -- ./bin/stmux.js -n -w error -e \"ERROR,!style errors\" -m beep,system -- [ -s 2/3 [ -s 60% -e foo -t shell $SHELL .. 'date; true' ] : 'date; true' ]"
+        "build": "grunt default",
+        "test": "grunt default && node -- ./bin/stmux.js -n -w error -e \"ERROR,!style errors\" -m beep,system -- [ -s 2/3 [ -s 60% -e foo -t shell $SHELL .. 'date; true' ] : 'date; true' ]"
     }
 }
