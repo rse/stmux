@@ -50,7 +50,7 @@ module.exports = function (grunt) {
                     presets: [
                         [ "@babel/preset-env", {
                             "targets": {
-                                "node": "8.0.0"
+                                "node": "10.0.0"
                             }
                         } ]
                     ],

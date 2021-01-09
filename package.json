@@ -23,41 +23,40 @@
         "stmux":  "./bin/stmux.js"
     },
     "devDependencies": {
-        "grunt":                                     "1.0.4",
+        "grunt":                                     "1.3.0",
         "grunt-cli":                                 "1.3.2",
         "grunt-contrib-clean":                       "2.0.0",
         "grunt-contrib-watch":                       "1.1.0",
         "grunt-babel":                               "8.0.0",
         "grunt-mocha-test":                          "0.13.3",
-        "mocha":                                     "6.2.2",
-        "grunt-eslint":                              "22.0.0",
-        "babel-eslint":                              "10.0.3",
-        "eslint":                                    "6.8.0",
-        "eslint-config-standard":                    "14.1.0",
-        "eslint-plugin-standard":                    "4.0.1",
+        "mocha":                                     "8.2.1",
+        "grunt-eslint":                              "23.0.0",
+        "babel-eslint":                              "10.1.0",
+        "eslint":                                    "7.17.0",
+        "eslint-config-standard":                    "16.0.2",
         "eslint-plugin-promise":                     "4.2.1",
-        "eslint-plugin-import":                      "2.19.1",
-        "eslint-plugin-node":                        "10.0.0",
-        "@babel/core":                               "7.7.7",
-        "@babel/preset-env":                         "7.7.7",
-        "@babel/plugin-transform-runtime":           "7.7.6"
+        "eslint-plugin-import":                      "2.22.1",
+        "eslint-plugin-node":                        "11.1.0",
+        "@babel/core":                               "7.12.10",
+        "@babel/preset-env":                         "7.12.11",
+        "@babel/plugin-transform-runtime":           "7.12.10"
     },
     "dependencies" : {
-        "@babel/runtime":                            "7.7.7",
+        "@babel/runtime":                            "7.12.5",
         "aggregation":                               "1.2.6",
         "blessed":                                   "0.1.81",
-        "blessed-xterm":                             "1.4.0",
-        "chalk":                                     "3.0.0",
+        "blessed-xterm":                             "1.4.1",
+        "chalk":                                     "4.1.0",
         "strip-ansi":                                "6.0.0",
-        "yargs":                                     "15.0.2",
+        "yargs":                                     "16.2.0",
         "which":                                     "2.0.2",
-        "asty":                                      "1.8.9",
-        "pegjs-otf":                                 "1.2.16",
-        "pegjs-util":                                "1.4.19",
-        "node-notifier":                             "6.0.0"
+        "asty":                                      "1.8.14",
+        "pegjs-otf":                                 "1.2.18",
+        "pegjs-util":                                "1.4.21",
+        "node-notifier":                             "9.0.0"
     },
     "engines": {
-        "node":                                      ">=8.0.0"
+        "node":                                      ">=10.0.0"
     },
     "scripts": {
         "prepublishOnly": "npm run build",
