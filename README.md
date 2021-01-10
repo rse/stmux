@@ -77,7 +77,7 @@ run-time of the backend server project.
 
         "start":      "cd sv && npm start",
 
-        "clean":      "npm run clean:ui && npm run clean:sv"
+        "clean":      "npm run clean:ui && npm run clean:sv",
         "clean:ui":   "cd ui && npm run clean",
         "clean:sv":   "cd sv && npm run clean",
 
