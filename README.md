@@ -82,7 +82,7 @@ run-time of the backend server project.
         "clean:sv":   "cd sv && npm run clean",
 
         "dev":        "stmux -w always -e ERROR -m beep,system -- [ [ \"npm run dev:ui\" .. \"npm run dev:sv\" ] : -s 1/3 -f \"npm start\" ]",
-        "dev:ui":     "cd ui && npm run build:watch"
+        "dev:ui":     "cd ui && npm run build:watch",
         "dev:sv":     "cd sv && npm run build:watch"
     }
 }
