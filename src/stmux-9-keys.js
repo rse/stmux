@@ -29,6 +29,10 @@ export default class stmuxKeys {
         /*  handle keys  */
         let prefixMode = 0
         this.screen.on("keypress", (ch, key) => {
+            if (this.argv["ctrl-c"] && key.full === "C-c") {
+                this.terminate()
+            }
+
             if ((prefixMode === 0 || prefixMode === 2) && key.full === `C-${this.argv.activator}`) {
                 /*  enter prefix mode  */
                 prefixMode = 1
