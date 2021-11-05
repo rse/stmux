@@ -59,8 +59,8 @@
         "node":                                      ">=10.0.0"
     },
     "scripts": {
-        "prepublishOnly": "npm run build",
-        "build":          "grunt default",
-        "test":           "grunt default && ./test.sh"
+        "prepublishOnly": "make",
+        "build":          "make build",
+        "test":           "make test"
     }
 }
