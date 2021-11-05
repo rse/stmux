@@ -24,18 +24,25 @@
 
 NPM   = npm
 GRUNT = ./node_modules/grunt-cli/bin/grunt
+BIN = ./bin/stmux.js
+.PHONY: all clean distclean test build
 
-all: build
+all: $(BIN) test
 
-bootstrap:
-	@if [ ! -x $(GRUNT) ]; then $(NPM) install; fi
+test: $(BIN) ./test.sh
+	./test.sh
 
-build: bootstrap
+build: $(BIN)
+
+$(GRUNT):
+	$(NPM) install
+
+$(BIN): src/*.js
 	@$(GRUNT)
 
-clean: bootstrap
+clean: $(GRUNT)
 	@$(GRUNT) clean:clean
 
-distclean: bootstrap
+distclean: $(GRUNT)
 	@$(GRUNT) clean:clean clean:distclean
 
