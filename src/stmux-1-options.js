@@ -97,7 +97,7 @@ export default class stmuxOptions {
                     }
                     if (bytesRead === 0)
                         break
-                    this.spec += buf.toString(null, 0, bytesRead)
+                    this.spec += buf.toString(undefined, 0, bytesRead)
                 }
             }
             else {
