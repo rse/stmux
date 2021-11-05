@@ -12,6 +12,10 @@ should_not_crash_on_reading_from_stdin() {
     fi
 }
 
+should_run_basic_use_case(){
+    $STMUX -n -w error -e "ERROR,!style errors" -m beep,system -- [ -s 2/3 [ -s 60% -e foo -t shell $SHELL .. 'date; true' ] : 'date; true' ]
+}
+
 run_all_tests(){
     for f in $(declare -F | grep should_ | sed 's/declare -f//'); do 
         $f || exit 1 # exit on first error
