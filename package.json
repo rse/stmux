@@ -51,7 +51,7 @@
         "yargs":                                     "17.2.1",
         "which":                                     "2.0.2",
         "asty":                                      "1.8.15",
-        "pegjs-otf":                                 "1.2.18",
+        "pegjs-otf":                                 "1.2.19",
         "pegjs-util":                                "1.4.21",
         "node-notifier":                             "10.0.0"
     },
