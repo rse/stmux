@@ -171,8 +171,16 @@ export default class stmuxKeys {
                     this.screen.render()
                 }
                 else if (key.full === "k") {
-                    /*  kill the program  */
-                    this.terminate()
+                    /*  send CTRL+c to all terminals to give processes a chance to gracefully terminate  */
+                    this.terms.forEach((term) => term.injectInput("\x03"))
+                    setTimeout(() => {
+                        /*  terminate all terminal processes  */
+                        this.terms.forEach((term) => term.terminate())
+                        setTimeout(() => {
+                            /*  finally kill the program  */
+                            this.terminate()
+                        }, 500)
+                    }, 500)
                 }
             }
             else if (prefixMode === 2) {
