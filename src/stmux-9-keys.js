@@ -152,6 +152,7 @@ export default class stmuxKeys {
                     /*  handle zooming  */
                     this.zoomed = (this.zoomed === -1 ? this.focused : -1)
                     this.provisionAgain()
+                    this.terms[this.focused].setFront()
                     this.terms[this.focused].focus()
                     this.screen.render()
                 }
