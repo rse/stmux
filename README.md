@@ -100,16 +100,14 @@ Installation
 $ npm install -g stmux
 ```
 
-### Dependency: node-gyp
+### Transitive Dependency
 
-You must have [node-gyp](https://github.com/nodejs/node-gyp) installed,
-as stmux requires [node-pty](https://github.com/Tyriar/node-pty) which
-must be built with [node-gyp](https://github.com/nodejs/node-gyp) during
-`npm install`.
-
-Please check out the documentation of
-[node-gyp](https://github.com/nodejs/node-gyp) on how to provide
-the necessary C/C++ compiler environment on your operating system.
+The dependencies of stmux transitively include
+[node-pty](https://github.com/Tyriar/node-pty) which must be
+built with [node-gyp](https://github.com/nodejs/node-gyp)
+during `npm install`. Please check out the documentation of
+[node-gyp](https://github.com/nodejs/node-gyp) on how to provide the
+necessary C/C++ compiler environment on your operating system.
 
 * macOS: install the "Command Line Tools" under
   "Preferences &gt; Downloads" in Xcode.
