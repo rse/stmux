@@ -141,7 +141,9 @@ $ stmux [-h] [-V] [-w <condition>] [-a <activator>] [-t <title>]
   either if any command terminated with an `error` or just `always`.
 - `-a <activator>`, `--activator <activator>`<br/>
   Use `CTRL+<activator>` as the prefix to special commands.
-  The default activator character is `a`.
+  The default activator character is `a`. For instance, for the
+  default activator case, opening the help popup requires you to
+  press `CTRL+a` (and release it again) and then (separately) press `?`.
 - `-t <title>`, `--title <title>`<br/>
   Set title on terminal. The default title is `stmux`.
 - `-c <type>`, `--cursor <type>`<br/>
