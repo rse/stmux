@@ -79,7 +79,7 @@ export default class stmuxOptions {
             if (this.argv.file === "-") {
                 /*  via stdin  */
                 this.spec = ""
-                process.stdin.setEncoding("utf-8")
+                process.stdin.setEncoding("utf8")
                 const BUFSIZE = 256
                 const buf = Buffer.alloc(BUFSIZE)
                 while (true) {
@@ -97,7 +97,7 @@ export default class stmuxOptions {
                     }
                     if (bytesRead === 0)
                         break
-                    this.spec += buf.toString(null, 0, bytesRead)
+                    this.spec += buf.toString("utf8", 0, bytesRead)
                 }
             }
             else {
