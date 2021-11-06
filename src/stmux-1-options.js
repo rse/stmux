@@ -61,7 +61,7 @@ export default class stmuxOptions {
         if (this.argv.version) {
             process.stderr.write(this.my.name + " " + this.my.version + " <" + this.my.homepage + ">\n")
             process.stderr.write(this.my.description + "\n")
-            process.stderr.write("Copyright (c) 2017 " + this.my.author.name + " <" + this.my.author.url + ">\n")
+            process.stderr.write("Copyright (c) 2017-2021 " + this.my.author.name + " <" + this.my.author.url + ">\n")
             process.stderr.write("Licensed under " + this.my.license + " <http://spdx.org/licenses/" + this.my.license + ".html>\n")
             process.exit(0)
         }
