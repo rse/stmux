@@ -282,7 +282,7 @@ export default class stmuxTerminal {
             /*  pass 4: provide results  */
             const SL = []
             for (let i = 0; i < n; i++) {
-                SL.push({ s: s, l: sizes[i] })
+                SL.push({ s, l: sizes[i] })
                 s += sizes[i]
             }
             return SL
