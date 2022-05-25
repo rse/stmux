@@ -29,12 +29,10 @@ extends:
     - eslint-config-standard
 
 parserOptions:
-    ecmaVersion: 8
+    ecmaVersion: 12
     sourceType:  module
     ecmaFeatures:
         jsx:     false
-
-parser: babel-eslint
 
 env:
     browser:       false
