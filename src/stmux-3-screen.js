@@ -69,7 +69,8 @@ export default class stmuxScreen {
             title:       this.argv.title,
             smartCSR:    true,
             autoPadding: false,
-            warnings:    false
+            warnings:    false,
+            fullUnicode: true
         })
 
         /*  disable cursor  */
