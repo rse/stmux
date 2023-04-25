@@ -63,8 +63,11 @@ class STMUX extends aggregation(
         process.exit(1)
     }
     terminate () {
-        this.screen.destroy()
-        process.exit(0)
+        this.terms.forEach(t => t.terminate())
+        setTimeout(() => {
+            this.screen.destroy()
+            process.exit(0)
+        }, 50)
     }
 }
 
