@@ -23,7 +23,7 @@
         "stmux":  "./bin/stmux.js"
     },
     "devDependencies": {
-        "grunt":                                     "1.5.3",
+        "grunt":                                     "1.6.1",
         "grunt-cli":                                 "1.4.3",
         "grunt-contrib-clean":                       "2.0.1",
         "grunt-contrib-watch":                       "1.1.0",
@@ -31,23 +31,23 @@
         "grunt-mocha-test":                          "0.13.3",
         "mocha":                                     "10.2.0",
         "grunt-eslint":                              "24.0.1",
-        "eslint":                                    "8.30.0",
+        "eslint":                                    "8.39.0",
         "eslint-config-standard":                    "17.0.0",
         "eslint-plugin-promise":                     "6.1.1",
-        "eslint-plugin-import":                      "2.26.0",
+        "eslint-plugin-import":                      "2.27.5",
         "eslint-plugin-node":                        "11.1.0",
-        "@babel/core":                               "7.20.7",
-        "@babel/preset-env":                         "7.20.2",
-        "@babel/plugin-transform-runtime":           "7.19.6"
+        "@babel/core":                               "7.21.4",
+        "@babel/preset-env":                         "7.21.4",
+        "@babel/plugin-transform-runtime":           "7.21.4"
     },
     "dependencies" : {
-        "@babel/runtime":                            "7.20.7",
+        "@babel/runtime":                            "7.21.0",
         "aggregation":                               "1.2.7",
         "blessed":                                   "0.1.81",
         "blessed-xterm":                             "1.4.4",
         "chalk":                                     "4.1.2",
         "strip-ansi":                                "6.0.0",
-        "yargs":                                     "17.6.2",
+        "yargs":                                     "17.7.1",
         "which":                                     "3.0.0",
         "asty":                                      "1.8.18",
         "pegjs-otf":                                 "1.2.20",
@@ -55,7 +55,7 @@
         "node-notifier":                             "10.0.1"
     },
     "engines": {
-        "node":                                      ">=10.0.0"
+        "node":                                      ">=12.0.0"
     },
     "upd":                                           [ "!chalk", "!strip-ansi" ],
     "scripts": {
