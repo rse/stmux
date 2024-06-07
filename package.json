@@ -20,7 +20,7 @@
         "url":  "http://github.com/rse/stmux/issues"
     },
     "bin": {
-        "stmux":  "./bin/stmux.js"
+        "stmux":  "bin/stmux.js"
     },
     "devDependencies": {
         "grunt":                                     "1.6.1",
