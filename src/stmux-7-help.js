@@ -1,6 +1,6 @@
 /*
 **  stmux -- Simple Terminal Multiplexing for Node Environments
-**  Copyright (c) 2017-2023 Dr. Ralf S. Engelschall <rse@engelschall.com>
+**  Copyright (c) 2017-2024 Dr. Ralf S. Engelschall <rse@engelschall.com>
 **
 **  Permission is hereby granted, free of charge, to any person obtaining
 **  a copy of this software and associated documentation files (the
@@ -29,7 +29,7 @@ export default class stmuxHelp {
         const helpText = "" +
             `{bold}${this.my.name} ${this.my.version} <${this.my.homepage}>{/bold}\n` +
             `{bold}${this.my.description}{/bold}\n` +
-            `Copyright (c) 2017 ${this.my.author.name} <${this.my.author.url}>\n` +
+            `Copyright (c) 2017-2024 ${this.my.author.name} <${this.my.author.url}>\n` +
             `Licensed under ${this.my.license} <http://spdx.org/licenses/${this.my.license}.html>\n` +
             "\n" +
             "Global Keys:\n" +
