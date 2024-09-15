@@ -9,18 +9,11 @@
         "email":   "rse@engelschall.com",
         "url":     "http://engelschall.com"
     },
-    "keywords": [
-        "simple", "terminal", "multiplexing"
-    ],
-    "repository": {
-        "type": "git",
-        "url":  "git://github.com/rse/stmux.git"
-    },
-    "bugs": {
-        "url":  "http://github.com/rse/stmux/issues"
-    },
+    "keywords":    [ "simple", "terminal", "multiplexing" ],
+    "repository":  { "type": "git", "url": "git://github.com/rse/stmux.git" },
+    "bugs":        { "url":  "http://github.com/rse/stmux/issues" },
     "bin": {
-        "stmux":  "bin/stmux.js"
+        "stmux":   "bin/stmux.js"
     },
     "devDependencies": {
         "grunt":                                     "1.6.1",
