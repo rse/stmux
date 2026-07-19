@@ -83,8 +83,8 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 /*  via command-line arguments  */
                 this.spec = this.argv._.map((arg) => {
                     let str = String(arg)
-                    if (/[\s"]/.test(str))
-                        str = `"${str.replace(/"/g, "\\\"")}"`
+                    if (/[\s"\\]/.test(str))
+                        str = `"${str.replace(/\\/g, "\\\\").replace(/"/g, "\\\"")}"`
                     return str
                 }).join(" ")
             }
