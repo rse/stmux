@@ -115,9 +115,13 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 }
                 else {
                     /*  via file  */
-                    if (!fs.existsSync(this.argv.file))
-                        this.fatal(`cannot find specification file "${this.argv.file}"`)
-                    this.spec = fs.readFileSync(this.argv.file, "utf8")
+                    try {
+                        this.spec = fs.readFileSync(this.argv.file, "utf8")
+                    }
+                    catch (ex: unknown) {
+                        const msg = ex instanceof Error ? ex.message : String(ex)
+                        this.fatal(`cannot read specification file "${this.argv.file}": ${msg}`)
+                    }
                 }
             }
         }
