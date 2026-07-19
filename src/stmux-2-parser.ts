@@ -42,12 +42,11 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             }
             catch (ex: unknown) {
                 /*  provide a source-excerpt annotated error message  */
-                const err = ex as { format?: (sources: { source: string, text: string }[]) => string, message?: string }
                 let message: string
-                if (typeof err.format === "function")
-                    message = err.format([ { source: "specification", text: this.spec } ])
+                if (ex instanceof parser.SyntaxError)
+                    message = ex.format([ { source: "specification", text: this.spec } ])
                 else
-                    message = String(err.message ?? ex)
+                    message = String(ex instanceof Error ? ex.message : ex)
                 this.fatal("parsing failure:\n" +
                     message.replace(/^/mg, `${this.my.name}: ERROR: `) + "\n")
             }
