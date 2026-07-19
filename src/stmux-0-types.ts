@@ -96,12 +96,15 @@ export interface WidgetPosition {
 }
 
 /*  a terminal border descriptor  */
+/*  the side of a terminal border  */
+export type BorderSide = "left" | "right" | "top" | "bottom"
+
 export interface Border {
     x1:   number
     x2:   number
     y1:   number
     y2:   number
-    side: string
+    side: BorderSide
 }
 
 /*  the shared contract which every mixin may rely upon  */
@@ -137,7 +140,7 @@ export interface STMUXBase {
     provision (x: number, y: number, w: number, h: number, node: ASTNode, initially: boolean): void
     provisionInitially (): void
     provisionAgain (): void
-    border (term: Terminal, side: string): Border
+    border (term: Terminal, side: BorderSide): Border
     touches (a1: number, a2: number, b1: number, b2: number): number
     establishHelp (): void
     handleErrors (): void

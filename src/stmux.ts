@@ -35,7 +35,7 @@ import stmuxErrors     from "./stmux-8-errors.js"
 import stmuxKeys       from "./stmux-9-keys.js"
 
 import type {
-    Constructor, STMUXBase, PackageInfo, Options, ASTNode, Terminal, Border
+    Constructor, STMUXBase, PackageInfo, Options, ASTNode, Terminal, Border, BorderSide
 } from "./stmux-0-types.js"
 
 import type { Widgets } from "blessed"
@@ -88,7 +88,7 @@ class STMUXRoot implements STMUXBase {
     provision (_x: number, _y: number, _w: number, _h: number, _node: ASTNode, _initially: boolean): void {}
     provisionInitially (): void {}
     provisionAgain (): void {}
-    border (_term: Terminal, _side: string): Border { return { x1: 0, x2: 0, y1: 0, y2: 0, side: _side } }
+    border (_term: Terminal, _side: BorderSide): Border { return { x1: 0, x2: 0, y1: 0, y2: 0, side: _side } }
     touches (_a1: number, _a2: number, _b1: number, _b2: number): number { return 0 }
     establishHelp (): void {}
     handleErrors (): void {}

@@ -24,7 +24,7 @@
 
 import Blessed from "blessed"
 
-import type { Constructor, STMUXBase, Border, Terminal } from "./stmux-0-types.js"
+import type { Constructor, STMUXBase, Border, BorderSide, Terminal } from "./stmux-0-types.js"
 
 export default <T extends Constructor<STMUXBase>>(Base: T) =>
     class extends Base {
@@ -72,7 +72,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
 
                         /*  determine border of focused terminal where we want to logically break through  */
                         let leave: Border
-                        let enteron: string
+                        let enteron: BorderSide
                         if (key.full === "left") {
                             leave = this.border(this.terms[this.focused], "left")
                             enteron = "right"

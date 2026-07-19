@@ -22,12 +22,12 @@
 **  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import type { Constructor, STMUXBase, Terminal, Border } from "./stmux-0-types.js"
+import type { Constructor, STMUXBase, Terminal, Border, BorderSide } from "./stmux-0-types.js"
 
 export default <T extends Constructor<STMUXBase>>(Base: T) =>
     class extends Base {
         /*  determine border of terminal  */
-        override border (term: Terminal, side: string): Border {
+        override border (term: Terminal, side: BorderSide): Border {
             let x1 = 0
             let x2 = 0
             let y1 = 0
