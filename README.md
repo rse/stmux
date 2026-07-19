@@ -206,6 +206,10 @@ The following keystrokes are supported under run-time:
   Toggle showing/hiding of terminal numbers.
 - `CTRL`+*activator* `z`:<br/>
   Toggle the zooming of focused terminal.
+- `CTRL`+*activator* `e`:<br/>
+  Toggle the expanding of focused terminal. While enabled, the focused
+  terminal is expanded and all other terminals stay visible, but are
+  shrunk to their minimum size.
 - `CTRL`+*activator* `v`:<br/>
   Switch the focused terminal into visual/scrolling mode.
   Use `PAGEUP`/`PAGEDOWN` during this mode to scroll up/down.

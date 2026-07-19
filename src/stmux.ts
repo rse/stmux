@@ -55,6 +55,7 @@ class STMUXRoot implements STMUXBase {
     terms:          Terminal[] = []
     focused         = -1
     zoomed          = -1
+    expanded        = false
     terminated      = 0
     terminatedError = 0
     terminating     = false

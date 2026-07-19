@@ -2,6 +2,11 @@
 CHANGELOG
 =========
 
+2.1.0 (unreleased)
+------------------
+
+- FEATURE [code]: add "CTRL+a e" for toggling the expand mode of the focused terminal
+
 2.0.0 (2026-07-19)
 ------------------
 

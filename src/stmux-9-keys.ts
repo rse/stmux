@@ -141,6 +141,13 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                         this.terms[this.focused].focus()
                         this.screen.render()
                     }
+                    else if (key.full === "e") {
+                        /*  handle expanding  */
+                        this.expanded = !this.expanded
+                        this.provisionAgain()
+                        this.terms[this.focused].focus()
+                        this.screen.render()
+                    }
                     else if (key.full === "v") {
                         /*  handle scrolling/visual mode  */
                         this.terms[this.focused].scroll(0)

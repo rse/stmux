@@ -53,6 +53,10 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     }
                 }
 
+                /*  in expand mode, re-apply the expansion to the new focus  */
+                if (this.expanded)
+                    this.provisionAgain()
+
                 /*  repaint focused  */
                 this.setTerminalTitle(term)
                 this.screen.render()
@@ -225,61 +229,98 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
 
             /*  provision terminals in a particular direction  */
             const childs = node.childs()
-            const divide = (s: number, l: number, items: ASTNode[]): { s: number, l: number }[] => {
+
+            /*  determine whether an AST node subtree contains the focused terminal  */
+            const containsFocused = (sub: ASTNode): boolean =>
+                sub.type() === "command" ?
+                    sub.term === this.terms[this.focused]
+                    : sub.childs().some((child) => containsFocused(child))
+
+            /*  determine the minimum size of an AST node subtree along an axis
+                (8 content columns or 4 content lines plus 2 border cells per terminal)  */
+            const minimumSize = (sub: ASTNode, horizontal: boolean): number => {
+                if (sub.type() === "command")
+                    return (horizontal ? 8 : 4) + 2
+                const minima = sub.childs().map((child) => minimumSize(child, horizontal))
+                return (sub.get("horizontal") === true) === horizontal ?
+                    minima.reduce((sum, min) => sum + min, 0)
+                    : Math.max(...minima)
+            }
+
+            const divide = (s: number, l: number, items: ASTNode[], horizontal: boolean): { s: number, l: number }[] => {
                 /*  sanity check situation  */
                 const n = items.length
                 if (l < (n * 3))
                     this.fatal("terminal too small")
 
-                /*  pass 1: calculate size of explicitly sized terminals  */
-                const sizes: number[] = []
-                for (let i = 0; i < n; i++) {
-                    sizes[i] = -1
-                    const spec = items[i].get("size") as string | undefined
-                    if (spec) {
-                        let size = -1
-                        const mRatio   = spec.match(/^(\d+)\/(\d+)$/)
-                        const mPercent = spec.match(/^(\d+)%$/)
-                        if (/^\d+$/.test(spec))
-                            size = parseInt(spec, 10)
-                        else if (/^\d+\.\d+$/.test(spec))
-                            size = Math.floor(l * parseFloat(spec))
-                        else if (mRatio !== null) {
-                            const denominator = parseInt(mRatio[2], 10)
-                            if (denominator === 0)
-                                this.fatal(`invalid terminal size specification "${spec}" (zero denominator)`)
-                            size = Math.floor(l * (parseInt(mRatio[1], 10) / denominator))
-                        }
-                        else if (mPercent !== null)
-                            size = Math.floor(l * (parseInt(mPercent[1], 10) / 100))
-                        else
-                            this.fatal(`invalid terminal size specification "${spec}"`)
-                        if (size < 3)
-                            size = 3
-                        else if (size > l)
-                            size = l
-                        sizes[i] = size
-                    }
-                }
-
-                /*  pass 2: calculate size of implicitly sized terminals
-                    (dividing the still remaining size among them)  */
+                /*  passes 1-2 (expand mode): assign every child subtree not
+                    containing the focused terminal its minimum size and all
+                    remaining space to the containing subtree (falling back
+                    to the regular passes if the minimum cannot be honored)  */
+                const sizes:    number[]  = []
                 const implicit: boolean[] = []
-                let m = 0
-                let remaining = l
-                for (let i = 0; i < n; i++) {
-                    implicit[i] = (sizes[i] === -1)
-                    if (implicit[i])
-                        m++
+                let expanded = this.expanded && this.focused >= 0
+                if (expanded) {
+                    const minima = items.map((item) => minimumSize(item, horizontal))
+                    const total  = minima.reduce((sum, min) => sum + min, 0)
+                    if (l >= total) {
+                        for (let i = 0; i < n; i++) {
+                            implicit[i] = false
+                            sizes[i] = minima[i] + (containsFocused(items[i]) ? l - total : 0)
+                        }
+                    }
                     else
-                        remaining -= sizes[i]
+                        expanded = false
                 }
-                for (let i = 0; i < n; i++) {
-                    if (implicit[i]) {
-                        let size = Math.floor(remaining / m)
-                        if (size < 3)
-                            size = 3
-                        sizes[i] = size
+                if (!expanded) {
+                    /*  pass 1: calculate size of explicitly sized terminals  */
+                    for (let i = 0; i < n; i++) {
+                        sizes[i] = -1
+                        const spec = items[i].get("size") as string | undefined
+                        if (spec) {
+                            let size = -1
+                            const mRatio   = spec.match(/^(\d+)\/(\d+)$/)
+                            const mPercent = spec.match(/^(\d+)%$/)
+                            if (/^\d+$/.test(spec))
+                                size = parseInt(spec, 10)
+                            else if (/^\d+\.\d+$/.test(spec))
+                                size = Math.floor(l * parseFloat(spec))
+                            else if (mRatio !== null) {
+                                const denominator = parseInt(mRatio[2], 10)
+                                if (denominator === 0)
+                                    this.fatal(`invalid terminal size specification "${spec}" (zero denominator)`)
+                                size = Math.floor(l * (parseInt(mRatio[1], 10) / denominator))
+                            }
+                            else if (mPercent !== null)
+                                size = Math.floor(l * (parseInt(mPercent[1], 10) / 100))
+                            else
+                                this.fatal(`invalid terminal size specification "${spec}"`)
+                            if (size < 3)
+                                size = 3
+                            else if (size > l)
+                                size = l
+                            sizes[i] = size
+                        }
+                    }
+
+                    /*  pass 2: calculate size of implicitly sized terminals
+                        (dividing the still remaining size among them)  */
+                    let m = 0
+                    let remaining = l
+                    for (let i = 0; i < n; i++) {
+                        implicit[i] = (sizes[i] === -1)
+                        if (implicit[i])
+                            m++
+                        else
+                            remaining -= sizes[i]
+                    }
+                    for (let i = 0; i < n; i++) {
+                        if (implicit[i]) {
+                            let size = Math.floor(remaining / m)
+                            if (size < 3)
+                                size = 3
+                            sizes[i] = size
+                        }
                     }
                 }
 
@@ -328,12 +369,12 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 return segments
             }
             if (node.get("horizontal") === true) {
-                const segments = divide(x, w, childs)
+                const segments = divide(x, w, childs, true)
                 for (let i = 0; i < childs.length; i++)
                     this.provision(segments[i].s, y, segments[i].l, h, childs[i], initially)
             }
             else if (node.get("vertical") === true) {
-                const segments = divide(y, h, childs)
+                const segments = divide(y, h, childs, false)
                 for (let i = 0; i < childs.length; i++)
                     this.provision(x, segments[i].s, w, segments[i].l, childs[i], initially)
             }

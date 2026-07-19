@@ -126,6 +126,7 @@ export interface STMUXBase {
     terms:           Terminal[]
     focused:         number
     zoomed:          number
+    expanded:        boolean
     terminated:      number
     terminatedError: number
     terminating:     boolean

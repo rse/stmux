@@ -52,6 +52,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 keys("1/2/.../9",          "switch focus to terminal identified by number") +
                 keys("n",                  "toggle the display of sequence numbers") +
                 keys("z",                  "toggle the zooming of focused terminal") +
+                keys("e",                  "toggle the expanding of focused terminal") +
                 keys("v",                  "enable scrolling mode on focused terminal") +
                 keys("l",                  "manually force redrawing of entire screen") +
                 keys("r",                  "restart shell command in focused terminal") +
