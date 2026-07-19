@@ -222,9 +222,6 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 const n = items.length
                 if (l < (n * 3))
                     this.fatal("terminal too small")
-                const k = Math.floor(l / n)
-                if (k === 0)
-                    this.fatal("terminal too small")
 
                 /*  pass 1: calculate size of explicitly sized terminals  */
                 const sizes: number[] = []
