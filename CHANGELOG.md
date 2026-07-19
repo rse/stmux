@@ -37,10 +37,13 @@ CHANGELOG
 - BUGFIX [code]: keep the help window visible after unzooming a terminal
 - BUGFIX [code]: reset scroll state when switching terminals with focus keys
 - BUGFIX [code]: unescape single quotes within double-quoted strings
-- BUGFIX [code]: quote backslashes when converting arguments to a specification
+- BUGFIX [code]: correctly quote arguments when converting them to a specification
 - BUGFIX [code]: fix the usage string of the command-line interface
 - BUGFIX [code]: avoid negative values and division by zero in size calculations
 - BUGFIX [code]: do not swallow the next exit event when manually restarting an already exited command
+- BUGFIX [code]: do not get stuck in scrolling mode when wheel-scrolling an empty scrollback
+- BUGFIX [code]: correctly clear and swap the error notification states of terminals
+- BUGFIX [othr]: fix spelling and grammar issues in the README document
 - UPDATE [infr]: use ES2024 as the TypeScript target and library
 - UPDATE [code]: use HTTPS URLs in the help text
 - CLEANUP [code]: simplify code, remove redundancies and dead code in all modules
