@@ -40,7 +40,7 @@
         "strip-ansi":            "7.2.0",
         "yargs":                 "18.0.0",
         "which":                 "7.0.0",
-        "asty":                  "2.0.1",
+        "asty":                  "2.0.2",
         "node-notifier":         "10.0.1"
     },
     "engines": {
