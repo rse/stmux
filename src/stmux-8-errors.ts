@@ -97,7 +97,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
 
                     /*  match errors in screenshot  */
                     term.stmuxError = lines.some((line) =>
-                           (globalErrorPatterns.length     > 0 && matches(line, globalErrorPatterns))
+                        (globalErrorPatterns.length > 0 && matches(line, globalErrorPatterns))
                         || (term.stmuxErrorPatterns.length > 0 && matches(line, term.stmuxErrorPatterns)))
 
                     /*  record notification state  */
@@ -109,29 +109,21 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                         notifyStateNew[term.stmuxNumber - 1] = ""
 
                     /*  determine and record screen updates  */
-                    const style = term.style as
-                        { border: { fg: string }, focus: { border: { fg: string } } }
-                    if (term.stmuxError && style.border.fg === "default") {
-                        style.border.fg = "red"
-                        dirty = true
+                    const style = term.style as { border: { fg: string }, focus: { border: { fg: string } } }
+                    const swapColor = (border: { fg: string }, normal: string, error: string) => {
+                        if (term.stmuxError && border.fg === normal) {
+                            border.fg = error
+                            dirty = true
+                        }
+                        else if (!term.stmuxError && border.fg === error) {
+                            border.fg = normal
+                            dirty = true
+                        }
                     }
-                    else if (!term.stmuxError && style.border.fg === "red") {
-                        style.border.fg = "default"
-                        dirty = true
-                    }
-                    if (term.stmuxError && style.focus.border.fg === "green") {
-                        style.focus.border.fg = "red"
-                        dirty = true
-                    }
-                    else if (!term.stmuxError && style.focus.border.fg === "red") {
-                        style.focus.border.fg = "green"
-                        dirty = true
-                    }
-                    if (term.stmuxError && !(/-\[ERROR\]/.test(term.stmuxTitle))) {
-                        this.setTerminalTitle(term)
-                        dirty = true
-                    }
-                    else if (!term.stmuxError && (/-\[ERROR\]/.test(term.stmuxTitle))) {
+                    swapColor(style.border,       "default", "red")
+                    swapColor(style.focus.border, "green",   "red")
+                    if (   ( term.stmuxError && !(/-\[ERROR\]/.test(term.stmuxTitle)))
+                        || (!term.stmuxError &&  (/-\[ERROR\]/.test(term.stmuxTitle)))) {
                         this.setTerminalTitle(term)
                         dirty = true
                     }
