@@ -86,11 +86,11 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             /*  spawn command  */
             if (os.platform() === "win32") {
                 term.stmuxShell = "cmd.exe"
-                term.stmuxArgs  = [ "/d", "/s", "/c", node.get("cmd") ]
+                term.stmuxArgs  = [ "/d", "/s", "/c", node.get("cmd") as string ]
             }
             else {
                 term.stmuxShell = "sh"
-                term.stmuxArgs  = [ "-c", node.get("cmd") ]
+                term.stmuxArgs  = [ "-c", node.get("cmd") as string ]
             }
             term.spawn(term.stmuxShell, term.stmuxArgs)
 

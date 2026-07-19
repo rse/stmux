@@ -59,7 +59,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             }
             const globalErrorPatterns = parseErrorPatterns(this.argv.error)
             this.terms.forEach((term) => {
-                const patterns = term.node.get("error")
+                const patterns = term.node.get("error") as string | undefined
                 term.stmuxErrorPatterns = patterns ? parseErrorPatterns(patterns) : []
                 term.stmuxError = false
             })

@@ -32,7 +32,7 @@ export type Constructor<T = object> = new (...args: any[]) => T
 /*  the AST node (structurally compatible with ASTY nodes)  */
 export interface ASTNode {
     type (): string
-    get (name: string): any
+    get (name: string): unknown
     childs (): ASTNode[]
     term?: Terminal
 }
