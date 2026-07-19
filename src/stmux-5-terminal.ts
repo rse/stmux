@@ -170,7 +170,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     /*  handle termination and restarting  */
                     if (node.get("restart") === true) {
                         /*  restart command  */
-                        const delay = node.get("delay")
+                        const delay = Number(node.get("delay") ?? 0)
                         if (delay > 0)
                             setTimeout(() => term.spawn(term.stmuxShell, term.stmuxArgs), delay)
                         else
