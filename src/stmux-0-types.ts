@@ -27,7 +27,7 @@ import type XTerm          from "blessed-xterm"
 import type { CursorType } from "blessed-xterm"
 
 /*  the generic mixin constructor type  */
-export type Constructor<T = {}> = new (...args: any[]) => T
+export type Constructor<T = object> = new (...args: any[]) => T
 
 /*  the AST node (structurally compatible with ASTY nodes)  */
 export interface ASTNode {
