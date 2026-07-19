@@ -74,6 +74,10 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 process.exit(0)
             }
 
+            /*  sanity check activator character  */
+            if (!/^[a-z]$/.test(this.argv.activator))
+                this.fatal(`invalid activator character "${this.argv.activator}" (expected a single lowercase letter)`)
+
             /*  determine specification  */
             if (this.argv._.length > 0) {
                 /*  via command-line arguments  */
