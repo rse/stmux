@@ -78,7 +78,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 }
             })
             this.screen.append(this.helpBox)
-            this.helpBox.setIndex(100)
+            this.helpBox.setFront()
         }
     }
 
