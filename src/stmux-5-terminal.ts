@@ -211,13 +211,13 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     if (size) {
                         let m
                         if (size.match(/^\d+$/))
-                            size = parseInt(size)
+                            size = parseInt(size, 10)
                         else if (size.match(/^\d+\.\d+$/))
                             size = Math.floor(l * parseFloat(size))
                         else if ((m = size.match(/^(\d+)\/(\d+)$/)))
-                            size = Math.floor(l * (parseInt(m[1]) / parseInt(m[2])))
+                            size = Math.floor(l * (parseInt(m[1], 10) / parseInt(m[2], 10)))
                         else if ((m = size.match(/^(\d+)%$/)))
-                            size = Math.floor(l * (parseInt(m[1]) / 100))
+                            size = Math.floor(l * (parseInt(m[1], 10) / 100))
                         if (size < 3)
                             size = 3
                         else if (size > l)

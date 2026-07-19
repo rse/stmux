@@ -121,7 +121,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     }
                     else if (this.zoomed === -1 && key.full.match(/^[1-9]$/)) {
                         /*  handle terminal focus change (directly)  */
-                        const n = parseInt(key.full)
+                        const n = parseInt(key.full, 10)
                         if (n <= this.terms.length) {
                             this.focused = n - 1
                             this.terms[this.focused].focus()
