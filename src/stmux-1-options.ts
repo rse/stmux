@@ -41,6 +41,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 .boolean("v").alias("v", "version").default("v", false)
                 .describe("v", "show program version information")
                 .string("w").nargs("w", 1).alias("w", "wait").default("w", "")
+                .choices("w", [ "", "error", "always" ])
                 .describe("w", "wait after last finished command (on \"error\" or \"always\")")
                 .string("a").nargs("a", 1).alias("a", "activator").default("a", "a")
                 .describe("a", "use CTRL+<activator> as the prefix to special commands")
