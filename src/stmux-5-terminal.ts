@@ -262,17 +262,29 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     }
                 }
 
-                /*  pass 2: calculate size of implicitly sized terminals  */
+                /*  pass 2: calculate size of implicitly sized terminals
+                    (dividing the still remaining size among them)  */
+                const implicit: boolean[] = []
+                let m = 0
+                let remaining = l
                 for (let i = 0; i < n; i++) {
-                    if (sizes[i] === -1) {
-                        let size = Math.floor(l / n)
+                    implicit[i] = (sizes[i] === -1)
+                    if (implicit[i])
+                        m++
+                    else
+                        remaining -= sizes[i]
+                }
+                for (let i = 0; i < n; i++) {
+                    if (implicit[i]) {
+                        let size = Math.floor(remaining / m)
                         if (size < 3)
                             size = 3
                         sizes[i] = size
                     }
                 }
 
-                /*  pass 3: optionally shrink/grow sizes to fit total available size  */
+                /*  pass 3: optionally shrink/grow sizes to fit total available size
+                    (preferring to adjust implicitly sized terminals)  */
                 while (true) {
                     let requested = 0
                     for (let i = 0; i < n; i++)
@@ -280,10 +292,12 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     if (requested > l) {
                         let shrink = requested - l
                         const before = shrink
-                        for (let i = 0; i < n && shrink > 0; i++) {
-                            if (sizes[i] > 3) {
-                                sizes[i]--
-                                shrink--
+                        for (const preferred of [ true, false ]) {
+                            for (let i = 0; i < n && shrink > 0; i++) {
+                                if (implicit[i] === preferred && sizes[i] > 3) {
+                                    sizes[i]--
+                                    shrink--
+                                }
                             }
                         }
                         if (shrink === before)
@@ -292,9 +306,13 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     }
                     else if (requested < l) {
                         let grow = l - requested
-                        for (let i = 0; i < n && grow > 0; i++) {
-                            sizes[i]++
-                            grow--
+                        for (const preferred of [ true, false ]) {
+                            for (let i = 0; i < n && grow > 0; i++) {
+                                if (implicit[i] === preferred) {
+                                    sizes[i]++
+                                    grow--
+                                }
+                            }
                         }
                         continue
                     }

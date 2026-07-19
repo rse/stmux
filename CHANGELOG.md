@@ -17,6 +17,7 @@ CHANGELOG
 - IMPROVEMENT [code]: improve performance in error highlighting, parsing and options
 - IMPROVEMENT [code]: perform a small wait before repeating a terminated command
 - IMPROVEMENT [code]: do not hard-code the length of the help text
+- BUGFIX [code]: divide only the remaining size among implicitly sized terminals
 - BUGFIX [code]: adjust only the focus border on error state changes
 - BUGFIX [code]: avoid infinite spin when shrinking terminals to fit
 - BUGFIX [code]: reject invalid terminal size specifications
