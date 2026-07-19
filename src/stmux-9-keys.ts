@@ -72,24 +72,14 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                         /*  handle terminal focus change (step-by-step, directional)  */
 
                         /*  determine border of focused terminal where we want to logically break through  */
-                        let leave: Border
-                        let enteron: BorderSide
-                        if (key.full === "left") {
-                            leave = this.border(this.terms[this.focused], "left")
-                            enteron = "right"
+                        const sides: Record<string, { leave: BorderSide, enteron: BorderSide }> = {
+                            left:  { leave: "left",   enteron: "right"  },
+                            right: { leave: "right",  enteron: "left"   },
+                            up:    { leave: "top",    enteron: "bottom" },
+                            down:  { leave: "bottom", enteron: "top"    }
                         }
-                        else if (key.full === "right") {
-                            leave = this.border(this.terms[this.focused], "right")
-                            enteron = "left"
-                        }
-                        else if (key.full === "up") {
-                            leave = this.border(this.terms[this.focused], "top")
-                            enteron = "bottom"
-                        }
-                        else {
-                            leave = this.border(this.terms[this.focused], "bottom")
-                            enteron = "top"
-                        }
+                        const enteron = sides[key.full].enteron
+                        const leave: Border = this.border(this.terms[this.focused], sides[key.full].leave)
 
                         /*  find the touchpoints of terminals with our border  */
                         const touchpoints: { i: number, touches: number }[] = []
