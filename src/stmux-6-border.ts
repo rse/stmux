@@ -28,29 +28,15 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
     class extends Base {
         /*  determine border of terminal  */
         override border (term: Terminal, side: BorderSide): Border {
-            let x1 = 0
-            let x2 = 0
-            let y1 = 0
-            let y2 = 0
+            const { left, top, width, height } = term.position
             if (side === "left" || side === "right") {
-                y1 = term.position.top
-                y2 = y1 + term.position.height - 1
-                if (side === "left")
-                    x1 = term.position.left
-                else
-                    x1 = term.position.left + term.position.width - 1
-                x2 = x1
+                const x = (side === "left" ? left : left + width - 1)
+                return { x1: x, x2: x, y1: top, y2: top + height - 1, side }
             }
-            else if (side === "top" || side === "bottom") {
-                x1 = term.position.left
-                x2 = x1 + term.position.width - 1
-                if (side === "top")
-                    y1 = term.position.top
-                else
-                    y1 = term.position.top + term.position.height - 1
-                y2 = y1
+            else {
+                const y = (side === "top" ? top : top + height - 1)
+                return { x1: left, x2: left + width - 1, y1: y, y2: y, side }
             }
-            return { x1, x2, y1, y2, side }
         }
 
         /*  find touches  */
