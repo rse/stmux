@@ -28,7 +28,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
     class extends Base {
         /*  determine title of terminal  */
         override setTerminalTitle (term: Terminal): void {
-            let title = term.node.get("title") || term.node.get("cmd")
+            let title = term.node.get("title") ?? term.node.get("cmd")
             title = `( {bold}${title}{/bold} )`
             if (this.argv.number)
                 title = `[${term.stmuxNumber}]-${title}`
