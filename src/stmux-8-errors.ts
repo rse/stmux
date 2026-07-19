@@ -144,13 +144,12 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                             notify.map((term) => "#" + term.stmuxNumber).join(", ")
 
                         /*  determine method(s)  */
-                        const methods: { [ key: string ]: boolean } = {}
-                        this.argv.method.split(",").forEach((method) => { methods[method] = true })
+                        const methods = new Set(this.argv.method.split(","))
 
                         /*  send notification(s)  */
-                        if (methods.beep)
+                        if (methods.has("beep"))
                             this.screen.program.output.write("\x07")
-                        if (methods.system) {
+                        if (methods.has("system")) {
                             notifier.notify({
                                 title:   `${this.my.name}: Detected new ERROR situation${plural}`,
                                 message: notifyMsg,
