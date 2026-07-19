@@ -97,8 +97,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 this.provisionAgain()
                 this.helpBox.left = Math.max(0, Math.floor((this.screenWidth  - this.helpW) / 2))
                 this.helpBox.top  = Math.max(0, Math.floor((this.screenHeight - this.helpH) / 2))
-                if (this.helpBox.visible)
-                    this.helpBox.hide()
+                this.helpBox.hide()
                 this.screen.render()
             })
         }
