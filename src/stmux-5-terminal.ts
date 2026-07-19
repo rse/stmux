@@ -247,12 +247,15 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                         requested += sizes[i]
                     if (requested > l) {
                         let shrink = requested - l
+                        const before = shrink
                         for (let i = 0; i < n && shrink > 0; i++) {
                             if (sizes[i] > 3) {
                                 sizes[i]--
                                 shrink--
                             }
                         }
+                        if (shrink === before)
+                            this.fatal("terminal too small")
                         continue
                     }
                     else if (requested < l) {
