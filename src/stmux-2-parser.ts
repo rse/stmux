@@ -22,11 +22,33 @@
 **  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import my from "../package.json"
+import ASTY from "asty"
 
-export default class stmuxInfo {
-    constructor () {
-        this.my = my
+import * as parser from "./stmux-2-parser.gen.js"
+
+import type { Constructor, STMUXBase, ASTNode } from "./stmux-0-types.js"
+
+export default <T extends Constructor<STMUXBase>>(Base: T) =>
+    class extends Base {
+        override parseSpec (): void {
+            /*  parse specification into Abstract Syntax Tree (AST)  */
+            const asty = new ASTY()
+            try {
+                this.ast = parser.parse(this.spec, {
+                    grammarSource: "specification",
+                    startRule:     "split",
+                    asty
+                }) as unknown as ASTNode
+            }
+            catch (ex: any) {
+                /*  provide a source-excerpt annotated error message  */
+                let message: string
+                if (typeof ex.format === "function")
+                    message = ex.format([ { source: "specification", text: this.spec } ])
+                else
+                    message = String(ex.message ?? ex)
+                this.fatal("parsing failure:\n" +
+                    message.replace(/^/mg, `${this.my.name}: ERROR: `) + "\n")
+            }
+        }
     }
-}
-

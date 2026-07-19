@@ -22,30 +22,20 @@
 **  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import path     from "path"
-import ASTY     from "asty"
-import PEG      from "pegjs-otf"
-import PEGUtil  from "pegjs-util"
+import fs                from "node:fs"
+import path              from "node:path"
+import { fileURLToPath } from "node:url"
 
-export default class stmuxParser {
-    parseSpec () {
-        /*  parse specification into Abstract Syntax Tree (AST)  */
-        const asty = new ASTY()
-        const parser = PEG.generateFromFile(path.join(__dirname, "..", "src", "stmux-2-parser.pegjs"), {
-            optimize: "size",
-            trace:    false
-        })
-        const result = PEGUtil.parse(parser, this.spec, {
-            startRule: "split",
-            makeAST: (line, column, offset, args) => {
-                return asty.create.apply(asty, args).pos(line, column, offset)
-            }
-        })
-        if (result.error !== null)
-            this.fatal("parsing failure:\n" +
-                PEGUtil.errorMessage(result.error, true)
-                    .replace(/^/mg, `${this.my.name}: ERROR: `) + "\n")
-        this.ast = result.ast
+import type { Constructor, STMUXBase, PackageInfo } from "./stmux-0-types.js"
+
+export default <T extends Constructor<STMUXBase>>(Base: T) =>
+    class extends Base {
+        constructor (...args: any[]) {
+            super(...args)
+
+            /*  determine the package meta information  */
+            const dirname = path.dirname(fileURLToPath(import.meta.url))
+            const file    = path.resolve(dirname, "..", "package.json")
+            this.my = JSON.parse(fs.readFileSync(file, "utf8")) as PackageInfo
+        }
     }
-}
-

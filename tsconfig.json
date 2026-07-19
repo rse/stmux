@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+        "target":                           "ES2022",
+        "lib":                              [ "ES2022" ],
+        "module":                           "nodenext",
+        "moduleResolution":                 "nodenext",
+        "types":                            [ "node" ],
+        "typeRoots":                        [ "./node_modules/@types", "./src/types" ],
+        "rootDir":                          "./src",
+        "outDir":                           "./bin",
+        "strict":                           true,
+        "noImplicitOverride":               true,
+        "noImplicitReturns":                true,
+        "noFallthroughCasesInSwitch":       true,
+        "noUnusedLocals":                   true,
+        "noUnusedParameters":               true,
+        "exactOptionalPropertyTypes":       false,
+        "esModuleInterop":                  true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule":                true,
+        "skipLibCheck":                     true,
+        "declaration":                      false,
+        "sourceMap":                        false,
+        "removeComments":                   false,
+        "newLine":                          "lf"
+    },
+    "include": [
+        "src/**/*.ts"
+    ]
+}

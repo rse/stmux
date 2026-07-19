@@ -1,2 +1,6 @@
 node_modules
 bin
+src/*.gen.js
+src/*.gen.d.ts
+.ase
+.env

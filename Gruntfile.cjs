@@ -23,59 +23,47 @@
 */
 
 /* global module: true */
+/* global require: true */
 module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-eslint")
-    grunt.loadNpmTasks("grunt-babel")
     grunt.loadNpmTasks("grunt-contrib-clean")
     grunt.loadNpmTasks("grunt-contrib-watch")
+    grunt.loadNpmTasks("grunt-shell")
     grunt.initConfig({
         eslint: {
             options: {
-                overrideConfigFile: "etc/eslint.yaml"
+                overrideConfigFile: "eslint.config.mjs",
+                warnIgnored:        false
             },
-            "stmux": [ "src/**/*.js" ]
+            "stmux": [ "src/**/*.ts" ]
         },
-        babel: {
-            "stmux": {
-                files: [
-                    {
-                        expand: true,
-                        cwd:    "src/",
-                        src:    [ "*.js" ],
-                        dest:   "bin/"
-                    }
-                ],
-                options: {
-                    sourceMap: false,
-                    presets: [
-                        [ "@babel/preset-env", {
-                            "targets": {
-                                "node": "10.0.0"
-                            }
-                        } ]
-                    ],
-                    plugins: [
-                        [ "@babel/transform-runtime", {
-                            "helpers":     true,
-                            "regenerator": false
-                        } ]
-                    ]
-                }
+        shell: {
+            "peggy": {
+                command: "peggy --format es --allowed-start-rules split --dts " +
+                    "-o src/stmux-2-parser.gen.js src/stmux-2-parser.pegjs"
+            },
+            "tsc": {
+                command: "tsc --project tsconfig.json"
+            },
+            "dist": {
+                /*  place the generated parser beside the compiled sources
+                    and make the command-line interface executable  */
+                command: "cp src/stmux-2-parser.gen.js bin/stmux-2-parser.gen.js && " +
+                    "chmod a+x bin/stmux.js"
             }
         },
         clean: {
-            clean: [ "bin" ],
+            clean:     [ "bin", "src/stmux-2-parser.gen.js", "src/stmux-2-parser.gen.d.ts" ],
             distclean: [ "node_modules" ]
         },
         watch: {
             "src": {
-                files: [ "src/**/*.js", "tst/**/*.js" ],
+                files: [ "src/**/*.ts", "src/**/*.pegjs" ],
                 tasks: [ "default" ],
                 options: {}
             }
         }
     })
-    grunt.registerTask("default", [ "eslint", "babel" ])
+    grunt.registerTask("default", [ "shell:peggy", "eslint", "shell:tsc", "shell:dist" ])
     grunt.registerTask("dev",     [ "default", "watch" ])
 }
-

@@ -31,11 +31,11 @@ bootstrap:
 	@if [ ! -x $(GRUNT) ]; then $(NPM) install; fi
 
 build: bootstrap
-	@$(GRUNT)
+	@$(GRUNT) --gruntfile Gruntfile.cjs
 
 clean: bootstrap
-	@$(GRUNT) clean:clean
+	@$(GRUNT) --gruntfile Gruntfile.cjs clean:clean
 
 distclean: bootstrap
-	@$(GRUNT) clean:clean clean:distclean
+	@$(GRUNT) --gruntfile Gruntfile.cjs clean:clean clean:distclean
 

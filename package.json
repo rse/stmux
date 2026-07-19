@@ -12,48 +12,49 @@
     "keywords":    [ "simple", "terminal", "multiplexing" ],
     "repository":  { "type": "git", "url": "git://github.com/rse/stmux.git" },
     "bugs":        { "url":  "http://github.com/rse/stmux/issues" },
+    "type":        "module",
     "bin": {
         "stmux":   "bin/stmux.js"
     },
     "devDependencies": {
-        "grunt":                                     "1.6.1",
+        "grunt":                                     "1.6.2",
         "grunt-cli":                                 "1.5.0",
         "grunt-contrib-clean":                       "2.0.1",
         "grunt-contrib-watch":                       "1.1.0",
-        "grunt-babel":                               "8.0.0",
-        "grunt-mocha-test":                          "0.13.3",
-        "mocha":                                     "11.3.0",
-        "grunt-eslint":                              "24.0.1",
-        "eslint":                                    "8.57.0",
-        "eslint-config-standard":                    "17.1.0",
-        "eslint-plugin-promise":                     "6.2.0",
-        "eslint-plugin-import":                      "2.30.0",
-        "eslint-plugin-node":                        "11.1.0",
-        "@babel/core":                               "7.27.1",
-        "@babel/preset-env":                         "7.27.2",
-        "@babel/plugin-transform-runtime":           "7.27.1"
+        "grunt-shell":                               "4.0.0",
+        "grunt-eslint":                              "26.0.0",
+        "eslint":                                    "9.39.5",
+        "@eslint/js":                                "9.39.5",
+        "neostandard":                               "0.13.0",
+        "typescript-eslint":                         "8.64.0",
+        "typescript":                                "6.0.3",
+        "peggy":                                     "5.1.0",
+        "@types/node":                               "26.1.1",
+        "@types/blessed":                            "0.1.27",
+        "@types/yargs":                              "17.0.35",
+        "@types/which":                              "3.0.4",
+        "@types/node-notifier":                      "8.0.5"
     },
     "dependencies" : {
-        "@babel/runtime":                            "7.27.1",
-        "aggregation":                               "1.2.7",
         "blessed":                                   "0.1.81",
-        "blessed-xterm":                             "1.5.1",
-        "chalk":                                     "4.1.2",
-        "strip-ansi":                                "6.0.0",
-        "yargs":                                     "17.7.2",
-        "which":                                     "5.0.0",
-        "asty":                                      "1.8.21",
-        "pegjs-otf":                                 "2.0.3",
-        "pegjs-util":                                "2.0.2",
+        "blessed-xterm":                             "1.6.0",
+        "chalk":                                     "5.6.2",
+        "strip-ansi":                                "7.2.0",
+        "yargs":                                     "18.0.0",
+        "which":                                     "7.0.0",
+        "asty":                                      "2.0.1",
         "node-notifier":                             "10.0.1"
     },
     "engines": {
-        "node":                                      ">=12.0.0"
+        "node":                                      ">=20.19.0"
     },
-    "upd":                                           [ "!chalk", "!strip-ansi", "!eslint*", "grunt-eslint" ],
+    "allowScripts": {
+        "node-pty":                                  true
+    },
+    "upd":                                           [ "!eslint", "!@eslint/js", "!typescript" ],
     "scripts": {
         "prepublishOnly": "npm run build",
-        "build":          "grunt default",
-        "test":           "grunt default && node -- ./bin/stmux.js -n -w error -e \"ERROR,!style errors\" -m beep,system -- [ -s 2/3 [ -s 60% -e foo -t shell $SHELL .. 'date; true' ] : 'date; true' ]"
+        "build":          "grunt --gruntfile Gruntfile.cjs default",
+        "test":           "grunt --gruntfile Gruntfile.cjs default && node -- ./bin/stmux.js -n -w error -e \"ERROR,!style errors\" -m beep,system -- [ -s 2/3 [ -s 60% -e foo -t shell $SHELL .. 'date; true' ] : 'date; true' ]"
     }
 }

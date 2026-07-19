@@ -23,16 +23,22 @@
 */
 
 {
-    var unroll = options.util.makeUnroll(location, options)
-    var ast    = options.util.makeAST   (location, options)
+    /*  the AST factory is passed in via the parser options  */
+    const asty = options.asty
+
+    /*  create an AST node with attached source position  */
+    const ast = (type) => {
+        const loc = location()
+        return asty.create(type).pos(loc.start.line, loc.start.column, loc.start.offset)
+    }
 }
 
 split
-    =   _ "[" _ dir:directive _ dirs:(_ ":" _ directive)* _ "]" _ {
-            return ast("split").set({ vertical: true }).add(unroll(dir, dirs, 3))
+    =   _ "[" _ dir:directive _ dirs:(_ ":" _ d:directive { return d })* _ "]" _ {
+            return ast("split").set({ vertical: true }).add([ dir, ...dirs ])
         }
-    /   _ "[" _ dir:directive _ dirs:(_ ".." _ directive)* _ "]" _ {
-            return ast("split").set({ horizontal: true }).add(unroll(dir, dirs, 3))
+    /   _ "[" _ dir:directive _ dirs:(_ ".." _ d:directive { return d })* _ "]" _ {
+            return ast("split").set({ horizontal: true }).add([ dir, ...dirs ])
         }
 
 directive
@@ -44,17 +50,15 @@ directive
         }
 
 options
-    =   f:option l:(_ option)* {
-            return unroll(f, l, 1).reduce(function (a, v) {
-                return a.merge(v)
-            }, ast("options"))
+    =   f:option l:(_ o:option { return o })* {
+            return [ f, ...l ].reduce((a, v) => a.merge(v), ast("options"))
         }
 
 option "short or long option"
-    =   s:("-f" / "--focus") {
+    =   ("-f" / "--focus") {
             return ast("option").set({ focus: true })
         }
-    /   s:("-r" / "--restart") {
+    /   ("-r" / "--restart") {
             return ast("option").set({ restart: true })
         }
     /   "-d" _ a:number {
@@ -137,4 +141,3 @@ co "comment"
 
 ws "whitespaces"
     =   [ \t\r\n]+
-

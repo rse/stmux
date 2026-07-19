@@ -22,25 +22,27 @@
 **  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-export default class stmuxTitle {
-    /*  determine title of terminal  */
-    setTerminalTitle (term) {
-        let title = term.node.get("title") || term.node.get("cmd")
-        title = `( {bold}${title}{/bold} )`
-        if (this.argv.number)
-            title = `[${term.stmuxNumber}]-${title}`
-        if (this.zoomed !== -1 && this.zoomed === (term.stmuxNumber - 1))
-            title = `${title}-[ZOOMED]`
-        if (term.stmuxError)
-            title = `${title}-[ERROR]`
-        if (term.scrolling)
-            title = `{yellow-fg}${title}{/yellow-fg}`
-        else if (term.stmuxError)
-            title = `{red-fg}${title}{/red-fg}`
-        else if (this.focused !== -1 && this.focused === (term.stmuxNumber - 1))
-            title = `{green-fg}${title}{/green-fg}`
-        term.stmuxTitle = title
-        term.setLabel(term.stmuxTitle)
-    }
-}
+import type { Constructor, STMUXBase, Terminal } from "./stmux-0-types.js"
 
+export default <T extends Constructor<STMUXBase>>(Base: T) =>
+    class extends Base {
+        /*  determine title of terminal  */
+        override setTerminalTitle (term: Terminal): void {
+            let title = term.node.get("title") || term.node.get("cmd")
+            title = `( {bold}${title}{/bold} )`
+            if (this.argv.number)
+                title = `[${term.stmuxNumber}]-${title}`
+            if (this.zoomed !== -1 && this.zoomed === (term.stmuxNumber - 1))
+                title = `${title}-[ZOOMED]`
+            if (term.stmuxError)
+                title = `${title}-[ERROR]`
+            if (term.scrolling)
+                title = `{yellow-fg}${title}{/yellow-fg}`
+            else if (term.stmuxError)
+                title = `{red-fg}${title}{/red-fg}`
+            else if (this.focused !== -1 && this.focused === (term.stmuxNumber - 1))
+                title = `{green-fg}${title}{/green-fg}`
+            term.stmuxTitle = title
+            term.setLabel(term.stmuxTitle)
+        }
+    }
