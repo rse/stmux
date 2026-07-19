@@ -133,13 +133,18 @@ class STMUX extends STMUXAggregated {
     }
 }
 
-const stmux = new STMUX()
-const onFatal = (err: unknown) => {
-    stmux.fatal(err instanceof Error ? err.message : String(err))
+let stmux: STMUX | null = null
+const onFatal = (err: unknown): never => {
+    const msg = err instanceof Error ? err.message : String(err)
+    if (stmux !== null)
+        stmux.fatal(msg)
+    process.stderr.write(`stmux: ERROR: ${msg}\n`)
+    process.exit(1)
 }
 process.on("uncaughtException", onFatal)
 process.on("unhandledRejection", onFatal)
 try {
+    stmux = new STMUX()
     stmux.main()
 }
 catch (err: unknown) {
