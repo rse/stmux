@@ -40,13 +40,14 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     asty
                 }) as unknown as ASTNode
             }
-            catch (ex: any) {
+            catch (ex: unknown) {
                 /*  provide a source-excerpt annotated error message  */
+                const err = ex as { format?: (sources: { source: string, text: string }[]) => string, message?: string }
                 let message: string
-                if (typeof ex.format === "function")
-                    message = ex.format([ { source: "specification", text: this.spec } ])
+                if (typeof err.format === "function")
+                    message = err.format([ { source: "specification", text: this.spec } ])
                 else
-                    message = String(ex.message ?? ex)
+                    message = String(err.message ?? ex)
                 this.fatal("parsing failure:\n" +
                     message.replace(/^/mg, `${this.my.name}: ERROR: `) + "\n")
             }
