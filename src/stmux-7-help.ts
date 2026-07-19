@@ -64,7 +64,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     "show (this) help window\n" +
                 ""
             this.helpW = 80
-            this.helpH = 22
+            this.helpH = helpText.replace(/\n$/, "").split("\n").length + 4
             this.helpBox = Blessed.box({
                 left:          Math.max(0, Math.floor((this.screenWidth  - this.helpW) / 2)),
                 top:           Math.max(0, Math.floor((this.screenHeight - this.helpH) / 2)),
