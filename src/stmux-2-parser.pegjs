@@ -61,28 +61,16 @@ option "short or long option"
     /   ("-r" / "--restart") {
             return ast("option").set({ restart: true })
         }
-    /   "-d" _ a:number {
+    /   ("-d" _ / "--delay" (ws / "=")) a:number {
             return ast("option").set({ delay: a.get("value") })
         }
-    /   "--delay" (ws / "=") a:number {
-            return ast("option").set({ delay: a.get("value") })
-        }
-    /   "-t" _ a:string {
+    /   ("-t" _ / "--title" (ws / "=")) a:string {
             return ast("option").set({ title: a.get("value") })
         }
-    /   "--title" (ws / "=") a:string {
-            return ast("option").set({ title: a.get("value") })
-        }
-    /   "-s" _ a:string {
+    /   ("-s" _ / "--size" (ws / "=")) a:string {
             return ast("option").set({ size: a.get("value") })
         }
-    /   "--size" (ws / "=") a:string {
-            return ast("option").set({ size: a.get("value") })
-        }
-    /   "-e" _ a:string {
-            return ast("option").set({ error: a.get("value") })
-        }
-    /   "--error" (ws / "=") a:string {
+    /   ("-e" _ / "--error" (ws / "=")) a:string {
             return ast("option").set({ error: a.get("value") })
         }
 
