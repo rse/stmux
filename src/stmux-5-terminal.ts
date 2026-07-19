@@ -207,9 +207,9 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
 
             /*  provision terminals in a particular direction  */
             const childs = node.childs()
-            const divide = (s: number, l: number, childs: ASTNode[]) => {
+            const divide = (s: number, l: number, items: ASTNode[]): { s: number, l: number }[] => {
                 /*  sanity check situation  */
-                const n = childs.length
+                const n = items.length
                 if (l < (n * 3))
                     this.fatal("terminal too small")
                 const k = Math.floor(l / n)
@@ -220,7 +220,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 const sizes: number[] = []
                 for (let i = 0; i < n; i++) {
                     sizes[i] = -1
-                    let size = childs[i].get("size")
+                    let size = items[i].get("size")
                     if (size) {
                         let m
                         if (size.match(/^\d+$/))
