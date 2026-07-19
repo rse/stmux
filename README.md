@@ -125,34 +125,36 @@ Usage
 The following command line arguments are supported:
 
 ```
-$ stmux [-h] [-V] [-w <condition>] [-a <activator>] [-t <title>]
-        [-c <type>] [-n] [-e <regexp>] [-m <method>] [-M] [-f <file>]
+$ stmux [-h] [-v] [-w <when>] [-a <activator>] [-t <title>]
+        [-c <cursor>] [-n] [-e <regexp>] [-m <method>] [-M] [-f <file>]
         [-- <spec>]
 ```
 
 - `-h`, `--help`<br/>
   Show usage help.
-- `-V`, `--version`<br/>
+- `-v`, `--version`<br/>
   Show program version information.
-- `-w <condition>`, `--wait <condition>`<br/>
+- `-w <when>`, `--wait <when>`<br/>
   Wait after last finished command (and do not shut down automatically),
   either if any command terminated with an `error` or just `always`.
 - `-a <activator>`, `--activator <activator>`<br/>
   Use `CTRL+<activator>` as the prefix to special commands.
+  The activator has to be a single lowercase letter.
   The default activator character is `a`. For instance, for the
   default activator case, opening the help popup requires you to
   press `CTRL+a` (and release it again) and then (separately) press `?`.
 - `-t <title>`, `--title <title>`<br/>
   Set title on terminal. The default title is `stmux`.
-- `-c <type>`, `--cursor <type>`<br/>
+- `-c <cursor>`, `--cursor <cursor>`<br/>
   Set type of cursor to `block` (default), `underline` or `line`.
 - `-n`, `--number`<br/>
-  Show terminal number in terminal title.
+  Show terminal number (and a focus indicator) in terminal title.
 - `-e <regexp>[,...]`, `--error <regexp>[,...]`<br/>
   Observe terminal lines for errors (global option).
   One or more regular expressions can be specified and have to match on a single line.
   If a regular expression is preceded with the prefix `!`, it is
   required that it does not match.
+  The default is `(?:ERROR|Error|error)`.
 - `-m <methods>`, `--method <methods>`<br/>
   In case of detected errors, use the comma-separated
   list of methods to perform user notification. The default
@@ -205,7 +207,8 @@ The following keystrokes are supported under run-time:
 - `CTRL`+*activator* `n`:<br/>
   Toggle showing/hiding of terminal numbers.
 - `CTRL`+*activator* `z`:<br/>
-  Toggle the zooming of focused terminal.
+  Toggle the zooming of focused terminal. While a terminal
+  is zoomed, the focus switching keys are disabled.
 - `CTRL`+*activator* `e`:<br/>
   Toggle the expanding of focused terminal. While enabled, the focused
   terminal is expanded and all other terminals stay visible, but are
