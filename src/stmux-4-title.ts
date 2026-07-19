@@ -28,22 +28,28 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
     class extends Base {
         /*  determine title of terminal  */
         override setTerminalTitle (term: Terminal): void {
+            const isFocused = this.focused !== -1 && this.focused === (term.stmuxNumber - 1)
             let title = String(term.node.get("title") ?? term.node.get("cmd") ?? "")
-            title = `( {bold}${title}{/bold} )`
+            title = `{bold}${title}{/bold}`
             if (this.argv.number)
-                title = `[${term.stmuxNumber}]-${title}`
+                title = `${isFocused ? "●" : "○"} ${term.stmuxNumber} ${title}`
             if (this.zoomed !== -1 && this.zoomed === (term.stmuxNumber - 1))
                 title = `${title}-[ZOOMED]`
             const isError = term.stmuxError
             if (isError)
                 title = `${title}-[ERROR]`
 
+            /*  render in inverse video with angle caps
+                (the caps are outside the inverse span, so their foreground
+                matches the inverse background and forms pointed block ends)  */
+            title = `◀{inverse} ${title} {/inverse}▶`
+
             /*  colorize by precedence: scrolling > error > focused  */
             if (term.scrolling)
                 title = `{yellow-fg}${title}{/yellow-fg}`
             else if (isError)
                 title = `{red-fg}${title}{/red-fg}`
-            else if (this.focused !== -1 && this.focused === (term.stmuxNumber - 1))
+            else if (isFocused)
                 title = `{green-fg}${title}{/green-fg}`
             term.stmuxTitle = title
             term.setLabel(term.stmuxTitle)
