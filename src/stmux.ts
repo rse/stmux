@@ -122,5 +122,10 @@ class STMUX extends STMUXAggregated {
 }
 
 const stmux = new STMUX()
-stmux.main()
+try {
+    stmux.main()
+}
+catch (err: unknown) {
+    stmux.fatal(err instanceof Error ? err.message : String(err))
+}
 
