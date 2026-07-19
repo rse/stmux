@@ -127,11 +127,11 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                         dirty = true
                     }
                     if (term.stmuxError && style.focus.border.fg === "green") {
-                        style.border.fg = "red"
+                        style.focus.border.fg = "red"
                         dirty = true
                     }
                     else if (!term.stmuxError && style.focus.border.fg === "red") {
-                        style.border.fg = "green"
+                        style.focus.border.fg = "green"
                         dirty = true
                     }
                     if (term.stmuxError && !term.stmuxTitle.match(/-\[ERROR\]/)) {
