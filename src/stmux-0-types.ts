@@ -118,7 +118,6 @@ export interface STMUXBase {
     ast:             ASTNode
     screen:          Widgets.Screen
     helpBox:         Widgets.BoxElement
-    dummyBox:        Widgets.BoxElement
     helpW:           number
     helpH:           number
     screenWidth:     number

@@ -48,7 +48,6 @@ class STMUXRoot implements STMUXBase {
     ast!:           ASTNode
     screen!:        Widgets.Screen
     helpBox!:       Widgets.BoxElement
-    dummyBox!:      Widgets.BoxElement
     helpW           = 0
     helpH           = 0
     screenWidth     = 0

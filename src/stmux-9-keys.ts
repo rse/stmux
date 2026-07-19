@@ -122,16 +122,16 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                             (by forcing Blessed to redraw everything
                             via temporarily opening a dummy box)  */
                         this.provisionAgain()
-                        this.dummyBox = Blessed.box({
+                        const dummyBox = Blessed.box({
                             left:     0,
                             top:      0,
                             width:    this.screenWidth,
                             height:   this.screenHeight,
                             content:  ""
                         })
-                        this.screen.append(this.dummyBox)
+                        this.screen.append(dummyBox)
                         this.screen.render()
-                        this.screen.remove(this.dummyBox)
+                        this.screen.remove(dummyBox)
                         this.screen.render()
                     }
                     else if (key.full === "z") {
