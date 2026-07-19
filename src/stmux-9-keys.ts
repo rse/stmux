@@ -24,7 +24,7 @@
 
 import Blessed from "blessed"
 
-import type { Constructor, STMUXBase, Border } from "./stmux-0-types.js"
+import type { Constructor, STMUXBase, Border, Terminal } from "./stmux-0-types.js"
 
 export default <T extends Constructor<STMUXBase>>(Base: T) =>
     class extends Base {
@@ -201,33 +201,23 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
 
             /*  handle mouse  */
             if (this.argv.mouse) {
+                /*  scroll a terminal by 10% into the given direction  */
+                const scrollByWheel = (term: Terminal, direction: 1 | -1) => {
+                    /*  on-the-fly start scrolling  */
+                    if (!term.scrolling)
+                        term.scroll(0)
+
+                    /*  scroll 10% into the direction  */
+                    const n = Math.max(1, Math.floor((term.height as number) * 0.10))
+                    term.scroll(direction * n)
+
+                    /*  reset/stop scrolling once we reached the end (again)  */
+                    if (direction > 0 && Math.ceil(term.getScrollPerc()) === 100)
+                        term.resetScroll()
+                }
                 this.terms.forEach((term) => {
-                    term.on("wheeldown", () => {
-                        /*  on-the-fly start scrolling  */
-                        if (!term.scrolling)
-                            term.scroll(0)
-
-                        /*  scroll 10% downwards  */
-                        const n = Math.max(1, Math.floor((term.height as number) * 0.10))
-                        term.scroll(+n)
-
-                        /*  reset/stop scrolling once we reached the end (again)  */
-                        if (Math.ceil(term.getScrollPerc()) === 100)
-                            term.resetScroll()
-                    })
-                    term.on("wheelup", () => {
-                        /*  on-the-fly start scrolling  */
-                        if (!term.scrolling)
-                            term.scroll(0)
-
-                        /*  scroll 10% upwards  */
-                        const n = Math.max(1, Math.floor((term.height as number) * 0.10))
-                        term.scroll(-n)
-
-                        /*  reset/stop scrolling once we reached the end (again)  */
-                        if (Math.ceil(term.getScrollPerc()) === 100)
-                            term.resetScroll()
-                    })
+                    term.on("wheeldown", () => scrollByWheel(term, +1))
+                    term.on("wheelup",   () => scrollByWheel(term, -1))
                 })
             }
         }
