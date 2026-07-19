@@ -201,7 +201,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                         term.scroll(0)
 
                     /*  scroll 10% into the direction  */
-                    const n = Math.max(1, Math.floor((term.height as number) * 0.10))
+                    const n = Math.max(1, Math.floor(term.position.height * 0.10))
                     term.scroll(direction * n)
 
                     /*  reset/stop scrolling once we reached the end (again)  */
