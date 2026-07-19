@@ -42,7 +42,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 `{bold}${this.my.name} ${this.my.version} <${this.my.homepage}>{/bold}\n` +
                 `{bold}${this.my.description}{/bold}\n` +
                 `Copyright (c) 2017-2026 ${this.my.author.name} <${this.my.author.url}>\n` +
-                `Licensed under ${this.my.license} <http://spdx.org/licenses/${this.my.license}.html>\n` +
+                `Licensed under ${this.my.license} <https://spdx.org/licenses/${this.my.license}.html>\n` +
                 "\n" +
                 "Global Keys:\n" +
                 keys(this.argv.activator, `send CTRL+${this.argv.activator} to focused terminal`) +
