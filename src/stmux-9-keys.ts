@@ -23,6 +23,7 @@
 */
 
 import Blessed from "blessed"
+import type { Widgets } from "blessed"
 
 import type { Constructor, STMUXBase, Border, BorderSide, Terminal } from "./stmux-0-types.js"
 
@@ -31,7 +32,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
         override handleKeys (): void {
             /*  handle keys  */
             let prefixMode: "idle" | "prefix" | "post" = "idle"
-            this.screen.on("keypress", (_ch: string, key: any) => {
+            this.screen.on("keypress", (_ch: string, key: Widgets.Events.IKeyEventArg) => {
                 if ((prefixMode === "idle" || prefixMode === "post") && key.full === `C-${this.argv.activator}`) {
                     /*  enter prefix mode  */
                     prefixMode = "prefix"
