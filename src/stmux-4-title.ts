@@ -22,6 +22,8 @@
 **  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+import Blessed from "blessed"
+
 import type { Constructor, STMUXBase, Terminal } from "./stmux-0-types.js"
 
 export default <T extends Constructor<STMUXBase>>(Base: T) =>
@@ -30,6 +32,10 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
         override setTerminalTitle (term: Terminal): void {
             const isFocused = this.focused !== -1 && this.focused === (term.stmuxNumber - 1)
             let title = String(term.node.get("title") ?? term.node.get("cmd") ?? "")
+
+            /*  escape the Blessed tag meta-characters "{" and "}", as the
+                title is later rendered with Blessed tag processing enabled  */
+            title = Blessed.escape(title)
             title = `{bold}${title}{/bold}`
             if (this.argv.number)
                 title = `${isFocused ? "●" : "○"} ${term.stmuxNumber} ${title}`

@@ -2,6 +2,11 @@
 CHANGELOG
 =========
 
+2.1.1 (unreleased)
+------------------
+
+- BUGFIX [code]: escape Blessed tag meta-characters in terminal titles to no longer crash on commands containing curly braces (issue #26)
+
 2.1.0 (2026-07-19)
 ------------------
 
