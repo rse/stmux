@@ -39,8 +39,9 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             try {
                 this.my = JSON.parse(fs.readFileSync(file, "utf8")) as PackageInfo
             }
-            catch (ex: any) {
-                throw new Error(`cannot load package meta information from "${file}": ${ex.message}`)
+            catch (ex: unknown) {
+                const msg = ex instanceof Error ? ex.message : String(ex)
+                throw new Error(`cannot load package meta information from "${file}": ${msg}`)
             }
         }
     }
