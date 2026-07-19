@@ -284,6 +284,8 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 for (let i = 0; i < childs.length; i++)
                     this.provision(x, SL[i].s, w, SL[i].l, childs[i], initially)
             }
+            else
+                this.fatal("invalid AST node (expected \"horizontal\" or \"vertical\" split)")
         }
         override provision (x: number, y: number, w: number, h: number, node: ASTNode, initially: boolean): void {
             if (node.type() === "split")
