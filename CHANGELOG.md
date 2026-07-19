@@ -2,12 +2,14 @@
 CHANGELOG
 =========
 
-2.1.0 (unreleased)
+2.1.0 (2026-07-19)
 ------------------
 
 - FEATURE [code]: add "CTRL+a e" for toggling the expand mode of the focused terminal
+- FEATURE [code, infr]: add Unix manual page stmux(1), linted and rendered via markdownlint and remark
 - IMPROVEMENT [code]: render terminal titles in inverse video with angle caps and focus indicator
 - IMPROVEMENT [code]: switch the regular highlighting color of titles and borders from green to blue
+- IMPROVEMENT [othr]: align the README usage documentation with the current command-line interface
 - UPDATE [infr]: upgrade NPM dependencies
 - CLEANUP [infr]: vertically align fields in package.json
 
