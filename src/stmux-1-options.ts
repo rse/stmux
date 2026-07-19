@@ -82,10 +82,25 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             if (this.argv._.length > 0) {
                 /*  via command-line arguments  */
                 this.spec = this.argv._.map((arg) => {
-                    let str = String(arg)
-                    if (/[\s"\\]/.test(str))
-                        str = `"${str.replace(/\\/g, "\\\\").replace(/"/g, "\\\"")}"`
-                    return str
+                    const str = String(arg)
+
+                    /*  determine whether a token is directly acceptable to the
+                        specification grammar (as a structural token, an inner
+                        option token, a numeric literal or a bareword) and
+                        hence has to be passed through without re-quoting  */
+                    const acceptable = (s: string) =>
+                        /^(?:\[|\]|:|\.\.)$/.test(s)
+                        || /^(?:-[frdtse]|--(?:focus|restart|delay|title|size|error))$/.test(s)
+                        || /^[+-]?(?:0b[01]+|0o[0-7]+|0x[0-9a-fA-F]+|[0-9]*\.[0-9]+(?:[eE][+-]?[0-9]+)?|[0-9]+)$/.test(s)
+                        || /^[^\r\n\t\v\f [\]:.\-"'\\]+$/.test(s)
+                    const quoted = (s: string) =>
+                        `"${s.replace(/\\/g, "\\\\").replace(/"/g, "\\\"")}"`
+
+                    /*  for the "--option=value" form re-quote just the value  */
+                    const m = /^(--(?:delay|title|size|error)=)(.*)$/.exec(str)
+                    if (m !== null)
+                        return acceptable(m[2]) ? str : m[1] + quoted(m[2])
+                    return acceptable(str) ? str : quoted(str)
                 }).join(" ")
             }
             else {
