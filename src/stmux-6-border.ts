@@ -66,19 +66,19 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             /*  +---a---+
                  +--b--+   */
             else if (a1 <= b1 && b2 <= a2)
-                return b2 - b1
+                return b2 - b1 + 1
             /*   +--a--+
                 +---b---+  */
             else if (b1 <= a1 && a2 <= b2)
-                return a2 - a1
+                return a2 - a1 + 1
             /*     +--a--+
                 +--b--+   */
             else if (b1 < a1 && b2 <= a2)
-                return b2 - a1
+                return b2 - a1 + 1
             /*  +--a--+
                    +--b--+   */
             else if (a1 <= b1 && b2 > a2)
-                return a2 - b1
+                return a2 - b1 + 1
             /*  actually cannot happen!?  */
             else
                 return 0
