@@ -132,6 +132,7 @@ class STMUX extends STMUXAggregated {
     }
 }
 
+/*  the global fatal error handling  */
 let stmux: STMUX | null = null
 const onFatal = (err: unknown): never => {
     const msg = err instanceof Error ? err.message : String(err)
@@ -142,6 +143,8 @@ const onFatal = (err: unknown): never => {
 }
 process.on("uncaughtException", onFatal)
 process.on("unhandledRejection", onFatal)
+
+/*  the top-level program entry  */
 try {
     stmux = new STMUX()
     stmux.main()
