@@ -70,13 +70,13 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                         /*  handle terminal focus change (step-by-step, directional)  */
 
                         /*  determine border of focused terminal where we want to logically break through  */
-                        const sides: Record<string, { leave: BorderSide, enteron: BorderSide }> = {
-                            left:  { leave: "left",   enteron: "right"  },
-                            right: { leave: "right",  enteron: "left"   },
-                            up:    { leave: "top",    enteron: "bottom" },
-                            down:  { leave: "bottom", enteron: "top"    }
+                        const sides: Record<string, { leave: BorderSide, enterOn: BorderSide }> = {
+                            left:  { leave: "left",   enterOn: "right"  },
+                            right: { leave: "right",  enterOn: "left"   },
+                            up:    { leave: "top",    enterOn: "bottom" },
+                            down:  { leave: "bottom", enterOn: "top"    }
                         }
-                        const enteron = sides[key.full].enteron
+                        const enterOn = sides[key.full].enterOn
                         const leave: Border = this.border(this.terms[this.focused], sides[key.full].leave)
 
                         /*  find the touchpoints of terminals with our border  */
@@ -85,12 +85,12 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                             if (i === this.focused)
                                 touchpoints[i] = { i, touches: 0 }
                             else {
-                                const enter = this.border(this.terms[i], enteron)
-                                if (   (enteron === "left"   && enter.x1 === (leave.x1 + 1))
-                                    || (enteron === "right"  && enter.x1 === (leave.x1 - 1)))
+                                const enter = this.border(this.terms[i], enterOn)
+                                if (   (enterOn === "left"   && enter.x1 === (leave.x1 + 1))
+                                    || (enterOn === "right"  && enter.x1 === (leave.x1 - 1)))
                                     touchpoints[i] = { i, touches: this.touches(leave.y1, leave.y2, enter.y1, enter.y2) }
-                                else if (   (enteron === "top"    && enter.y1 === (leave.y1 + 1))
-                                         || (enteron === "bottom" && enter.y1 === (leave.y1 - 1)))
+                                else if (   (enterOn === "top"    && enter.y1 === (leave.y1 + 1))
+                                         || (enterOn === "bottom" && enter.y1 === (leave.y1 - 1)))
                                     touchpoints[i] = { i, touches: this.touches(leave.x1, leave.x2, enter.x1, enter.x2) }
                                 else
                                     touchpoints[i] = { i, touches: 0 }
