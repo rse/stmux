@@ -97,8 +97,11 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                             bytesRead = fs.readSync(process.stdin.fd, buf, 0, BUFSIZE, null)
                         }
                         catch (ex: any) {
-                            if (ex.code === "EAGAIN")
+                            if (ex.code === "EAGAIN") {
+                                /*  throttle the retry to avoid a busy-wait spin  */
+                                Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 10)
                                 continue
+                            }
                             else if (ex.code === "EOF")
                                 break
                             else
