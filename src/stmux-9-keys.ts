@@ -30,6 +30,14 @@ import type { Constructor, STMUXBase, Border, BorderSide, Terminal } from "./stm
 export default <T extends Constructor<STMUXBase>>(Base: T) =>
     class extends Base {
         override handleKeys (): void {
+            /*  switch focus to the terminal with the given index  */
+            const switchFocus = (i: number) => {
+                this.terms[this.focused].resetScroll()
+                this.focused = i
+                this.terms[this.focused].focus()
+                this.screen.render()
+            }
+
             /*  handle keys  */
             let prefixMode: "idle" | "prefix" | "post" = "idle"
             this.screen.on("keypress", (_ch: string, key: Widgets.Events.IKeyEventArg) => {
@@ -48,21 +56,11 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     }
                     else if (this.zoomed === -1 && key.full === "backspace") {
                         /*  handle terminal focus change (step-by-step, sequenced)  */
-                        this.terms[this.focused].resetScroll()
-                        this.focused--
-                        if (this.focused < 0)
-                            this.focused = this.terms.length - 1
-                        this.terms[this.focused].focus()
-                        this.screen.render()
+                        switchFocus((this.focused + this.terms.length - 1) % this.terms.length)
                     }
                     else if (this.zoomed === -1 && key.full === "space") {
                         /*  handle terminal focus change (step-by-step, sequenced)  */
-                        this.terms[this.focused].resetScroll()
-                        this.focused++
-                        if (this.focused > this.terms.length - 1)
-                            this.focused = 0
-                        this.terms[this.focused].focus()
-                        this.screen.render()
+                        switchFocus((this.focused + 1) % this.terms.length)
                     }
                     else if (   this.zoomed === -1
                              && (   key.full === "left"
@@ -103,22 +101,14 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                         const bestMatch = touchpoints.reduce((best, tp) => tp.touches > best.touches ? tp : best)
 
                         /*  switch to best matching one  */
-                        if (bestMatch.touches > 0) {
-                            this.terms[this.focused].resetScroll()
-                            this.focused = bestMatch.i
-                            this.terms[this.focused].focus()
-                            this.screen.render()
-                        }
+                        if (bestMatch.touches > 0)
+                            switchFocus(bestMatch.i)
                     }
                     else if (this.zoomed === -1 && key.full.match(/^[1-9]$/)) {
                         /*  handle terminal focus change (directly)  */
                         const n = parseInt(key.full, 10)
-                        if (n <= this.terms.length) {
-                            this.terms[this.focused].resetScroll()
-                            this.focused = n - 1
-                            this.terms[this.focused].focus()
-                            this.screen.render()
-                        }
+                        if (n <= this.terms.length)
+                            switchFocus(n - 1)
                     }
                     else if (key.full === "n") {
                         /*  handle number toggling  */
