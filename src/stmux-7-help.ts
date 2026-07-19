@@ -85,3 +85,4 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             this.helpBox.setIndex(100)
         }
     }
+

@@ -84,3 +84,4 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 return 0
         }
     }
+

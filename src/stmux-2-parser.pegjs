@@ -141,3 +141,4 @@ co "comment"
 
 ws "whitespaces"
     =   [ \t\r\n]+
+

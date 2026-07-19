@@ -117,3 +117,4 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             this.screen.render()
         }
     }
+

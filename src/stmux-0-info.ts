@@ -39,3 +39,4 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             this.my = JSON.parse(fs.readFileSync(file, "utf8")) as PackageInfo
         }
     }
+

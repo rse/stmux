@@ -222,3 +222,4 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             }
         }
     }
+

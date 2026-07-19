@@ -301,3 +301,4 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             this.provision(0, 0, this.screenWidth, this.screenHeight, this.ast, false)
         }
     }
+
