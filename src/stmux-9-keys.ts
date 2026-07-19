@@ -114,6 +114,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                         /*  handle terminal focus change (directly)  */
                         const n = parseInt(key.full, 10)
                         if (n <= this.terms.length) {
+                            this.terms[this.focused].resetScroll()
                             this.focused = n - 1
                             this.terms[this.focused].focus()
                             this.screen.render()
