@@ -43,7 +43,7 @@ $ stmux -- [ [ -s 1/3 bash .. vim ] : mc ]
 
 ...leads to the following particular terminal multiplexing environment,
 where GNU bash, Vim and Midnight Commander are running side-by-side
-inside their own XTerm emulating terminal widget (and, just for fun,
+inside their own XTerm emulating terminal widgets (and, just for fun,
 `CTRL+a` `?` was pressed to open up the stmux help window):
 
 ![stmux usage](etc/screenshot1.png)
@@ -88,7 +88,7 @@ run-time of the backend server project.
 }
 ```
 
-In case of a build-time error in the frontend user interface (SV), the
+In case of a build-time error in the frontend user interface (UI), the
 result might be similar to the following one:
 
 ![stmux example](etc/screenshot2.png)
@@ -163,7 +163,7 @@ $ stmux [-h] [-v] [-w <when>] [-a <activator>] [-t <title>]
 - `-M`, `--mouse`<br/>
   Enable mouse event handling. This enables the focus switching
   by left mouse click, the scrolling with mouse wheel and
-  sends down mouse events to the terminal as mouse key sequences.
+  the sending of mouse events to the terminal as mouse key sequences.
 - `-f <file>`, `--file <file>`<br/>
   Read specification `<spec>` from a configuration file. The
   default is to use the specification inside the command line arguments

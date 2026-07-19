@@ -36,7 +36,7 @@ commands in a Node.js build-time environment.
 
 ## OPTIONS
 
-The following command-line options and arguments exist to the `stmux`(1) command:
+The following command-line options and arguments exist for the `stmux`(1) command:
 
 - \[`-h`|`--help`\]:
   Show program usage information only.
@@ -119,7 +119,7 @@ size      ::= /^\d+$/                              /* fixed character size */
 
 ## KEYSTROKES
 
-The following keystrokes are supported under run-time:
+The following keystrokes are supported at run-time:
 
 - `CTRL`+*activator* *activator*:
   Send the `CTRL`+*activator* key-sequence to the focused terminal.
@@ -140,11 +140,11 @@ The following keystrokes are supported under run-time:
   Toggle showing/hiding of terminal numbers.
 
 - `CTRL`+*activator* `z`:
-  Toggle the zooming of focused terminal. While a terminal
+  Toggle the zooming of the focused terminal. While a terminal
   is zoomed, the focus switching keys are disabled.
 
 - `CTRL`+*activator* `e`:
-  Toggle the expanding of focused terminal. While enabled, the focused
+  Toggle the expanding of the focused terminal. While enabled, the focused
   terminal is expanded and all other terminals stay visible, but are
   shrunk to their minimum size.
 
