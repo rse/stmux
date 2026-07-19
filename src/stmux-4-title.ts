@@ -50,7 +50,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             else if (isError)
                 title = `{red-fg}${title}{/red-fg}`
             else if (isFocused)
-                title = `{green-fg}${title}{/green-fg}`
+                title = `{blue-fg}${title}{/blue-fg}`
             term.stmuxTitle = title
             term.setLabel(term.stmuxTitle)
         }

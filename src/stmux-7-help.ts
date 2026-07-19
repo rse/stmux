@@ -31,7 +31,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
         override establishHelp (): void {
             /*  render a single help entry from key label(s) and description  */
             const emphasize = (label: string) =>
-                label === "..." ? label : `{bold}{green-fg}${label}{/green-fg}{/bold}`
+                label === "..." ? label : `{bold}{blue-fg}${label}{/blue-fg}{/bold}`
             const keys = (labels: string, description: string) =>
                 `CTRL+${this.argv.activator} ` +
                 labels.split("/").map(emphasize).join("/") +

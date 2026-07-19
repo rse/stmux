@@ -123,7 +123,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                         }
                     }
                     swapColor(style.border,       "default", "red")
-                    swapColor(style.focus.border, "green",   "red")
+                    swapColor(style.focus.border, "blue",    "red")
                     if (   ( term.stmuxError && !(/-\[ERROR\]/.test(term.stmuxTitle)))
                         || (!term.stmuxError &&  (/-\[ERROR\]/.test(term.stmuxTitle)))) {
                         this.setTerminalTitle(term)

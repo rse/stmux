@@ -107,7 +107,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     return
                 }
 
-                const color = code === 0 ? chalk.green : chalk.red
+                const color = code === 0 ? chalk.blue : chalk.red
                 const label = code === 0 ? " PROGRAM TERMINATED " : ` PROGRAM TERMINATED (code: ${code}) `
                 term.write(
                     "\r\n" +
@@ -179,7 +179,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                         fg:        "default",
                         bg:        "default",
                         border:    { fg: "default" },
-                        focus:     { border: { fg: "green" } },
+                        focus:     { border: { fg: "blue" } },
                         scrolling: { border: { fg: "yellow" } }
                     }
                 }
