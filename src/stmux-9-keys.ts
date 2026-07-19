@@ -109,7 +109,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                         }
 
                         /*  determine best matching terminal  */
-                        const bestMatch = touchpoints.sort((t1, t2) => t2.touches - t1.touches)[0]
+                        const bestMatch = touchpoints.reduce((best, tp) => tp.touches > best.touches ? tp : best)
 
                         /*  switch to best matching one  */
                         if (bestMatch.touches > 0) {
