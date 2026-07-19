@@ -55,10 +55,10 @@ options
         }
 
 option "short or long option"
-    =   ("-f" / "--focus") {
+    =   ("-f" / "--focus") ![^\r\n\t\v\f \[\]:.-] {
             return ast("option").set({ focus: true })
         }
-    /   ("-r" / "--restart") {
+    /   ("-r" / "--restart") ![^\r\n\t\v\f \[\]:.-] {
             return ast("option").set({ restart: true })
         }
     /   ("-d" _ / "--delay" (ws / "=")) a:number {
