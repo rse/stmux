@@ -66,7 +66,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 })
                 if (child.error)
                     this.fatal(`failed to pass-through execution to "winpty": ${child.error.message}`)
-                process.exit(child.status ?? 0)
+                process.exit(child.status ?? (child.signal !== null ? 1 : 0))
             }
 
             /*  final sanity check for TTY  */
