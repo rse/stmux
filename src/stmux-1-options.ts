@@ -91,8 +91,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             else {
                 if (this.argv.file === "-") {
                     /*  via stdin  */
-                    this.spec = ""
-                    process.stdin.setEncoding("utf8")
+                    const chunks: Buffer[] = []
                     const BUFSIZE = 256
                     const buf = Buffer.alloc(BUFSIZE)
                     while (true) {
@@ -114,8 +113,9 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                         }
                         if (bytesRead === 0)
                             break
-                        this.spec += buf.toString("utf8", 0, bytesRead)
+                        chunks.push(Buffer.from(buf.subarray(0, bytesRead)))
                     }
+                    this.spec = Buffer.concat(chunks).toString("utf8")
                 }
                 else {
                     /*  via file  */
