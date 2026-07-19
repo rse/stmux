@@ -95,8 +95,8 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             this.screen.on("resize", () => {
                 this.calcScreenSize()
                 this.provisionAgain()
-                this.helpBox.left = Math.floor((this.screenWidth  - this.helpW) / 2)
-                this.helpBox.top  = Math.floor((this.screenHeight - this.helpH) / 2)
+                this.helpBox.left = Math.max(0, Math.floor((this.screenWidth  - this.helpW) / 2))
+                this.helpBox.top  = Math.max(0, Math.floor((this.screenHeight - this.helpH) / 2))
                 if (this.helpBox.visible)
                     this.helpBox.hide()
                 this.screen.render()
