@@ -103,8 +103,6 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
         override calcScreenSize (): void {
             this.screenWidth  = this.screen.width  as number
             this.screenHeight = this.screen.height as number
-            if (this.screenWidth < 3 || this.screenHeight < 3)
-                this.fatal("attached terminal is too small")
             if (isLegacyWindows()) {
                 /*  nasty hack for older Windows versions where all types of consoles
                     (including ConEmu) scroll by an extra line (which breaks the screen
@@ -112,6 +110,8 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     ensure we are not hitting the right margin on the last line. */
                 this.screenWidth--
             }
+            if (this.screenWidth < 3 || this.screenHeight < 3)
+                this.fatal("attached terminal is too small")
         }
         override renderScreen (): void {
             this.screen.render()
