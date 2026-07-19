@@ -138,8 +138,9 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     const stateChanged = notifyStateNew.some((state, i) => state !== notifyStateOld[i])
                     if (stateChanged) {
                         /*  determine message  */
-                        const notifyMsg = `${this.my.name}: ERROR situation${notify.length > 1 ? "s" : ""} ` +
-                            `detected in terminal${notify.length > 1 ? "s" : ""} ` +
+                        const plural = notify.length > 1 ? "s" : ""
+                        const notifyMsg = `${this.my.name}: ERROR situation${plural} ` +
+                            `detected in terminal${plural} ` +
                             notify.map((term) => "#" + term.stmuxNumber).join(", ")
 
                         /*  determine method(s)  */
@@ -151,7 +152,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                             this.screen.program.output.write("\x07")
                         if (methods.system) {
                             notifier.notify({
-                                title:   `${this.my.name}: Detected new ERROR situation${notify.length > 1 ? "s" : ""}`,
+                                title:   `${this.my.name}: Detected new ERROR situation${plural}`,
                                 message: notifyMsg,
                                 wait:    false
                             })
