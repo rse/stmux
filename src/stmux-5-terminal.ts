@@ -157,20 +157,14 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
 
                 /*  handle command termination (and optional restarting)  */
                 term.on("exit", (code: number) => {
-                    if (code === 0)
-                        term.write(
-                            "\r\n" +
-                            chalk.green.inverse(" ..::") +
-                            chalk.green.bold.inverse(" PROGRAM TERMINATED ") +
-                            chalk.green.inverse("::.. ") +
-                            "\r\n\r\n")
-                    else
-                        term.write(
-                            "\r\n" +
-                            chalk.red.inverse(" ..::") +
-                            chalk.red.bold.inverse(` PROGRAM TERMINATED (code: ${code}) `) +
-                            chalk.red.inverse("::.. ") +
-                            "\r\n\r\n")
+                    const color = code === 0 ? chalk.green : chalk.red
+                    const label = code === 0 ? " PROGRAM TERMINATED " : ` PROGRAM TERMINATED (code: ${code}) `
+                    term.write(
+                        "\r\n" +
+                        color.inverse(" ..::") +
+                        color.bold.inverse(label) +
+                        color.inverse("::.. ") +
+                        "\r\n\r\n")
 
                     /*  handle termination and restarting  */
                     if (node.get("restart") === true) {
