@@ -66,8 +66,8 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             this.helpW = 80
             this.helpH = 22
             this.helpBox = Blessed.box({
-                left:          Math.floor((this.screenWidth  - this.helpW) / 2),
-                top:           Math.floor((this.screenHeight - this.helpH) / 2),
+                left:          Math.max(0, Math.floor((this.screenWidth  - this.helpW) / 2)),
+                top:           Math.max(0, Math.floor((this.screenHeight - this.helpH) / 2)),
                 width:         this.helpW,
                 height:        this.helpH,
                 padding:       1,
