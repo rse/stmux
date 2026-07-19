@@ -123,21 +123,14 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     this.setTerminalTitle(term)
                     this.screen.render()
                 })
-                term.on("blur", () => {
-                    /*  repaint blurred  */
-                    this.setTerminalTitle(term)
-                    this.screen.render()
-                })
 
-                /*  handle scrolling events  */
-                term.on("scrolling-start", () => {
-                    this.setTerminalTitle(term)
-                    this.screen.render()
-                })
-                term.on("scrolling-end", () => {
-                    this.setTerminalTitle(term)
-                    this.screen.render()
-                })
+                /*  handle blur and scrolling events with a plain repaint  */
+                for (const event of [ "blur", "scrolling-start", "scrolling-end" ]) {
+                    term.on(event, () => {
+                        this.setTerminalTitle(term)
+                        this.screen.render()
+                    })
+                }
 
                 /*  handle beep events  */
                 term.on("beep", () => {
