@@ -71,6 +71,8 @@ The following command-line options and arguments exist for the `stmux`(1) comman
   a single line. If a regular expression is preceded with the prefix
   `!`, it is required that it does not match.
   The default is `(?:ERROR|Error|error)`.
+  A local `-e`|`--error` option on a terminal (see **SPECIFICATION**
+  below) overrides this global option for that particular terminal.
 
 - \[`-m`|`--method` *methods*\]:
   In case of detected errors, use the comma-separated

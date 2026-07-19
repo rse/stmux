@@ -95,10 +95,11 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     screenshot = stripAnsi(screenshot)
                     const lines = screenshot.split(/\r?\n/)
 
-                    /*  match errors in screenshot  */
-                    term.stmuxError = lines.some((line) =>
-                        (globalErrorPatterns.length > 0 && matches(line, globalErrorPatterns))
-                        || (term.stmuxErrorPatterns.length > 0 && matches(line, term.stmuxErrorPatterns)))
+                    /*  match errors in screenshot
+                        (per-terminal patterns override the global ones)  */
+                    const patterns = term.stmuxErrorPatterns.length > 0 ?
+                        term.stmuxErrorPatterns : globalErrorPatterns
+                    term.stmuxError = lines.some((line) => matches(line, patterns))
 
                     /*  record notification state  */
                     if (term.stmuxError) {

@@ -6,6 +6,7 @@ CHANGELOG
 ------------------
 
 - BUGFIX [code]: escape Blessed tag meta-characters in terminal titles to no longer crash on commands containing curly braces (issue #26)
+- BUGFIX [code, docs]: let a local -e/--error option override the global one instead of being OR-combined with its always-active default pattern (issue #28)
 
 2.1.0 (2026-07-19)
 ------------------
