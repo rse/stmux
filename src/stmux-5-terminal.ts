@@ -78,6 +78,11 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 term.stmuxUpdate = true
             })
 
+            /*  initialize termination bookkeeping  */
+            term.stmuxExited      = false
+            term.stmuxExitCode    = 0
+            term.stmuxIgnoreExits = 0
+
             /*  spawn command  */
             if (os.platform() === "win32") {
                 term.stmuxShell = "cmd.exe"
@@ -91,6 +96,13 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
 
             /*  handle command termination (and optional restarting)  */
             term.on("exit", (code: number) => {
+                /*  ignore the trailing "exit" event of the old process
+                    which was killed during a manual restart  */
+                if (term.stmuxIgnoreExits > 0) {
+                    term.stmuxIgnoreExits--
+                    return
+                }
+
                 const color = code === 0 ? chalk.green : chalk.red
                 const label = code === 0 ? " PROGRAM TERMINATED " : ` PROGRAM TERMINATED (code: ${code}) `
                 term.write(
@@ -111,6 +123,8 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 }
                 else {
                     /*  handle automatic program termination  */
+                    term.stmuxExited   = true
+                    term.stmuxExitCode = code
                     this.terminated++
                     if (code !== 0)
                         this.terminatedError++

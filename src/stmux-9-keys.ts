@@ -159,14 +159,20 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     else if (key.full === "r") {
                         /*  handle manual restarting  */
                         const term = this.terms[this.focused]
+                        if (term.stmuxExited) {
+                            /*  revoke the termination bookkeeping of the "exit" handler  */
+                            term.stmuxExited = false
+                            this.terminated--
+                            if (term.stmuxExitCode !== 0)
+                                this.terminatedError--
+                        }
+                        else {
+                            /*  the still running process is killed now and delivers
+                                a trailing "exit" event which has to be ignored  */
+                            term.stmuxIgnoreExits++
+                        }
                         term.terminate()
                         term.spawn(term.stmuxShell, term.stmuxArgs)
-
-                        /*  revoke the termination bookkeeping of the "exit" handler  */
-                        if (this.terminated > 0)
-                            this.terminated--
-                        if (this.terminatedError > 0)
-                            this.terminatedError--
                     }
                     else if (key.full === "?") {
                         /*  handle help screen toggling  */

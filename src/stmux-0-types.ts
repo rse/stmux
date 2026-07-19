@@ -80,6 +80,9 @@ export interface Terminal extends Omit<XTerm, "position" | "screenshot"> {
     stmuxTitle:          string
     stmuxError:          boolean
     stmuxUpdate:         boolean
+    stmuxExited:         boolean
+    stmuxExitCode:       number
+    stmuxIgnoreExits:    number
     stmuxShell:          string
     stmuxArgs:           string[]
     stmuxErrorPatterns:  ErrorPattern[]
