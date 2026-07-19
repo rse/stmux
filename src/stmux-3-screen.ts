@@ -48,9 +48,9 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             }
 
             /*  sanity check to prevent trouble under Windows + MinTTY
-                (where Node sees to TTY on stdio because MinTTY does not
-                actually emulate a real TTY. The only workaround is to
-                use the "winpty" utility and start Node with "winpty node"  */
+                (where Node sees no TTY on stdio because MinTTY does not
+                actually emulate a real TTY; the only workaround is to
+                use the "winpty" utility and start Node with "winpty node")  */
             if (os.platform() === "win32" && process.env.TERM === "xterm" && !process.stdin.isTTY && !process.stdout.isTTY) {
                 let winpty: string
                 try { winpty = which.sync("winpty") }
