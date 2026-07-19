@@ -105,8 +105,10 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                         notifyStateNew[term.stmuxNumber - 1] = screenshot
                         notify.push(term)
                     }
-                    else
+                    else {
                         notifyStateNew[term.stmuxNumber - 1] = ""
+                        notifyStateOld[term.stmuxNumber - 1] = ""
+                    }
 
                     /*  determine and record screen updates  */
                     const style = term.style as { border: { fg: string }, focus: { border: { fg: string } } }
