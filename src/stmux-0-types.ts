@@ -125,6 +125,7 @@ export interface STMUXBase {
     zoomed:          number
     terminated:      number
     terminatedError: number
+    terminating:     boolean
 
     /*  provided by the root class  */
     fatal (msg: string): never
