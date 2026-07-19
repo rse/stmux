@@ -207,7 +207,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             /*  set terminal title  */
             this.setTerminalTitle(term)
 
-            /*  some initial initializations  */
+            /*  initially wire up events and spawn the command  */
             if (initially)
                 this.initializeTerminal(term, node)
         }
