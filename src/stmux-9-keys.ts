@@ -202,6 +202,12 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             if (this.argv.mouse) {
                 /*  scroll a terminal by 10% into the given direction  */
                 const scrollByWheel = (term: Terminal, direction: 1 | -1) => {
+                    /*  skip scrolling entirely on an empty scrollback
+                        (else the pane would be stuck in scrolling mode,
+                        as the position never reaches 100 percent)  */
+                    if (term.getScrollHeight() === 0)
+                        return
+
                     /*  on-the-fly start scrolling  */
                     if (!term.scrolling)
                         term.scroll(0)
