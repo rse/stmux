@@ -31,14 +31,15 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
     class extends Base {
         override handleErrors (): void {
             /*  determine error patterns  */
-            const parseErrorPatterns = (patterns: string): ErrorPattern[] => {
+            const parseErrorPatterns = (spec: string): ErrorPattern[] => {
                 const result: ErrorPattern[] = []
+                let patterns: string | undefined = spec
                 while (patterns) {
-                    const parts = patterns.match(/^((?:\\,|.)+?)(?:,(.+))?$/)
+                    const parts: RegExpMatchArray | null = patterns.match(/^((?:\\,|.)+?)(?:,(.+))?$/)
                     if (parts === null)
                         break
                     let pattern = parts[1]
-                    const rest  = parts[2]
+                    const rest: string | undefined = parts[2]
                     const m = pattern.match(/^!(.+)$/)
                     let negate = false
                     if (m) {
