@@ -46,7 +46,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 if (ex instanceof parser.SyntaxError)
                     message = ex.format([ { source: "specification", text: this.spec } ])
                 else
-                    message = String(ex instanceof Error ? ex.message : ex)
+                    message = ex instanceof Error ? ex.message : String(ex)
                 this.fatal("parsing failure:\n" +
                     message.replace(/^/mg, `${this.my.name}: ERROR: `) + "\n")
             }
