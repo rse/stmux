@@ -74,7 +74,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     bg:        "default",
                     border:    { fg: "default" }
                 }
-            } as any)
+            })
             this.screen.append(this.helpBox)
             this.helpBox.setIndex(100)
         }
