@@ -105,7 +105,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     /*  restart command  */
                     const delay = Number(node.get("delay") ?? 0)
                     if (delay > 0)
-                        setTimeout(() => term.spawn(term.stmuxShell, term.stmuxArgs), delay)
+                        setTimeout(() => term.spawn(term.stmuxShell, term.stmuxArgs), delay * 1000)
                     else
                         term.spawn(term.stmuxShell, term.stmuxArgs)
                 }
