@@ -211,19 +211,20 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     const spec = items[i].get("size") as string | undefined
                     if (spec) {
                         let size = -1
-                        let m: RegExpMatchArray | null
-                        if (spec.match(/^\d+$/))
+                        const mRatio   = spec.match(/^(\d+)\/(\d+)$/)
+                        const mPercent = spec.match(/^(\d+)%$/)
+                        if (/^\d+$/.test(spec))
                             size = parseInt(spec, 10)
-                        else if (spec.match(/^\d+\.\d+$/))
+                        else if (/^\d+\.\d+$/.test(spec))
                             size = Math.floor(l * parseFloat(spec))
-                        else if ((m = spec.match(/^(\d+)\/(\d+)$/))) {
-                            const denominator = parseInt(m[2], 10)
+                        else if (mRatio !== null) {
+                            const denominator = parseInt(mRatio[2], 10)
                             if (denominator === 0)
                                 this.fatal(`invalid terminal size specification "${spec}" (zero denominator)`)
-                            size = Math.floor(l * (parseInt(m[1], 10) / denominator))
+                            size = Math.floor(l * (parseInt(mRatio[1], 10) / denominator))
                         }
-                        else if ((m = spec.match(/^(\d+)%$/)))
-                            size = Math.floor(l * (parseInt(m[1], 10) / 100))
+                        else if (mPercent !== null)
+                            size = Math.floor(l * (parseInt(mPercent[1], 10) / 100))
                         else
                             this.fatal(`invalid terminal size specification "${spec}"`)
                         if (size < 3)
