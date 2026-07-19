@@ -29,13 +29,17 @@ import Blessed      from "blessed"
 
 import type { Constructor, STMUXBase } from "./stmux-0-types.js"
 
+/*  detect legacy (pre-10) Windows consoles  */
+const isLegacyWindows = () =>
+    os.platform() === "win32" && os.release().match(/^10\./) === null
+
 export default <T extends Constructor<STMUXBase>>(Base: T) =>
     class extends Base {
         override establishScreen (): void {
             /*  Older/ancient Windows console API does not support inverse
                 or underline for displaying the emulated cursor, so we have
                 to force the use of the special character based "line" cursor.  */
-            if (os.platform() === "win32" && !os.release().match(/^10\./))
+            if (isLegacyWindows())
                 this.argv.cursor = "line"
 
             /*  workaround for trouble under Windows + ConEmu + TERM=cygwin
@@ -101,7 +105,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             this.screenHeight = this.screen.height as number
             if (this.screenWidth < 3 || this.screenHeight < 3)
                 this.fatal("attached terminal is too small")
-            if (os.platform() === "win32" && !os.release().match(/^10\./)) {
+            if (isLegacyWindows()) {
                 /*  nasty hack for older Windows versions where all types of consoles
                     (including ConEmu) scroll by an extra line (which breaks the screen
                     rendering) once the right bottom character is rendered. As a workaround
