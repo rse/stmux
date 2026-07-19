@@ -29,40 +29,34 @@ import type { Constructor, STMUXBase } from "./stmux-0-types.js"
 export default <T extends Constructor<STMUXBase>>(Base: T) =>
     class extends Base {
         override establishHelp (): void {
-            const helpText = "" +
+            /*  render a single help entry from key label(s) and description  */
+            const emphasize = (label: string) =>
+                label === "..." ? label : `{bold}{green-fg}${label}{/green-fg}{/bold}`
+            const keys = (labels: string, description: string) =>
+                `CTRL+${this.argv.activator} ` +
+                labels.split("/").map(emphasize).join("/") +
+                ` ${".".repeat(Math.max(1, 20 - labels.length))} ${description}\n`
+
+            /*  assemble the help window content  */
+            const helpText =
                 `{bold}${this.my.name} ${this.my.version} <${this.my.homepage}>{/bold}\n` +
                 `{bold}${this.my.description}{/bold}\n` +
                 `Copyright (c) 2017-2026 ${this.my.author.name} <${this.my.author.url}>\n` +
                 `Licensed under ${this.my.license} <http://spdx.org/licenses/${this.my.license}.html>\n` +
                 "\n" +
                 "Global Keys:\n" +
-                `CTRL+${this.argv.activator} {bold}{green-fg}${this.argv.activator}{/green-fg}{/bold} ................... ` +
-                    `send CTRL+${this.argv.activator} to focused terminal\n` +
-                `CTRL+${this.argv.activator} {bold}{green-fg}BACKSPACE{/green-fg}{/bold} ........... ` +
-                    "switch focus to previous terminal in sequence\n" +
-                `CTRL+${this.argv.activator} {bold}{green-fg}SPACE{/green-fg}{/bold} ............... ` +
-                    "switch focus to next terminal in sequence\n" +
-                `CTRL+${this.argv.activator} {bold}{green-fg}LEFT{/green-fg}{/bold}/{bold}{green-fg}RIGHT{/green-fg}{/bold}/` +
-                    "{bold}{green-fg}UP{/green-fg}{/bold}/{bold}{green-fg}DOWN{/green-fg}{/bold} .. " +
-                    "switch focus to best terminal in direction\n" +
-                `CTRL+${this.argv.activator} {bold}{green-fg}1{/green-fg}{/bold}/{bold}{green-fg}2{/green-fg}{/bold}/.../` +
-                    "{bold}{green-fg}9{/green-fg}{/bold} ........... " +
-                    "switch focus to terminal identified by number\n" +
-                `CTRL+${this.argv.activator} {bold}{green-fg}n{/green-fg}{/bold} ................... ` +
-                    "toggle the display of sequence numbers\n" +
-                `CTRL+${this.argv.activator} {bold}{green-fg}z{/green-fg}{/bold} ................... ` +
-                    "toggle the zooming of focused terminal\n" +
-                `CTRL+${this.argv.activator} {bold}{green-fg}v{/green-fg}{/bold} ................... ` +
-                    "enable scrolling mode on focused terminal\n" +
-                `CTRL+${this.argv.activator} {bold}{green-fg}l{/green-fg}{/bold} ................... ` +
-                    "manually force redrawing of entire screen\n" +
-                `CTRL+${this.argv.activator} {bold}{green-fg}r{/green-fg}{/bold} ................... ` +
-                    "restart shell command in focused terminal\n" +
-                `CTRL+${this.argv.activator} {bold}{green-fg}k{/green-fg}{/bold} ................... ` +
-                    "kill stmux application (and all shell commands)\n" +
-                `CTRL+${this.argv.activator} {bold}{green-fg}?{/green-fg}{/bold} ................... ` +
-                    "show (this) help window\n" +
-                ""
+                keys(this.argv.activator, `send CTRL+${this.argv.activator} to focused terminal`) +
+                keys("BACKSPACE",          "switch focus to previous terminal in sequence") +
+                keys("SPACE",              "switch focus to next terminal in sequence") +
+                keys("LEFT/RIGHT/UP/DOWN", "switch focus to best terminal in direction") +
+                keys("1/2/.../9",          "switch focus to terminal identified by number") +
+                keys("n",                  "toggle the display of sequence numbers") +
+                keys("z",                  "toggle the zooming of focused terminal") +
+                keys("v",                  "enable scrolling mode on focused terminal") +
+                keys("l",                  "manually force redrawing of entire screen") +
+                keys("r",                  "restart shell command in focused terminal") +
+                keys("k",                  "kill stmux application (and all shell commands)") +
+                keys("?",                  "show (this) help window")
             this.helpW = 80
             this.helpH = helpText.replace(/\n$/, "").split("\n").length + 4
             this.helpBox = Blessed.box({
