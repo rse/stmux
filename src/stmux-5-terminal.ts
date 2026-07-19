@@ -38,7 +38,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             let term: Terminal
             if (initially) {
                 /*  create XTerm widget  */
-                term = new BlessedXTerm({
+                const options: ConstructorParameters<typeof BlessedXTerm>[0] = {
                     left:          x,
                     top:           y,
                     width:         w,
@@ -62,7 +62,8 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                         focus:     { border: { fg: "green" } },
                         scrolling: { border: { fg: "yellow" } }
                     }
-                } as any) as unknown as Terminal
+                }
+                term = new BlessedXTerm(options) as unknown as Terminal
                 node.term = term
                 term.node = node
 

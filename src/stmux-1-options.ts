@@ -47,6 +47,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 .string("t").nargs("t", 1).alias("t", "title").default("t", "stmux")
                 .describe("t", "set title on terminal")
                 .string("c").nargs("c", 1).alias("c", "cursor").default("c", "block")
+                .choices("c", [ "block", "underline", "line" ])
                 .describe("c", "set type of cursor (block, underline or line)")
                 .boolean("n").alias("n", "number").default("n", false)
                 .describe("n", "show terminal number in terminal title")

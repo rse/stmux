@@ -22,8 +22,9 @@
 **  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import type { Widgets } from "blessed"
-import type XTerm       from "blessed-xterm"
+import type { Widgets }    from "blessed"
+import type XTerm          from "blessed-xterm"
+import type { CursorType } from "blessed-xterm"
 
 /*  the generic mixin constructor type  */
 export type Constructor<T = {}> = new (...args: any[]) => T
@@ -54,7 +55,7 @@ export interface Options {
     wait:      string
     activator: string
     title:     string
-    cursor:    string
+    cursor:    CursorType
     number:    boolean
     error:     string
     method:    string
