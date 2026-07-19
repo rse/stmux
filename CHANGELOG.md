@@ -7,6 +7,7 @@ CHANGELOG
 
 - FEATURE [code]: add "CTRL+a e" for toggling the expand mode of the focused terminal
 - FEATURE [code, infr]: add Unix manual page stmux(1), linted and rendered via markdownlint and remark
+- FEATURE [code, docs]: add option -U/--full-unicode for optionally enabling full Unicode rendering
 - IMPROVEMENT [code]: render terminal titles in inverse video with angle caps and focus indicator
 - IMPROVEMENT [code]: switch the regular highlighting color of titles and borders from green to blue
 - IMPROVEMENT [othr]: align the README usage documentation with the current command-line interface

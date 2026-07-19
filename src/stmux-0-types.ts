@@ -49,18 +49,19 @@ export interface PackageInfo {
 
 /*  the parsed command-line options  */
 export interface Options {
-    _:         (string | number)[]
-    help:      boolean
-    version:   boolean
-    wait:      string
-    activator: string
-    title:     string
-    cursor:    CursorType
-    number:    boolean
-    error:     string
-    method:    string
-    mouse:     boolean
-    file:      string
+    _:           (string | number)[]
+    help:        boolean
+    version:     boolean
+    wait:        string
+    activator:   string
+    title:       string
+    cursor:      CursorType
+    number:      boolean
+    error:       string
+    method:      string
+    mouse:       boolean
+    fullUnicode: boolean
+    file:        string
     [ key: string ]: unknown
 }
 

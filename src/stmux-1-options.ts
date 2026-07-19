@@ -32,7 +32,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
         override parseOptions (): void {
             /*  parse command-line arguments  */
             this.argv = yargs()
-                .usage("Usage: $0 [-h] [-v] [-w <when>] [-a <activator>] [-t <title>] [-c <cursor>] [-n] [-e <regexp>] [-m <method>] [-M] [-f <file>] [-- <spec>]")
+                .usage("Usage: $0 [-h] [-v] [-w <when>] [-a <activator>] [-t <title>] [-c <cursor>] [-n] [-e <regexp>] [-m <method>] [-M] [-U] [-f <file>] [-- <spec>]")
                 .help("h").alias("h", "help").default("h", false)
                 .describe("h", "show usage help")
                 /*  disable the built-in version handling of yargs, as we
@@ -58,6 +58,8 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 .describe("m", "notification method(s) in case an error was detected")
                 .boolean("M").alias("M", "mouse").default("M", false)
                 .describe("M", "enable mouse event handling")
+                .boolean("U").alias("U", "full-unicode").default("U", false)
+                .describe("U", "enable full Unicode handling (wide, combining and surrogate characters)")
                 .string("f").nargs("f", 1).alias("f", "file").default("f", "-")
                 .describe("f", "read specification from configuration file")
                 .strict()

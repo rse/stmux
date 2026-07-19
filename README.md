@@ -126,7 +126,7 @@ The following command line arguments are supported:
 
 ```
 $ stmux [-h] [-v] [-w <when>] [-a <activator>] [-t <title>]
-        [-c <cursor>] [-n] [-e <regexp>] [-m <method>] [-M] [-f <file>]
+        [-c <cursor>] [-n] [-e <regexp>] [-m <method>] [-M] [-U] [-f <file>]
         [-- <spec>]
 ```
 
@@ -164,6 +164,11 @@ $ stmux [-h] [-v] [-w <when>] [-a <activator>] [-t <title>]
   Enable mouse event handling. This enables the focus switching
   by left mouse click, the scrolling with mouse wheel and
   the sending of mouse events to the terminal as mouse key sequences.
+- `-U`, `--full-unicode`<br/>
+  Enable full Unicode handling in the screen rendering. This correctly
+  displays East Asian wide characters, combining characters and
+  surrogate pairs (like emojis), at the cost of a slightly slower
+  rendering. The default is to treat all characters as single-width.
 - `-f <file>`, `--file <file>`<br/>
   Read specification `<spec>` from a configuration file. The
   default is to use the specification inside the command line arguments

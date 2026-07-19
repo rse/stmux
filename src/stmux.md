@@ -14,6 +14,7 @@
 \[`-e`|`--error` *regexp*\[`,`...\]\]
 \[`-m`|`--method` *methods*\]
 \[`-M`|`--mouse`\]
+\[`-U`|`--full-unicode`\]
 \[`-f`|`--file` *file*\]
 \[`--` *spec*\]
 
@@ -81,6 +82,12 @@ The following command-line options and arguments exist for the `stmux`(1) comman
   Enable mouse event handling. This enables the focus switching
   by left mouse click, the scrolling with mouse wheel and
   sends down mouse events to the terminal as mouse key sequences.
+
+- \[`-U`|`--full-unicode`\]:
+  Enable full Unicode handling in the screen rendering. This correctly
+  displays East Asian wide characters, combining characters and
+  surrogate pairs (like emojis), at the cost of a slightly slower
+  rendering. The default is to treat all characters as single-width.
 
 - \[`-f`|`--file` *file*\]:
   Read specification *spec* from a configuration file. The

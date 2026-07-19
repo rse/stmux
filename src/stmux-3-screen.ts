@@ -78,7 +78,8 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 title:       this.argv.title,
                 smartCSR:    true,
                 autoPadding: false,
-                warnings:    false
+                warnings:    false,
+                fullUnicode: this.argv.fullUnicode
             })
 
             /*  disable cursor  */
