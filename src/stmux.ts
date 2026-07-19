@@ -75,7 +75,7 @@ class STMUXRoot implements STMUXBase {
         this.terms.forEach((t) => t.terminate())
         setTimeout(() => {
             this.screen?.destroy()
-            process.exit(0)
+            process.exit(this.terminatedError > 0 ? 1 : 0)
         }, 50)
     }
 
