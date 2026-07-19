@@ -45,7 +45,12 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                         negate = true
                         pattern = m[1]
                     }
-                    result.push({ negate, regexp: new RegExp(pattern) })
+                    try {
+                        result.push({ negate, regexp: new RegExp(pattern) })
+                    }
+                    catch (ex: any) {
+                        this.fatal(`invalid error pattern "${pattern}": ${ex.message}`)
+                    }
                     patterns = rest
                 }
                 return result
