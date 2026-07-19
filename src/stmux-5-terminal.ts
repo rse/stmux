@@ -144,6 +144,8 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 }
             })
         }
+
+        /*  provision a single terminal for a "command" AST node  */
         provisionCommand (x: number, y: number, w: number, h: number, node: ASTNode, initially: boolean): void {
             if (node.type() !== "command")
                 this.fatal("invalid AST node (expected \"command\")")
@@ -215,6 +217,8 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             if (initially)
                 this.initializeTerminal(term, node)
         }
+
+        /*  provision a group of terminals for a "split" AST node  */
         provisionSplit (x: number, y: number, w: number, h: number, node: ASTNode, initially: boolean): void {
             if (node.type() !== "split")
                 this.fatal("invalid AST node (expected \"split\")")
@@ -298,26 +302,28 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 }
 
                 /*  pass 4: provide results  */
-                const SL: { s: number, l: number }[] = []
+                const segments: { s: number, l: number }[] = []
                 for (let i = 0; i < n; i++) {
-                    SL.push({ s, l: sizes[i] })
+                    segments.push({ s, l: sizes[i] })
                     s += sizes[i]
                 }
-                return SL
+                return segments
             }
             if (node.get("horizontal") === true) {
-                const SL = divide(x, w, childs)
+                const segments = divide(x, w, childs)
                 for (let i = 0; i < childs.length; i++)
-                    this.provision(SL[i].s, y, SL[i].l, h, childs[i], initially)
+                    this.provision(segments[i].s, y, segments[i].l, h, childs[i], initially)
             }
             else if (node.get("vertical") === true) {
-                const SL = divide(y, h, childs)
+                const segments = divide(y, h, childs)
                 for (let i = 0; i < childs.length; i++)
-                    this.provision(x, SL[i].s, w, SL[i].l, childs[i], initially)
+                    this.provision(x, segments[i].s, w, segments[i].l, childs[i], initially)
             }
             else
                 this.fatal("invalid AST node (expected \"horizontal\" or \"vertical\" split)")
         }
+
+        /*  provision the terminals of an arbitrary AST node  */
         override provision (x: number, y: number, w: number, h: number, node: ASTNode, initially: boolean): void {
             if (node.type() === "split")
                 this.provisionSplit(x, y, w, h, node, initially)
@@ -326,6 +332,8 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             else
                 this.fatal("invalid AST node (expected \"split\" or \"command\")")
         }
+
+        /*  provision all terminals initially  */
         override provisionInitially (): void {
             this.provision(0, 0, this.screenWidth, this.screenHeight, this.ast, true)
 
@@ -334,6 +342,8 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 this.focused = 0
             this.terms[this.focused].focus()
         }
+
+        /*  re-provision all terminals again (after layout changes)  */
         override provisionAgain (): void {
             this.provision(0, 0, this.screenWidth, this.screenHeight, this.ast, false)
         }
