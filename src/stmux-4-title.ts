@@ -34,11 +34,14 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 title = `[${term.stmuxNumber}]-${title}`
             if (this.zoomed !== -1 && this.zoomed === (term.stmuxNumber - 1))
                 title = `${title}-[ZOOMED]`
-            if (term.stmuxError)
+            const isError = term.stmuxError
+            if (isError)
                 title = `${title}-[ERROR]`
+
+            /*  colorize by precedence: scrolling > error > focused  */
             if (term.scrolling)
                 title = `{yellow-fg}${title}{/yellow-fg}`
-            else if (term.stmuxError)
+            else if (isError)
                 title = `{red-fg}${title}{/red-fg}`
             else if (this.focused !== -1 && this.focused === (term.stmuxNumber - 1))
                 title = `{green-fg}${title}{/green-fg}`
