@@ -78,21 +78,28 @@ class STMUXRoot implements STMUXBase {
         }, 50)
     }
 
-    /*  the operations provided by the individual mixins  */
-    parseOptions (): void {}
-    parseSpec (): void {}
-    establishScreen (): void {}
-    calcScreenSize (): void {}
-    renderScreen (): void {}
-    setTerminalTitle (_term: Terminal): void {}
-    provision (_x: number, _y: number, _w: number, _h: number, _node: ASTNode, _initially: boolean): void {}
-    provisionInitially (): void {}
-    provisionAgain (): void {}
-    border (_term: Terminal, _side: BorderSide): Border { return { x1: 0, x2: 0, y1: 0, y2: 0, side: _side } }
-    touches (_a1: number, _a2: number, _b1: number, _b2: number): number { return 0 }
-    establishHelp (): void {}
-    handleErrors (): void {}
-    handleKeys (): void {}
+    /*  the operations provided by the individual mixins
+        (these placeholders must never run -- a reachable call
+        means the corresponding mixin was not aggregated)  */
+    parseOptions (): void { this.unaggregated("parseOptions") }
+    parseSpec (): void { this.unaggregated("parseSpec") }
+    establishScreen (): void { this.unaggregated("establishScreen") }
+    calcScreenSize (): void { this.unaggregated("calcScreenSize") }
+    renderScreen (): void { this.unaggregated("renderScreen") }
+    setTerminalTitle (_term: Terminal): void { this.unaggregated("setTerminalTitle") }
+    provision (_x: number, _y: number, _w: number, _h: number, _node: ASTNode, _initially: boolean): void { this.unaggregated("provision") }
+    provisionInitially (): void { this.unaggregated("provisionInitially") }
+    provisionAgain (): void { this.unaggregated("provisionAgain") }
+    border (_term: Terminal, _side: BorderSide): Border { this.unaggregated("border") }
+    touches (_a1: number, _a2: number, _b1: number, _b2: number): number { this.unaggregated("touches") }
+    establishHelp (): void { this.unaggregated("establishHelp") }
+    handleErrors (): void { this.unaggregated("handleErrors") }
+    handleKeys (): void { this.unaggregated("handleKeys") }
+
+    /*  report a mixin operation which was not aggregated  */
+    unaggregated (op: string): never {
+        throw new Error(`internal error: operation "${op}" not provided by any mixin`)
+    }
 }
 
 /*  aggregate the individual mixins onto the root class  */
