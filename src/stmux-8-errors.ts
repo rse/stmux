@@ -114,7 +114,8 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                         notifyStateNew[term.stmuxNumber - 1] = ""
 
                     /*  determine and record screen updates  */
-                    const style = term.style as any
+                    const style = term.style as
+                        { border: { fg: string }, focus: { border: { fg: string } } }
                     if (term.stmuxError && style.border.fg === "default") {
                         style.border.fg = "red"
                         dirty = true
