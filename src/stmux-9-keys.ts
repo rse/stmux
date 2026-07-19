@@ -149,13 +149,17 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                         /*  handle manual restarting  */
                         const term = this.terms[this.focused]
 
-                        /*  cancel a still pending automatic restart  */
                         if (term.stmuxRestartTimer !== undefined) {
+                            /*  cancel a still pending automatic restart
+                                (the process is already gone, so its "exit"
+                                event was already delivered and handled)  */
                             clearTimeout(term.stmuxRestartTimer)
                             term.stmuxRestartTimer = undefined
                         }
-                        if (term.stmuxExited) {
-                            /*  revoke the termination bookkeeping of the "exit" handler  */
+                        else if (term.stmuxExited) {
+                            /*  revoke the termination bookkeeping of the "exit" handler
+                                (the process is already gone, so its "exit"
+                                event was already delivered and handled)  */
                             term.stmuxExited = false
                             this.terminated--
                             if (term.stmuxExitCode !== 0)

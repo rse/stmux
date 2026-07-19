@@ -40,6 +40,7 @@ CHANGELOG
 - BUGFIX [code]: quote backslashes when converting arguments to a specification
 - BUGFIX [code]: fix the usage string of the command-line interface
 - BUGFIX [code]: avoid negative values and division by zero in size calculations
+- BUGFIX [code]: do not swallow the next exit event when manually restarting an already exited command
 - UPDATE [infr]: use ES2024 as the TypeScript target and library
 - UPDATE [code]: use HTTPS URLs in the help text
 - CLEANUP [code]: simplify code, remove redundancies and dead code in all modules
