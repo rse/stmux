@@ -129,8 +129,13 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     if (code !== 0)
                         this.terminatedError++
                     if (this.terminated >= this.terms.length) {
-                        if (this.argv.wait === "" || (this.argv.wait === "error" && this.terminatedError === 0))
-                            setTimeout(() => this.terminate(), 2 * 1000)
+                        if (this.argv.wait === "" || (this.argv.wait === "error" && this.terminatedError === 0)) {
+                            setTimeout(() => {
+                                /*  re-check, as terminals could have been manually restarted meanwhile  */
+                                if (this.terminated >= this.terms.length)
+                                    this.terminate()
+                            }, 2 * 1000)
+                        }
                     }
                 }
             })
