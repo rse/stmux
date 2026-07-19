@@ -64,6 +64,10 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 term.stmuxError = false
             })
 
+            /*  match a line against error patterns  */
+            const matches = (line: string, patterns: ErrorPattern[]) =>
+                patterns.every((pattern) => pattern.regexp.test(line) !== pattern.negate)
+
             /*  handle error detection  */
             let notifyLocked = false
             const notifyStateOld: string[] = []
@@ -92,15 +96,6 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     const lines = screenshot.split(/\r?\n/)
 
                     /*  match errors in screenshot  */
-                    const matches = (string: string, patterns: ErrorPattern[]) => {
-                        for (let i = 0; i < patterns.length; i++) {
-                            const matched = patterns[i].regexp.test(string)
-                            if (!(   ( matched && !patterns[i].negate)
-                                  || (!matched &&  patterns[i].negate)))
-                                return false
-                        }
-                        return true
-                    }
                     term.stmuxError = false
                     for (let i = 0; i < lines.length; i++) {
                         if (   (globalErrorPatterns.length     > 0 && matches(lines[i], globalErrorPatterns))
