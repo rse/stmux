@@ -62,10 +62,10 @@ option "short or long option"
             return ast("option").set({ restart: true })
         }
     /   "-d" _ a:number {
-            return ast("option").set({ delay: parseInt(a.get("value")) })
+            return ast("option").set({ delay: a.get("value") })
         }
     /   "--delay" (ws / "=") a:number {
-            return ast("option").set({ delay: parseInt(a.get("value")) })
+            return ast("option").set({ delay: a.get("value") })
         }
     /   "-t" _ a:string {
             return ast("option").set({ title: a.get("value") })
