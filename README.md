@@ -19,7 +19,7 @@ environments. It is inspired by the awesome and unreachable
 is intended to provide just a very tiny subset of the original
 [tmux](https://tmux.github.io/) functionality, but in a portable way for
 bare Node.js environments and with some special features for application
-build environments. Most notably, stmux has a built-time error
+build environments. Most notably, stmux has a build-time error
 detection and notification feature, can automatically restart terminated commands,
 and can automatically close or wait after all spawned commands have
 successfully or unsuccessfully terminated.
@@ -54,7 +54,7 @@ Intention
 This utility is primarily intended to be used from within a
 `package.json` `script` to easily side-by-side run various NPM-based
 commands in a Node.js build-time environment. Sample `package.json`
-entries from a top-level NPM-based project follows, which on `npm run
+entries from a top-level NPM-based project follow, which on `npm run
 dev` allows one to conveniently run the commands of two sub-projects.
 First, the build-time of the frontend user interface (UI) project.
 Second, the build-time of the backend server (SV) project. Third, the
@@ -135,7 +135,7 @@ $ stmux [-h] [-V] [-w <condition>] [-a <activator>] [-t <title>]
 - `-V`, `--version`<br/>
   Show program version information.
 - `-w <condition>`, `--wait <condition>`<br/>
-  Wait after last finished command (and do not shutdown automatically),
+  Wait after last finished command (and do not shut down automatically),
   either if any command terminated with an `error` or just `always`.
 - `-a <activator>`, `--activator <activator>`<br/>
   Use `CTRL+<activator>` as the prefix to special commands.
@@ -145,13 +145,13 @@ $ stmux [-h] [-V] [-w <condition>] [-a <activator>] [-t <title>]
 - `-t <title>`, `--title <title>`<br/>
   Set title on terminal. The default title is `stmux`.
 - `-c <type>`, `--cursor <type>`<br/>
-  Set type of cursor  to `block` (default), `underline` or `line`.
+  Set type of cursor to `block` (default), `underline` or `line`.
 - `-n`, `--number`<br/>
   Show terminal number in terminal title.
 - `-e <regexp>[,...]`, `--error <regexp>[,...]`<br/>
   Observe terminal lines for errors (global option).
   One or more regular expressions can be specified and have to match on a single line.
-  If a regular expression is preceeded with the prefix `!`, it is
+  If a regular expression is preceded with the prefix `!`, it is
   required that it does not match.
 - `-m <methods>`, `--method <methods>`<br/>
   In case of detected errors, use the comma-separated
@@ -167,7 +167,7 @@ $ stmux [-h] [-V] [-w <condition>] [-a <activator>] [-t <title>]
   default is to use the specification inside the command line arguments
   or (alternatively) to read the specification from `stdin`.
 
-The following PEG-style grammar loosly describes the specification `<spec>`.
+The following PEG-style grammar loosely describes the specification `<spec>`.
 For exact details see the [real PEG grammar of stmux](src/stmux-2-parser.pegjs).
 
 ```
