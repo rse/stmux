@@ -2,11 +2,13 @@
 CHANGELOG
 =========
 
-2.1.1 (unreleased)
+2.1.1 (2026-07-19)
 ------------------
 
+- IMPROVEMENT [othr]: replace outdated README images with the usual shields.io badges, incl. project stars
 - BUGFIX [code]: escape Blessed tag meta-characters in terminal titles to no longer crash on commands containing curly braces (issue #26)
-- BUGFIX [code, docs]: let a local -e/--error option override the global one instead of being OR-combined with its always-active default pattern (issue #28)
+- BUGFIX [code]: let a local -e/--error option override the global one instead of being OR-combined with its always-active default pattern (issue #28)
+- CLEANUP [othr]: use the copyright character in the README license section
 
 2.1.0 (2026-07-19)
 ------------------
