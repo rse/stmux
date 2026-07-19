@@ -62,6 +62,7 @@ class STMUXRoot implements STMUXBase {
 
     /*  emit a fatal error and terminate the program  */
     fatal (msg: string): never {
+        this.screen?.destroy()
         process.stderr.write(`${this.my.name}: ERROR: ${msg}\n`)
         process.exit(1)
     }
