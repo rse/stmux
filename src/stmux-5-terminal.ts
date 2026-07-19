@@ -30,6 +30,97 @@ import type { Constructor, STMUXBase, ASTNode, Terminal } from "./stmux-0-types.
 
 export default <T extends Constructor<STMUXBase>>(Base: T) =>
     class extends Base {
+        /*  initialize a freshly created XTerm widget (event wiring and command spawning)  */
+        initializeTerminal (term: Terminal, node: ASTNode): void {
+            /*  optionally enable mouse event handling  */
+            if (this.argv.mouse)
+                term.enableMouse()
+
+            /*  determine initial focus  */
+            if (node.get("focus") === true) {
+                if (this.focused >= 0)
+                    this.fatal("only a single command can be focused")
+                this.focused = this.terms.length - 1
+            }
+
+            /*  handle focus/blur events  */
+            term.on("focus", () => {
+                /*  redetermine our view of the current focused terminal  */
+                for (let i = 0; i < this.terms.length; i++) {
+                    if (this.terms[i].focused) {
+                        this.focused = i
+                        break
+                    }
+                }
+
+                /*  repaint focused  */
+                this.setTerminalTitle(term)
+                this.screen.render()
+            })
+
+            /*  handle blur and scrolling events with a plain repaint  */
+            for (const event of [ "blur", "scrolling-start", "scrolling-end" ]) {
+                term.on(event, () => {
+                    this.setTerminalTitle(term)
+                    this.screen.render()
+                })
+            }
+
+            /*  handle beep events  */
+            term.on("beep", () => {
+                /*  pass-through to program  */
+                this.screen.program.output.write("\x07")
+            })
+
+            /*  handle error observation  */
+            term.stmuxUpdate = false
+            term.on("update", () => {
+                term.stmuxUpdate = true
+            })
+
+            /*  spawn command  */
+            if (os.platform() === "win32") {
+                term.stmuxShell = "cmd.exe"
+                term.stmuxArgs  = [ "/d", "/s", "/c", node.get("cmd") ]
+            }
+            else {
+                term.stmuxShell = "sh"
+                term.stmuxArgs  = [ "-c", node.get("cmd") ]
+            }
+            term.spawn(term.stmuxShell, term.stmuxArgs)
+
+            /*  handle command termination (and optional restarting)  */
+            term.on("exit", (code: number) => {
+                const color = code === 0 ? chalk.green : chalk.red
+                const label = code === 0 ? " PROGRAM TERMINATED " : ` PROGRAM TERMINATED (code: ${code}) `
+                term.write(
+                    "\r\n" +
+                    color.inverse(" ..::") +
+                    color.bold.inverse(label) +
+                    color.inverse("::.. ") +
+                    "\r\n\r\n")
+
+                /*  handle termination and restarting  */
+                if (node.get("restart") === true) {
+                    /*  restart command  */
+                    const delay = Number(node.get("delay") ?? 0)
+                    if (delay > 0)
+                        setTimeout(() => term.spawn(term.stmuxShell, term.stmuxArgs), delay)
+                    else
+                        term.spawn(term.stmuxShell, term.stmuxArgs)
+                }
+                else {
+                    /*  handle automatic program termination  */
+                    this.terminated++
+                    if (code !== 0)
+                        this.terminatedError++
+                    if (this.terminated >= this.terms.length) {
+                        if (this.argv.wait === "" || (this.argv.wait === "error" && this.terminatedError === 0))
+                            setTimeout(() => this.terminate(), 2 * 1000)
+                    }
+                }
+            })
+        }
         provisionCommand (x: number, y: number, w: number, h: number, node: ASTNode, initially: boolean): void {
             if (node.type() !== "command")
                 this.fatal("invalid AST node (expected \"command\")")
@@ -98,96 +189,8 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             this.setTerminalTitle(term)
 
             /*  some initial initializations  */
-            if (initially) {
-                /*  optionally enable mouse event handling  */
-                if (this.argv.mouse)
-                    term.enableMouse()
-
-                /*  determine initial focus  */
-                if (node.get("focus") === true) {
-                    if (this.focused >= 0)
-                        this.fatal("only a single command can be focused")
-                    this.focused = this.terms.length - 1
-                }
-
-                /*  handle focus/blur events  */
-                term.on("focus", () => {
-                    /*  redetermine our view of the current focused terminal  */
-                    for (let i = 0; i < this.terms.length; i++) {
-                        if (this.terms[i].focused) {
-                            this.focused = i
-                            break
-                        }
-                    }
-
-                    /*  repaint focused  */
-                    this.setTerminalTitle(term)
-                    this.screen.render()
-                })
-
-                /*  handle blur and scrolling events with a plain repaint  */
-                for (const event of [ "blur", "scrolling-start", "scrolling-end" ]) {
-                    term.on(event, () => {
-                        this.setTerminalTitle(term)
-                        this.screen.render()
-                    })
-                }
-
-                /*  handle beep events  */
-                term.on("beep", () => {
-                    /*  pass-through to program  */
-                    this.screen.program.output.write("\x07")
-                })
-
-                /*  handle error observation  */
-                term.stmuxUpdate = false
-                term.on("update", () => {
-                    term.stmuxUpdate = true
-                })
-
-                /*  spawn command  */
-                if (os.platform() === "win32") {
-                    term.stmuxShell = "cmd.exe"
-                    term.stmuxArgs  = [ "/d", "/s", "/c", node.get("cmd") ]
-                }
-                else {
-                    term.stmuxShell = "sh"
-                    term.stmuxArgs  = [ "-c", node.get("cmd") ]
-                }
-                term.spawn(term.stmuxShell, term.stmuxArgs)
-
-                /*  handle command termination (and optional restarting)  */
-                term.on("exit", (code: number) => {
-                    const color = code === 0 ? chalk.green : chalk.red
-                    const label = code === 0 ? " PROGRAM TERMINATED " : ` PROGRAM TERMINATED (code: ${code}) `
-                    term.write(
-                        "\r\n" +
-                        color.inverse(" ..::") +
-                        color.bold.inverse(label) +
-                        color.inverse("::.. ") +
-                        "\r\n\r\n")
-
-                    /*  handle termination and restarting  */
-                    if (node.get("restart") === true) {
-                        /*  restart command  */
-                        const delay = Number(node.get("delay") ?? 0)
-                        if (delay > 0)
-                            setTimeout(() => term.spawn(term.stmuxShell, term.stmuxArgs), delay)
-                        else
-                            term.spawn(term.stmuxShell, term.stmuxArgs)
-                    }
-                    else {
-                        /*  handle automatic program termination  */
-                        this.terminated++
-                        if (code !== 0)
-                            this.terminatedError++
-                        if (this.terminated >= this.terms.length) {
-                            if (this.argv.wait === "" || (this.argv.wait === "error" && this.terminatedError === 0))
-                                setTimeout(() => this.terminate(), 2 * 1000)
-                        }
-                    }
-                })
-            }
+            if (initially)
+                this.initializeTerminal(term, node)
         }
         provisionSplit (x: number, y: number, w: number, h: number, node: ASTNode, initially: boolean): void {
             if (node.type() !== "split")
