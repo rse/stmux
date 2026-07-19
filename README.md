@@ -125,9 +125,11 @@ Usage
 The following command line arguments are supported:
 
 ```
-$ stmux [-h] [-v] [-w <when>] [-a <activator>] [-t <title>]
-        [-c <cursor>] [-n] [-e <regexp>] [-m <method>] [-M] [-U] [-f <file>]
-        [-- <spec>]
+$ stmux [-h|--help] [-v|--version] [-w|--wait <when>]
+        [-a|--activator <activator>] [-t|--title <title>]
+        [-c|--cursor <cursor>] [-n|--number] [-e|--error <regexp>]
+        [-m|--method <method>] [-M|--mouse] [-U|--full-unicode]
+        [-f|--file <file>] [-- <spec>]
 ```
 
 - `-h`, `--help`<br/>

@@ -32,7 +32,9 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
         override parseOptions (): void {
             /*  parse command-line arguments  */
             this.argv = yargs()
-                .usage("Usage: $0 [-h] [-v] [-w <when>] [-a <activator>] [-t <title>] [-c <cursor>] [-n] [-e <regexp>] [-m <method>] [-M] [-U] [-f <file>] [-- <spec>]")
+                .usage("Usage: $0 [-h|--help] [-v|--version] [-w|--wait <when>] [-a|--activator <activator>] " +
+                    "[-t|--title <title>] [-c|--cursor <cursor>] [-n|--number] [-e|--error <regexp>] " +
+                    "[-m|--method <method>] [-M|--mouse] [-U|--full-unicode] [-f|--file <file>] [-- <spec>]")
                 .help("h").alias("h", "help").default("h", false)
                 .describe("h", "show usage help")
                 /*  disable the built-in version handling of yargs, as we
