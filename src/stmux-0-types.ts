@@ -61,7 +61,7 @@ export interface Options {
     method:    string
     mouse:     boolean
     file:      string
-    [ key: string ]: any
+    [ key: string ]: unknown
 }
 
 /*  an error detection pattern  */
