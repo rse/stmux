@@ -6,6 +6,10 @@ CHANGELOG
 ------------------
 
 - FEATURE [code]: add "CTRL+a e" for toggling the expand mode of the focused terminal
+- IMPROVEMENT [code]: render terminal titles in inverse video with angle caps and focus indicator
+- IMPROVEMENT [code]: switch the regular highlighting color of titles and borders from green to blue
+- UPDATE [infr]: upgrade NPM dependencies
+- CLEANUP [infr]: vertically align fields in package.json
 
 2.0.0 (2026-07-19)
 ------------------
