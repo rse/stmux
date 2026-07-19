@@ -93,7 +93,7 @@ string "quoted string literal or bareword"
     /   "'" t:$(("\\'" / [^'])*) "'" {
             return ast("string").set({ value: t.replace(/\\'/g, "'") })
         }
-    /   s:$((![\r\n\t\v\f \[\]:.-] .)*) {
+    /   s:$((![\r\n\t\v\f \[\]:.-] .)+) {
             return ast("string").set({ value: s })
         }
 
