@@ -58,6 +58,7 @@ class STMUXRoot implements STMUXBase {
     zoomed          = -1
     terminated      = 0
     terminatedError = 0
+    terminating     = false
 
     /*  emit a fatal error and terminate the program  */
     fatal (msg: string): never {
@@ -65,8 +66,11 @@ class STMUXRoot implements STMUXBase {
         process.exit(1)
     }
 
-    /*  gracefully terminate the program  */
+    /*  gracefully terminate the program (idempotent)  */
     terminate (): void {
+        if (this.terminating)
+            return
+        this.terminating = true
         this.terms.forEach((t) => t.terminate())
         setTimeout(() => {
             this.screen.destroy()
