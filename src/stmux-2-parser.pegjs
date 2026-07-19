@@ -127,6 +127,6 @@ co "comment"
     =   "//" (![\r\n] .)*
     /   "/*" (!"*/" .)* "*/"
 
-ws "whitespaces"
+ws "whitespace"
     =   [ \t\r\n]+
 
