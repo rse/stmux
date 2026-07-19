@@ -92,7 +92,9 @@ class STMUXRoot implements STMUXBase {
 }
 
 /*  aggregate the individual mixins onto the root class  */
-const STMUXAggregated = [
+type Mixin = (Base: Constructor<STMUXBase>) => Constructor<STMUXBase>
+
+const STMUXAggregated = ([
     stmuxInfo,
     stmuxOptions,
     stmuxParser,
@@ -103,7 +105,7 @@ const STMUXAggregated = [
     stmuxHelp,
     stmuxErrors,
     stmuxKeys
-].reduce((Base, mixin) => mixin(Base as any) as any, STMUXRoot as any) as Constructor<STMUXBase>
+] as Mixin[]).reduce((Base, mixin) => mixin(Base), STMUXRoot as Constructor<STMUXBase>)
 
 /*  the aggregated application class  */
 class STMUX extends STMUXAggregated {
