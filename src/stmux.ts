@@ -73,7 +73,7 @@ class STMUXRoot implements STMUXBase {
         this.terminating = true
         this.terms.forEach((t) => t.terminate())
         setTimeout(() => {
-            this.screen.destroy()
+            this.screen?.destroy()
             process.exit(0)
         }, 50)
     }
@@ -133,10 +133,15 @@ class STMUX extends STMUXAggregated {
 }
 
 const stmux = new STMUX()
+const onFatal = (err: unknown) => {
+    stmux.fatal(err instanceof Error ? err.message : String(err))
+}
+process.on("uncaughtException", onFatal)
+process.on("unhandledRejection", onFatal)
 try {
     stmux.main()
 }
 catch (err: unknown) {
-    stmux.fatal(err instanceof Error ? err.message : String(err))
+    onFatal(err)
 }
 
