@@ -216,8 +216,12 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                             size = parseInt(spec, 10)
                         else if (spec.match(/^\d+\.\d+$/))
                             size = Math.floor(l * parseFloat(spec))
-                        else if ((m = spec.match(/^(\d+)\/(\d+)$/)))
-                            size = Math.floor(l * (parseInt(m[1], 10) / parseInt(m[2], 10)))
+                        else if ((m = spec.match(/^(\d+)\/(\d+)$/))) {
+                            const denominator = parseInt(m[2], 10)
+                            if (denominator === 0)
+                                this.fatal(`invalid terminal size specification "${spec}" (zero denominator)`)
+                            size = Math.floor(l * (parseInt(m[1], 10) / denominator))
+                        }
                         else if ((m = spec.match(/^(\d+)%$/)))
                             size = Math.floor(l * (parseInt(m[1], 10) / 100))
                         else
