@@ -57,6 +57,8 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 keys("r",                  "restart shell command in focused terminal") +
                 keys("k",                  "kill stmux application (and all shell commands)") +
                 keys("?",                  "show (this) help window")
+
+            /*  create the help window  */
             this.helpW = 80
             this.helpH = helpText.replace(/\n$/, "").split("\n").length + 4
             this.helpBox = Blessed.box({
