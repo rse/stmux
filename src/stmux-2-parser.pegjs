@@ -67,11 +67,16 @@ option "short or long option"
     /   ("-t" _ / "--title" (ws / "=")) a:string {
             return ast("option").set({ title: a.get("value") })
         }
-    /   ("-s" _ / "--size" (ws / "=")) a:string {
+    /   ("-s" _ / "--size" (ws / "=")) a:(sizeFactor / string) {
             return ast("option").set({ size: a.get("value") })
         }
     /   ("-e" _ / "--error" (ws / "=")) a:string {
             return ast("option").set({ error: a.get("value") })
+        }
+
+sizeFactor "fractional size factor"
+    =   s:$([0-9]+ "." [0-9]+) {
+            return ast("string").set({ value: s })
         }
 
 string "quoted string literal or bareword"
