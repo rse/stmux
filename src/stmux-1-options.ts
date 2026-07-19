@@ -94,6 +94,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     const chunks: Buffer[] = []
                     const BUFSIZE = 256
                     const buf = Buffer.alloc(BUFSIZE)
+                    const sleeper = new Int32Array(new SharedArrayBuffer(4))
                     while (true) {
                         let bytesRead = 0
                         try {
@@ -103,7 +104,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                             const err = ex as NodeJS.ErrnoException
                             if (err.code === "EAGAIN") {
                                 /*  throttle the retry to avoid a busy-wait spin  */
-                                Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 10)
+                                Atomics.wait(sleeper, 0, 0, 10)
                                 continue
                             }
                             else if (err.code === "EOF")
