@@ -137,7 +137,8 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
 
                 /*  raise notification  */
                 if (this.argv.method !== "" && notify.length > 0 && !notifyLocked) {
-                    const stateChanged = notifyStateNew.some((state, i) => state !== notifyStateOld[i])
+                    const stateChanged = notify.some((term) =>
+                        notifyStateNew[term.stmuxNumber - 1] !== notifyStateOld[term.stmuxNumber - 1])
                     if (stateChanged) {
                         /*  determine message  */
                         const plural = notify.length > 1 ? "s" : ""
@@ -160,7 +161,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                         }
 
                         /*  swap notification state  */
-                        this.terms.forEach((term) => {
+                        notify.forEach((term) => {
                             notifyStateOld[term.stmuxNumber - 1] = notifyStateNew[term.stmuxNumber - 1]
                             notifyStateNew[term.stmuxNumber - 1] = ""
                         })
