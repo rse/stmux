@@ -151,9 +151,8 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
 
                 /*  raise notification  */
                 if (this.argv.method !== "" && notify.length > 0 && !notifyLocked) {
-                    const stateOld = notifyStateOld.reduce((a, v) => a + v, "")
-                    const stateNew = notifyStateNew.reduce((a, v) => a + v, "")
-                    if (stateOld !== stateNew) {
+                    const stateChanged = notifyStateNew.some((state, i) => state !== notifyStateOld[i])
+                    if (stateChanged) {
                         /*  determine message  */
                         const notifyMsg = `${this.my.name}: ERROR situation${notify.length > 1 ? "s" : ""} ` +
                             `detected in terminal${notify.length > 1 ? "s" : ""} ` +
