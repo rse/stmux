@@ -64,6 +64,8 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                 const child = childProcess.spawnSync(winpty, process.argv, {
                     stdio: [ "inherit", "inherit", "inherit" ]
                 })
+                if (child.error)
+                    this.fatal(`failed to pass-through execution to "winpty": ${child.error.message}`)
                 process.exit(child.status ?? 0)
             }
 
