@@ -96,14 +96,9 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     const lines = screenshot.split(/\r?\n/)
 
                     /*  match errors in screenshot  */
-                    term.stmuxError = false
-                    for (let i = 0; i < lines.length; i++) {
-                        if (   (globalErrorPatterns.length     > 0 && matches(lines[i], globalErrorPatterns))
-                            || (term.stmuxErrorPatterns.length > 0 && matches(lines[i], term.stmuxErrorPatterns))) {
-                            term.stmuxError = true
-                            break
-                        }
-                    }
+                    term.stmuxError = lines.some((line) =>
+                           (globalErrorPatterns.length     > 0 && matches(line, globalErrorPatterns))
+                        || (term.stmuxErrorPatterns.length > 0 && matches(line, term.stmuxErrorPatterns)))
 
                     /*  record notification state  */
                     if (term.stmuxError) {
