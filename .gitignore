@@ -1,5 +1,5 @@
 node_modules
-bin
+dst
 src/*.gen.js
 src/*.gen.d.ts
 .ase

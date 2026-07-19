@@ -5,9 +5,9 @@
         "module":                           "nodenext",
         "moduleResolution":                 "nodenext",
         "types":                            [ "node" ],
-        "typeRoots":                        [ "./node_modules/@types", "./src/types" ],
-        "rootDir":                          "./src",
-        "outDir":                           "./bin",
+        "typeRoots":                        [ "../node_modules/@types", "../src/types" ],
+        "rootDir":                          "../src",
+        "outDir":                           "../dst",
         "strict":                           true,
         "noImplicitOverride":               true,
         "noImplicitReturns":                true,
@@ -25,6 +25,6 @@
         "newLine":                          "lf"
     },
     "include": [
-        "src/**/*.ts"
+        "../src/**/*.ts"
     ]
 }

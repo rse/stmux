@@ -22,20 +22,24 @@
 **  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import js         from "@eslint/js"
+import path        from "node:path"
+import js          from "@eslint/js"
 import neostandard from "neostandard"
 import tseslint    from "typescript-eslint"
 import globals     from "globals"
 
+/*  the project root directory (one level above this configuration file)  */
+const rootDir = path.resolve(import.meta.dirname, "..")
+
 export default [
     {
-        ignores: [ "bin/**", "node_modules/**", "src/**/*.gen.js", "src/**/*.gen.d.ts" ]
+        ignores: [ "dst/**", "node_modules/**", "**/*.gen.js", "**/*.gen.d.ts" ]
     },
     js.configs.recommended,
     ...tseslint.configs.recommended,
     ...neostandard({ ts: true, noStyle: true }),
     {
-        files: [ "src/**/*.ts" ],
+        files: [ "**/*.ts" ],
         languageOptions: {
             ecmaVersion: 2022,
             sourceType:  "module",
@@ -43,8 +47,8 @@ export default [
                 ...globals.node
             },
             parserOptions: {
-                projectService: true,
-                tsconfigRootDir: import.meta.dirname
+                project:         [ "./etc/tsconfig.json" ],
+                tsconfigRootDir: rootDir
             }
         },
         rules: {

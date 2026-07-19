@@ -14,18 +14,16 @@
     "bugs":        { "url":  "http://github.com/rse/stmux/issues" },
     "type":        "module",
     "bin": {
-        "stmux":   "bin/stmux.js"
+        "stmux":   "dst/stmux.js"
     },
     "devDependencies": {
-        "grunt":                                     "1.6.2",
-        "grunt-cli":                                 "1.5.0",
-        "grunt-contrib-clean":                       "2.0.1",
-        "grunt-contrib-watch":                       "1.1.0",
-        "grunt-shell":                               "4.0.0",
-        "grunt-eslint":                              "26.0.0",
+        "@rse/stx":                                  "1.1.6",
+        "shx":                                       "0.4.0",
+        "nodemon":                                   "3.1.14",
         "eslint":                                    "9.39.5",
         "@eslint/js":                                "9.39.5",
         "neostandard":                               "0.13.0",
+        "globals":                                   "17.7.0",
         "typescript-eslint":                         "8.64.0",
         "typescript":                                "6.0.3",
         "peggy":                                     "5.1.0",
@@ -53,8 +51,8 @@
     },
     "upd":                                           [ "!eslint", "!@eslint/js", "!typescript" ],
     "scripts": {
-        "prepublishOnly": "npm run build",
-        "build":          "grunt --gruntfile Gruntfile.cjs default",
-        "test":           "grunt --gruntfile Gruntfile.cjs default && node -- ./bin/stmux.js -n -w error -e \"ERROR,!style errors\" -m beep,system -- [ -s 2/3 [ -s 60% -e foo -t shell $SHELL .. 'date; true' ] : 'date; true' ]"
+        "prepublishOnly": "npm start build",
+        "start":          "stx -v4 -c etc/stx.conf",
+        "test":           "stx -v4 -c etc/stx.conf test"
     }
 }
