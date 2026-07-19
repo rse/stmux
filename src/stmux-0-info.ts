@@ -36,7 +36,12 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
             /*  determine the package meta information  */
             const dirname = path.dirname(fileURLToPath(import.meta.url))
             const file    = path.resolve(dirname, "..", "package.json")
-            this.my = JSON.parse(fs.readFileSync(file, "utf8")) as PackageInfo
+            try {
+                this.my = JSON.parse(fs.readFileSync(file, "utf8")) as PackageInfo
+            }
+            catch (ex: any) {
+                throw new Error(`cannot load package meta information from "${file}": ${ex.message}`)
+            }
         }
     }
 
