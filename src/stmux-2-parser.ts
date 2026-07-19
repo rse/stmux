@@ -38,7 +38,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     grammarSource: "specification",
                     startRule:     "split",
                     asty
-                }) as unknown as ASTNode
+                }) as ASTNode
             }
             catch (ex: unknown) {
                 /*  provide a source-excerpt annotated error message  */
