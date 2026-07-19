@@ -62,7 +62,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     this.fatal("under Windows/MinTTY you need the \"winpty\" utility on PATH")
                 }
                 const child = childProcess.spawnSync(winpty, process.argv, {
-                    stdio: [ "inherit", "inherit", "inherit" ]
+                    stdio: "inherit"
                 })
                 if (child.error)
                     this.fatal(`failed to pass-through execution to "winpty": ${child.error.message}`)
