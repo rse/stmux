@@ -31,7 +31,7 @@ import type { Constructor, STMUXBase } from "./stmux-0-types.js"
 
 /*  detect legacy (pre-10) Windows consoles  */
 const isLegacyWindows = () =>
-    os.platform() === "win32" && !os.release().startsWith("10.")
+    os.platform() === "win32" && parseInt(os.release(), 10) < 10
 
 export default <T extends Constructor<STMUXBase>>(Base: T) =>
     class extends Base {
