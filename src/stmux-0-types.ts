@@ -98,10 +98,10 @@ export interface WidgetPosition {
     height: number
 }
 
-/*  a terminal border descriptor  */
 /*  the side of a terminal border  */
 export type BorderSide = "left" | "right" | "top" | "bottom"
 
+/*  a terminal border descriptor  */
 export interface Border {
     x1:   number
     x2:   number
