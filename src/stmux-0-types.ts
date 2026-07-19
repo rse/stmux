@@ -85,6 +85,7 @@ export interface Terminal extends Omit<XTerm, "position" | "screenshot"> {
     stmuxIgnoreExits:    number
     stmuxShell:          string
     stmuxArgs:           string[]
+    stmuxRestartTimer?:  ReturnType<typeof setTimeout>
     stmuxErrorPatterns:  ErrorPattern[]
 }
 

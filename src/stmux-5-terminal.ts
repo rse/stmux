@@ -114,10 +114,14 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
 
                 /*  handle termination and restarting  */
                 if (node.get("restart") === true) {
-                    /*  restart command  */
+                    /*  restart command (remember the timer to allow a manual restart to cancel it)  */
                     const delay = Number(node.get("delay") ?? 0)
-                    if (delay > 0)
-                        setTimeout(() => term.spawn(term.stmuxShell, term.stmuxArgs), delay * 1000)
+                    if (delay > 0) {
+                        term.stmuxRestartTimer = setTimeout(() => {
+                            term.stmuxRestartTimer = undefined
+                            term.spawn(term.stmuxShell, term.stmuxArgs)
+                        }, delay * 1000)
+                    }
                     else
                         term.spawn(term.stmuxShell, term.stmuxArgs)
                 }

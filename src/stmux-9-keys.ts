@@ -148,6 +148,12 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                     else if (key.full === "r") {
                         /*  handle manual restarting  */
                         const term = this.terms[this.focused]
+
+                        /*  cancel a still pending automatic restart  */
+                        if (term.stmuxRestartTimer !== undefined) {
+                            clearTimeout(term.stmuxRestartTimer)
+                            term.stmuxRestartTimer = undefined
+                        }
                         if (term.stmuxExited) {
                             /*  revoke the termination bookkeeping of the "exit" handler  */
                             term.stmuxExited = false
