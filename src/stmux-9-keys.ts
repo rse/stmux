@@ -104,7 +104,7 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
                         if (bestMatch.touches > 0)
                             switchFocus(bestMatch.i)
                     }
-                    else if (this.zoomed === -1 && key.full.match(/^[1-9]$/)) {
+                    else if (this.zoomed === -1 && /^[1-9]$/.test(key.full)) {
                         /*  handle terminal focus change (directly)  */
                         const n = parseInt(key.full, 10)
                         if (n <= this.terms.length)
