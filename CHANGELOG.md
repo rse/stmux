@@ -22,6 +22,7 @@ CHANGELOG
 - CLEANUP [code]: factor out the Windows 10 check
 - CLEANUP [code]: generate version output with template literals
 - CLEANUP [code, othr]: fix spelling and update year in copyright messages
+- REFACTORING [code,docs,infr,othr]: migrate from Grunt to @rse/stx
 - REFACTORING [code,docs,infr,othr]: migrate from JavaScript to TypeScript
 
 1.8.11 (2025-05-28)
