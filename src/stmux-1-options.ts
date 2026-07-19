@@ -67,10 +67,10 @@ export default <T extends Constructor<STMUXBase>>(Base: T) =>
 
             /*  short-circuit processing of "-v" command-line option  */
             if (this.argv.version) {
-                process.stderr.write(`${this.my.name} ${this.my.version} <${this.my.homepage}>\n`)
-                process.stderr.write(`${this.my.description}\n`)
-                process.stderr.write(`Copyright (c) 2017-2026 ${this.my.author.name} <${this.my.author.url}>\n`)
-                process.stderr.write(`Licensed under ${this.my.license} <https://spdx.org/licenses/${this.my.license}.html>\n`)
+                process.stdout.write(`${this.my.name} ${this.my.version} <${this.my.homepage}>\n`)
+                process.stdout.write(`${this.my.description}\n`)
+                process.stdout.write(`Copyright (c) 2017-2026 ${this.my.author.name} <${this.my.author.url}>\n`)
+                process.stdout.write(`Licensed under ${this.my.license} <https://spdx.org/licenses/${this.my.license}.html>\n`)
                 process.exit(0)
             }
 
